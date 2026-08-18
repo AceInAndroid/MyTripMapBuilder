@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>南疆亲子自驾方案 B · 喀什—莎车—帕米尔</title>
+<meta name="description" content="2026年10月2日至10日，4位大人和2位5岁儿童的喀什—莎车—帕米尔MPV自驾参考行程">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* ═══════════════════════════════════════════
+   Design System — edit :root to change theme
+   ═══════════════════════════════════════════ */
+:root {
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f5f5f7;
+  --bg-tertiary:   #fbfbfd;
+  --bg-grouped:    #f2f2f7;
+  --bg-elevated:   #ffffff;
+  --text-primary:   #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary:  #aeaeb2;
+  --accent:        #0071e3;
+  --accent-hover:  #0077ed;
+  --tint-red:    #ff3b30;
+  --tint-orange: #ff9500;
+  --tint-green:  #34c759;
+  --tint-blue:   #007aff;
+  --tint-purple: #af52de;
+  --tint-pink:   #ff2d55;
+  --separator:  rgba(60, 60, 67, .12);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 14px rgba(0,0,0,.08);
+  --shadow-lg:  0 8px 30px rgba(0,0,0,.12);
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+               "Helvetica Neue", "Arial", sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Map ── */
+#map { width: 100%; height: 40vh; min-height: 280px; position: sticky; top: 0; z-index: 100; }
+.locate-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
+  border: none; box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.locate-btn.active { color: #007aff; }
+@keyframes loc-pulse {
+  0%   { transform: scale(1); opacity: .55; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.loc-pulse {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: rgba(0,122,255,.25);
+  animation: loc-pulse 1.6s ease-out infinite;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex; gap: 6px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  background: rgba(255,255,255,.85); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 40vh; z-index: 99;
+  border-bottom: .5px solid var(--separator); scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; padding: 7px 16px; border-radius: 980px; border: none;
+  background: var(--bg-grouped); color: var(--text-secondary);
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: all .25s ease;
+  white-space: nowrap; letter-spacing: -0.01em;
+}
+.tab:active { transform: scale(.96); }
+.tab.active { background: var(--accent); color: #fff; }
+
+/* ── Main content ── */
+.content { max-width: 680px; margin: 0 auto; padding: 16px 16px calc(24px + var(--safe-bottom)); }
+
+/* ── Overview ── */
+.hero { text-align: center; padding: 28px 20px 20px; }
+.hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+.hero .subtitle { font-size: 17px; color: var(--text-secondary); margin-top: 6px; font-weight: 400; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.info-card { background: var(--bg-elevated); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); }
+.info-card .label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 6px; }
+.info-card .value { font-size: 15px; font-weight: 600; line-height: 1.4; }
+
+/* ── Section headers ── */
+.section-head { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; padding: 20px 0 8px; }
+
+/* ── Day header ── */
+.day-head { padding: 20px 0 12px; }
+.day-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.day-head p { font-size: 15px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── Route bar ── */
+.route-bar { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--text-secondary); line-height: 1.7; white-space: pre-line; }
+.route-bar strong { color: var(--text-primary); }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 7px; top: 20px; bottom: 20px; width: 1.5px; background: var(--separator); }
+.tl-item { position: relative; margin-bottom: 10px; }
+.tl-dot { position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; z-index: 1; box-shadow: 0 0 0 3px var(--bg-secondary); }
+.tl-dot.food    { background: var(--tint-red); }
+.tl-dot.spot    { background: var(--tint-blue); }
+.tl-dot.hotel   { background: var(--tint-orange); }
+.tl-dot.drink   { background: var(--tint-purple); }
+.tl-dot.transport { background: var(--text-tertiary); }
+
+/* ── Card ── */
+.card { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: box-shadow .25s ease; cursor: pointer; }
+.card:active { box-shadow: var(--shadow-md); }
+.card .time { font-size: 12px; font-weight: 600; color: var(--text-tertiary); letter-spacing: .01em; }
+.card .name { font-size: 17px; font-weight: 600; margin: 2px 0 4px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; }
+.card .desc { font-size: 14px; color: var(--text-secondary); line-height: 1.45; }
+
+/* Badge */
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
+.badge.food   { background: rgba(255,59,48,.1);  color: var(--tint-red); }
+.badge.spot   { background: rgba(0,122,255,.1);  color: var(--tint-blue); }
+.badge.drink  { background: rgba(175,82,222,.1); color: var(--tint-purple); }
+
+/* Budget */
+.budget { display: inline-block; margin-top: 6px; padding: 3px 10px; background: var(--bg-grouped); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+/* Payment */
+.pays { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.pay { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+.pay.ok  { background: rgba(52,199,89,.1);  color: var(--tint-green); }
+.pay.no  { background: rgba(255,59,48,.08); color: var(--tint-red); }
+.pay.idk { background: rgba(255,149,0,.1);  color: var(--tint-orange); }
+
+/* Links row */
+.links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+  text-decoration: none !important; transition: filter .2s;
+}
+.btn:active { filter: brightness(.9); }
+.btn.nav    { background: var(--accent); color: #fff; }
+.btn.xhs    { background: #ff2442; color: #fff; }
+.btn.dp     { background: #ffa700; color: #fff; }
+.btn.rsv    { background: var(--tint-green); color: #fff; }
+
+/* Action Sheet */
+.as-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.35); backdrop-filter: blur(2px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.as-overlay.show { opacity: 1; pointer-events: auto; }
+.as-sheet {
+  width: 100%; max-width: 420px;
+  padding: 0 8px 34px;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.as-overlay.show .as-sheet { transform: translateY(0); }
+.as-group {
+  background: rgba(255,255,255,.88); backdrop-filter: blur(20px);
+  border-radius: 14px; overflow: hidden; margin-bottom: 8px;
+}
+.as-group .as-item {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px; font-size: 18px; color: #007aff; font-weight: 500;
+  border: none; background: none; width: 100%; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.as-group .as-item + .as-item { border-top: .5px solid rgba(0,0,0,.12); }
+.as-group .as-item:active { background: rgba(0,0,0,.06); }
+.as-cancel { font-weight: 600; }
+
+/* Details — default open */
+.details {
+  margin-top: 10px; padding-top: 10px;
+  border-top: .5px solid var(--separator);
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+}
+.details.closed { display: none; }
+
+/* ── Overview day list ── */
+.day-list .card { margin-bottom: 8px; }
+.day-list .card .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+
+/* ── Payment summary ── */
+.pay-summary { background: var(--bg-elevated); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
+.pay-summary h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.pay-summary .warn { color: var(--tint-red); }
+.pay-summary .ok-text { color: var(--tint-green); }
+
+/* ── Legend ── */
+.legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 0; font-size: 12px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── Leaflet overrides ── */
+.leaflet-popup-content-wrapper { border-radius: var(--radius-md) !important; box-shadow: var(--shadow-lg) !important; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important; }
+.leaflet-popup-content { font-size: 14px !important; line-height: 1.5 !important; margin: 12px 14px !important; }
+.leaflet-popup-content a { color: var(--accent) !important; }
+.leaflet-popup-tip { background: #fff !important; }
+.leaflet-control-zoom a { width: 34px !important; height: 34px !important; line-height: 34px !important; font-size: 16px !important; border-radius: 10px !important; background: rgba(255,255,255,.85) !important; -webkit-backdrop-filter: blur(10px) !important; backdrop-filter: blur(10px) !important; border: .5px solid var(--separator) !important; color: var(--text-primary) !important; }
+.leaflet-control-zoom { border-radius: 12px !important; overflow: hidden; box-shadow: var(--shadow-md) !important; border: none !important; }
+.leaflet-control-attribution { font-size: 9px !important; opacity: .5; }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div class="tabs" id="tabs"></div>
+<div class="content" id="content"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  REPLACE THIS SECTION — Hotel and Days data                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const HOTEL = { name: '喀什古城住宿区域', lat: 39.4704, lng: 75.9898 };
+
+const LEGACY_DAYS = [
+  { id: 0, label: '总览', color: '#0071e3', locations: [] },
+  { id: 1, label: '10/2 喀什', date: '10月2日 · 抵达日 · 约20–40 km', title: '落地、取车、只逛古城', color: '#ff9500', locations: [
+    { name:'喀什徕宁国际机场', lat:39.5437, lng:76.0200, type:'transport', time:'按航班', desc:'落地后取 MPV；确认配备两张合规儿童安全座椅。', detail:'第一天不排刚性景点。机场到古城通常约30分钟，国庆假期给取车和堵车多留时间。', dianping:false, gmap:'喀什徕宁国际机场' },
+    { name:'喀什古城西区', lat:39.4704, lng:75.9858, type:'spot', time:'17:00', desc:'轻松适应：老茶馆、街巷、手工艺，不追着打卡。', detail:'喀什约1290米，通常不属于高海拔；孩子落地当天仍应多喝水、早休息。', xhsKeyword:'喀什古城 亲子 避坑', dianping:false, gmap:'喀什古城' },
+    { name:'汗巴扎夜市', lat:39.4689, lng:75.9922, type:'food', time:'19:00', desc:'第一顿吃烤肉、抓饭、烤包子；少量多样，孩子先选清淡熟食。', budget:'全家 ¥250–450', detail:'节日人多，不把某一家名店当锚点；看哪家翻台快、食材现做就近吃。', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'喀什汗巴扎夜市 美食 亲子', dianpingKeyword:'喀什汗巴扎夜市' }
+  ]},
+  { id: 2, label: '10/3 喀什', date: '10月3日 · 城内人文日 · 约25 km', title: '古城、清真寺与博物馆', color: '#ff3b30', locations: [
+    { name:'喀什古城东门', lat:39.4742, lng:75.9960, type:'spot', time:'09:30', desc:'早到避开人流，是否有开城仪式以当天官方公告为准。', detail:'演出时间可能季节调整；不要让孩子在人群最密处久站。', xhsKeyword:'喀什古城东门 开城仪式 2026', dianping:false },
+    { name:'艾提尕尔清真寺', lat:39.4701, lng:75.9855, type:'spot', time:'11:00', desc:'理解喀什宗教与城市历史；尊重礼拜秩序和着装要求。', detail:'若遇礼拜或临时管控，从广场外观即可，不强行进入。', xhsKeyword:'艾提尕尔清真寺 游览 注意事项', dianping:false },
+    { name:'百年老茶馆', lat:39.4747, lng:75.9888, type:'drink', time:'12:00', desc:'看当地日常生活，短坐听乐、喝茶，孩子吃点馕。', budget:'全家 ¥80–150', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'喀什百年老茶馆 值不值得', dianpingKeyword:'喀什百年老茶馆' },
+    { name:'喀什市博物馆', lat:39.4935, lng:75.9896, type:'spot', time:'15:00', desc:'室内补足丝路、民族与城市史，兼作大风或降温备选。', detail:'提前在官方渠道核对国庆开放和预约规则；5岁孩子控制在1.5小时内。', xhsKeyword:'喀什市博物馆 亲子', dianping:false },
+    { name:'喀什古城夜景', lat:39.4714, lng:75.9910, type:'spot', time:'19:30', desc:'回古城随走随吃，20:30前收队，让孩子保证睡眠。', xhsKeyword:'喀什古城 夜景 美食 不踩雷', dianping:false }
+  ]},
+  { id: 3, label: '10/4 莎车', date: '10月4日 · 喀什→莎车 · 约200 km / 3小时', title: '沿绿洲南下，进入叶尔羌历史', color: '#34c759', locations: [
+    { name:'喀什古城住宿区域', lat:39.4704, lng:75.9898, type:'hotel', time:'09:30', desc:'早餐后出发，避开早高峰；每90分钟安排一次休息。', dianping:false },
+    { name:'莎车老城', lat:38.4142, lng:77.2406, type:'spot', time:'14:30', desc:'慢逛街巷、巴扎与手工作坊，比赶多个县城更适合孩子。', xhsKeyword:'莎车老城 亲子 美食', dianping:false },
+    { name:'叶尔羌汗国王陵', lat:38.4125, lng:77.2452, type:'spot', time:'16:00', desc:'了解叶尔羌汗国、阿曼尼莎汗与十二木卡姆。', detail:'当天表演与开放时间务必以景区公告为准；不围绕演出卡死路线。', xhsKeyword:'叶尔羌汗国王陵 十二木卡姆 表演时间', dianping:false },
+    { name:'莎车老城美食街', lat:38.4160, lng:77.2430, type:'food', time:'18:30', desc:'烤肉、鸽子汤、缸子肉、酸奶粽子，孩子优先清汤与主食。', budget:'全家 ¥250–400', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'莎车老城 美食 本地人', dianpingKeyword:'莎车老城美食' }
+  ]},
+  { id: 4, label: '10/5 和田', date: '10月5日 · 莎车→和田 · 约330 km / 5小时', title: '中段转场，下午只做轻活动', color: '#5856d6', locations: [
+    { name:'莎车县', lat:38.4142, lng:77.2406, type:'transport', time:'09:00', desc:'加满油后出发；儿童每90分钟下车活动10–15分钟。', dianping:false },
+    { name:'叶城零公里', lat:37.8845, lng:77.4130, type:'spot', time:'11:00', desc:'仅作休息与G219起点纪念，不驶入新藏线高海拔段。', detail:'这里是路线边界：继续向昆仑山区会快速升高，不适合本次5岁儿童行程。', xhsKeyword:'叶城零公里 G219 打卡', dianping:false },
+    { name:'和田团城', lat:37.1128, lng:79.9277, type:'spot', time:'16:00', desc:'到店休息后再逛传统街区，控制步行量。', xhsKeyword:'和田团城 亲子 美食', dianping:false },
+    { name:'和田夜市', lat:37.1133, lng:79.9196, type:'food', time:'18:30', desc:'烤蛋、胡辣羊蹄、鸽子汤等分着尝；避开生冷和过辣。', budget:'全家 ¥300–500', detail:'国庆高峰先找座位再分头购买；只买滚烫现制、明码标价的食物。', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'和田夜市 必吃 避坑 亲子', dianpingKeyword:'和田夜市' }
+  ]},
+  { id: 5, label: '10/6 和田', date: '10月6日 · 人文美食日 · 约30 km', title: '博物馆、团城与本地市场', color: '#af52de', locations: [
+    { name:'和田地区博物馆', lat:37.1140, lng:79.9054, type:'spot', time:'10:00', desc:'系统看尼雅、于阗与丝路历史，避开正午日晒。', detail:'提前核对国庆开放、预约和证件要求；给孩子设置“找三件宝物”的小游戏。', xhsKeyword:'和田地区博物馆 预约 镇馆之宝', dianping:false },
+    { name:'和田团城', lat:37.1128, lng:79.9277, type:'spot', time:'14:30', desc:'看民居、木作与艾德莱斯元素，安排午后慢游。', xhsKeyword:'和田团城 拍照 路线', dianping:false },
+    { name:'和田老城鸽子汤', lat:37.1150, lng:79.9260, type:'food', time:'17:30', desc:'用清汤、烤包子和抓饭做稳妥晚餐，不必追单一网红店。', budget:'全家 ¥220–380', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'和田 鸽子汤 本地人推荐', dianpingKeyword:'和田鸽子汤' }
+  ]},
+  { id: 6, label: '10/7 和田', date: '10月7日 · 手艺与沙漠风景 · 约100 km', title: '艾德莱斯、玉龙喀什河与沙漠边缘', color: '#00a6a6', locations: [
+    { name:'吉亚丽人艾特莱斯绸厂', lat:37.0578, lng:80.0470, type:'spot', time:'10:00', desc:'看艾德莱斯绸制作，适合孩子理解染色和织造。', detail:'以实际开放为准；若商业化体验不佳，缩短到45分钟。', xhsKeyword:'和田吉亚 艾德莱斯绸厂 体验', dianping:false },
+    { name:'玉龙喀什河', lat:37.1095, lng:79.9840, type:'spot', time:'13:30', desc:'只在安全河滩短停，体验“找石头”，不下深水、不购买来路不明玉石。', detail:'河床石头不等于和田玉；孩子须始终在成人一臂范围内。风大时直接取消。', xhsKeyword:'玉龙喀什河 捡玉 亲子 注意', dianping:false },
+    { name:'和田沙漠观景区', lat:37.0020, lng:79.8700, type:'spot', time:'16:00', desc:'选择城市近郊正规景区看日落，不深入无人沙漠。', detail:'以当天风力、景区营业和道路条件为准；沙尘大或孩子疲劳就取消。', xhsKeyword:'和田 沙漠 日落 亲子 景区', dianping:false },
+    { name:'和田夜市', lat:37.1133, lng:79.9196, type:'food', time:'19:00', desc:'第二次只补第一晚没吃到的品类，避免暴饮暴食。', budget:'全家 ¥250–400', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'和田夜市 必吃 清单', dianpingKeyword:'和田夜市' }
+  ]},
+  { id: 7, label: '10/8 莎车', date: '10月8日 · 和田→莎车 · 约330 km / 5小时', title: '拆分回程，给孩子留足休息', color: '#ff2d55', locations: [
+    { name:'和田市', lat:37.1120, lng:79.9220, type:'transport', time:'09:30', desc:'不硬开500公里直达喀什；分两天走，避免成人疲劳驾驶和孩子久坐。', dianping:false },
+    { name:'莎车非遗博览园', lat:38.4200, lng:77.2550, type:'spot', time:'16:00', desc:'若到达早且孩子状态好，再看木卡姆或非遗展示。', detail:'这一天的唯一目标是安全到达；该点可以无条件放弃。', xhsKeyword:'莎车非遗博览园 木卡姆', dianping:false },
+    { name:'莎车鸽子汤', lat:38.4165, lng:77.2420, type:'food', time:'18:00', desc:'选住宿附近本地馆，热汤和主食优先。', budget:'全家 ¥220–350', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'莎车 鸽子汤 本地人', dianpingKeyword:'莎车鸽子汤' }
+  ]},
+  { id: 8, label: '10/9 喀什', date: '10月9日 · 莎车→喀什 · 约200 km / 3小时', title: '回到喀什，补买不补景点', color: '#007aff', locations: [
+    { name:'莎车县', lat:38.4142, lng:77.2406, type:'transport', time:'09:30', desc:'午后回喀什，留出还车前检查和行李整理时间。', dianping:false },
+    { name:'喀什古城手工艺街', lat:39.4720, lng:75.9900, type:'spot', time:'15:00', desc:'补看铜器、木器、土陶；只买可解释来源和价格的商品。', xhsKeyword:'喀什古城 手工艺 伴手礼 避坑', dianping:false },
+    { name:'喀什古城餐饮区', lat:39.4708, lng:75.9888, type:'food', time:'18:00', desc:'最后一晚选全家最喜欢的品类复吃，拒绝长队。', budget:'全家 ¥280–450', pay:{alipay:1,wechat:1,cash:1}, xhsKeyword:'喀什古城 美食 本地人 推荐', dianpingKeyword:'喀什古城美食' }
+  ]},
+  { id: 9, label: '10/10 返程', date: '10月10日 · 返程日 · 约20 km', title: '按航班倒排，还车离开', color: '#8e8e93', locations: [
+    { name:'喀什古城住宿区域', lat:39.4704, lng:75.9898, type:'hotel', time:'按航班-4h', desc:'早餐、退房、检查证件和儿童用品；不安排远距离景点。', dianping:false },
+    { name:'喀什徕宁国际机场', lat:39.5437, lng:76.0200, type:'transport', time:'航班前3h', desc:'国庆尾声预留加油、验车、行李托运和安检时间。', detail:'若是早班机，前一晚加满油并确认还车点；最终时间需等航班信息后细化。', dianping:false, gmap:'喀什徕宁国际机场' }
+  ]}
+];
+
+// 2026-08 revision: Pamir branch requested by the traveler.
+// Keep the previous low-altitude southern loop above as a fallback reference;
+// the active map below is intentionally a flexible, high-altitude-aware plan.
+const DAYS = [
+  { id: 0, label: '总览', color: '#0071e3', locations: [] },
+  { id: 1, label: '10/2 喀什', date: '10月2日 · 抵达日 · 约20–40 km', title: '落地取车，古城轻逛', drive:'机场→古城约30分钟；市内约20分钟', color: '#ff9500', locations: [
+    {name:'喀什徕宁国际机场',lat:39.5437,lng:76.0200,type:'transport',time:'按航班',desc:'取7座MPV，确认两张儿童安全座椅；不安排远郊。',detail:'航班时间未知，第一天只按落地状态安排古城西区。',gmap:'喀什徕宁国际机场',dianping:false},
+    {name:'喀什古城西区',lat:39.4704,lng:75.9858,type:'spot',time:'17:00',desc:'街巷、老茶馆、手工艺；让孩子早睡。',detail:'喀什约1290米，作为后面进山前的低海拔适应日。',xhsKeyword:'喀什古城 亲子 避坑',dianping:false,gmap:'喀什古城'},
+    {name:'汗巴扎夜市',lat:39.4689,lng:75.9922,type:'food',time:'19:00',desc:'烤肉、抓饭、烤包子少量多样；儿童先吃热汤和主食。',budget:'全家 ¥250–450',xhsKeyword:'喀什汗巴扎夜市 美食 亲子',dianpingKeyword:'喀什汗巴扎夜市',pay:{alipay:1,wechat:1,cash:1}}
+  ]},
+  { id: 2, label: '10/3 喀什', date: '10月3日 · 城内人文适应日 · 约25 km', title: '古城、清真寺与博物馆', drive:'喀什市内累计约30–45分钟', color: '#ff3b30', locations: [
+    {name:'喀什古城东门',lat:39.4742,lng:75.9960,type:'spot',time:'09:30',desc:'早到避开人流；开城仪式以当天公告为准。',xhsKeyword:'喀什古城东门 开城仪式 亲子',dianping:false},
+    {name:'艾提尕尔清真寺',lat:39.4701,lng:75.9855,type:'spot',time:'11:00',desc:'看城市宗教与历史，尊重礼拜秩序和着装。',xhsKeyword:'艾提尕尔清真寺 游览 注意事项',dianping:false},
+    {name:'喀什市博物馆',lat:39.4935,lng:75.9896,type:'spot',time:'15:00',desc:'室内补足丝路史，也作为风沙天气备选。',detail:'5岁儿童控制在1–1.5小时；提前核对国庆预约。',xhsKeyword:'喀什市博物馆 亲子',dianping:false},
+    {name:'喀什古城餐饮区',lat:39.4708,lng:75.9888,type:'food',time:'18:30',desc:'今晚不排队，吃饱并把水、零食、保暖层装车。',budget:'全家 ¥250–450',xhsKeyword:'喀什古城 美食 本地人 推荐',dianpingKeyword:'喀什古城美食',pay:{alipay:1,wechat:1,cash:1}}
+  ]},
+  { id: 3, label: '10/4 莎车', date: '10月4日 · 喀什→莎车 · 约200 km / 3小时', title: '莎车老城与叶尔羌历史', drive:'喀什→莎车约3小时；莎车市内约20分钟', color: '#34c759', locations: [
+    {name:'喀什古城住宿区域',lat:39.4704,lng:75.9898,type:'hotel',time:'09:00',desc:'早餐后南下莎车；每90分钟让孩子下车活动。',dianping:false},
+    {name:'莎车老城',lat:38.4142,lng:77.2406,type:'spot',time:'13:30',desc:'慢逛街巷、巴扎和手工作坊，下午不再赶其他县城。',xhsKeyword:'莎车老城 亲子 美食',dianping:false},
+    {name:'叶尔羌汗国王陵',lat:38.4125,lng:77.2452,type:'spot',time:'15:30',desc:'了解叶尔羌汗国、阿曼尼莎汗与十二木卡姆。',detail:'演出和开放时间以国庆当天公告为准，不围绕表演卡死路线。',xhsKeyword:'叶尔羌汗国王陵 十二木卡姆 表演时间',dianping:false},
+    {name:'莎车老城美食街',lat:38.4160,lng:77.2430,type:'food',time:'18:00',desc:'鸽子汤、缸子肉、烤肉和酸奶粽子；孩子优先热汤与主食。',budget:'全家 ¥250–400',xhsKeyword:'莎车老城 美食 本地人',dianpingKeyword:'莎车老城美食',pay:{alipay:1,wechat:1,cash:1}},
+    {name:'木吉火山替代支线',lat:39.0015,lng:74.5006,type:'spot',time:'—',desc:'木吉和莎车方向相反，只能二选一；若去木吉，就删除莎车，并留一天低处恢复。',detail:'木吉火山口群约3400–3500米；须提前确认当期通行、报备、道路和儿童是否适合进入。',xhsKeyword:'木吉火山 卡日铁米尔 亲子 路况',dianping:false}
+  ]},
+  { id: 4, label: '10/5 莎车', date: '10月5日 · 莎车完整一日 · 约20–40 km', title: '叶尔羌人文深度日', drive:'莎车市内累计约30–45分钟', color: '#007aff', locations: [
+    {name:'莎车老城早餐区',lat:38.4142,lng:77.2406,type:'food',time:'09:00',desc:'不早起赶路，先在住宿附近吃热食。',budget:'全家 ¥100–180',xhsKeyword:'莎车早餐 本地人',dianpingKeyword:'莎车早餐',pay:{alipay:1,wechat:1,cash:1}},
+    {name:'莎车老城与巴扎',lat:38.4142,lng:77.2406,type:'spot',time:'10:00',desc:'补足街巷、手工艺、巴扎和本地生活观察。',xhsKeyword:'莎车老城 巴扎 亲子',dianping:false},
+    {name:'叶尔羌汗国王陵',lat:38.4125,lng:77.2452,type:'spot',time:'14:30',desc:'重点理解叶尔羌汗国、阿曼尼莎汗与十二木卡姆。',detail:'演出和开放时间以国庆当天公告为准；如果孩子疲劳，只保留王陵或老城其中一个。',xhsKeyword:'叶尔羌汗国王陵 十二木卡姆',dianping:false},
+    {name:'莎车老城美食街',lat:38.4160,lng:77.2430,type:'food',time:'18:00',desc:'鸽子汤、缸子肉、烤肉和酸奶粽子；孩子优先热汤与主食。',budget:'全家 ¥250–400',xhsKeyword:'莎车老城 美食 本地人',dianpingKeyword:'莎车老城美食',pay:{alipay:1,wechat:1,cash:1}}
+  ]},
+  { id: 5, label: '10/6 喀什', date: '10月6日 · 莎车→喀什 · 约200 km / 3小时', title: '回到进山起点，休整半天', drive:'莎车→喀什约3小时', color: '#5856d6', locations: [
+    {name:'莎车县',lat:38.4142,lng:77.2406,type:'transport',time:'09:00',desc:'早餐后返回喀什，不从莎车直接硬切塔县。',dianping:false},
+    {name:'喀什古城住宿区域',lat:39.4704,lng:75.9898,type:'hotel',time:'13:00',desc:'喀什第3晚：下午只休息、补水和整理进山物资。',detail:'检查轮胎、油量、儿童安全座椅、证件、保暖层和车载热食；今晚不熬夜。',dianping:false},
+    {name:'喀什古城餐饮区',lat:39.4708,lng:75.9888,type:'food',time:'18:00',desc:'吃清淡热食，拒绝长队，为次日早起留体力。',budget:'全家 ¥250–400',xhsKeyword:'喀什古城 美食 亲子',dianpingKeyword:'喀什古城美食',pay:{alipay:1,wechat:1,cash:1}}
+  ]},
+  { id: 6, label: '10/7 塔县', date: '10月7日 · 喀什→白沙湖→喀拉库勒湖→塔县 · 约300 km', title: '帕米尔核心景观 · 塔县第1晚', drive:'纯驾驶约6–7小时；含观景与休息约10小时', color: '#af52de', locations: [
+    {name:'喀什出发',lat:39.4704,lng:75.9898,type:'transport',time:'07:30',desc:'进山前买足水、热食和儿童零食；驾驶员轮换。',dianping:false},
+    {name:'白沙湖/布伦口水库',lat:38.7203,lng:74.9863,type:'spot',time:'11:30',desc:'短停看雪山、沙丘与湖面，只在观景台活动。',detail:'约3300米上下；开放点位和交通以当天景区公告为准。',xhsKeyword:'白沙湖 喀什 帕米尔 亲子',dianping:false},
+    {name:'喀拉库勒湖',lat:38.4453,lng:75.0563,type:'spot',time:'13:30',desc:'远眺慕士塔格峰，不登山、不沿湖长距离行走。',detail:'湖区约3600米；控制停留在30–45分钟，持续观察孩子状态。',xhsKeyword:'喀拉库勒湖 慕士塔格峰 亲子 高反',dianping:false},
+    {name:'慕士塔格峰观景点',lat:38.2761,lng:75.1159,type:'spot',time:'14:30',desc:'只在公路观景点看峰，不加入冰川或登山活动。',xhsKeyword:'慕士塔格峰 观景点 自驾',dianping:false},
+    {name:'塔什库尔干县城',lat:37.7708,lng:75.2281,type:'hotel',time:'18:00',desc:'塔县第1晚：入住后不再外出，清淡晚餐、补水、早睡。',detail:'县城约3100米；第一晚不饮酒、不剧烈活动。任何明显不适都优先下撤。',dianping:false}
+  ]},
+  { id: 7, label: '10/8 塔县', date: '10月8日 · 塔县完整1天 · 约20–180 km', title: '石头城主线 · 班迪尔/盘龙二选一 · 第2晚', drive:'石头城主线约30分钟；班迪尔/盘龙支线约3–5小时', color: '#ff2d55', locations: [
+    {name:'塔什库尔干石头城/金草滩',lat:37.7720,lng:75.2230,type:'spot',time:'09:30',desc:'主线只走石头城和金草滩短线，保留人文历史内容。',detail:'前一晚若有头痛、呕吐、明显乏力或睡眠异常，今天不跑支线，直接下撤。',xhsKeyword:'塔县石头城 金草滩 亲子',dianping:false},
+    {name:'班迪尔蓝湖',lat:37.8379,lng:75.4218,type:'spot',time:'—',desc:'优先备选：道路、天气和孩子状态都好才去。',detail:'约3000米上下；与盘龙古道二选一，不要一天全塞。',xhsKeyword:'班迪尔蓝湖 10月 路况 亲子',dianping:false},
+    {name:'盘龙古道入口',lat:37.6287,lng:75.4542,type:'spot',time:'—',desc:'低优先级备选：10月存在因降雪、结冰或交通管控封闭的可能。',detail:'出发当天先查塔县官方交通/景区通知；封闭就不绕行、不闯卡，改留塔县或选班迪尔。即使开放，最高点接近4000米，孩子状态不好也取消。',xhsKeyword:'盘龙古道 10月 封路 路况',dianping:false},
+    {name:'塔什库尔干县城',lat:37.7708,lng:75.2281,type:'hotel',time:'17:30',desc:'塔县第2晚：早回县城休息，准备次日下撤。',dianping:false},
+    {name:'塔县县城晚餐',lat:37.7708,lng:75.2281,type:'food',time:'18:00',desc:'清淡热食，避免酒精；确认次日油量与返程天气。',budget:'全家 ¥250–450',xhsKeyword:'塔县 美食 亲子',dianpingKeyword:'塔什库尔干美食',pay:{alipay:1,wechat:1,cash:1}}
+  ]},
+  { id: 8, label: '10/9 喀什', date: '10月9日 · 塔县→喀什 · 约300 km / 6小时', title: '下撤回低海拔，喀什第4晚', drive:'塔县→喀什纯驾驶约6小时；含休息约7–8小时', color: '#34c759', locations: [
+    {name:'塔什库尔干县城',lat:37.7708,lng:75.2281,type:'transport',time:'08:00',desc:'不在高原继续加点，沿G314下撤；每90分钟休息。',dianping:false},
+    {name:'喀什古城住宿区域',lat:39.4704,lng:75.9898,type:'hotel',time:'16:00',desc:'回到约1290米，洗澡、吃热饭、早睡。',detail:'这是喀什第4晚；不再安排远郊，让孩子为返程恢复体力。',dianping:false},
+    {name:'喀什古城餐饮区',lat:39.4708,lng:75.9888,type:'food',time:'18:30',desc:'恢复后再吃本地菜，儿童继续避免生冷和过辣。',budget:'全家 ¥250–450',xhsKeyword:'喀什古城 美食 亲子',dianpingKeyword:'喀什古城美食',pay:{alipay:1,wechat:1,cash:1}}
+  ]},
+  { id: 9, label: '10/10 返程', date: '10月10日 · 返程日 · 约20 km', title: '还车离开', drive:'古城→机场约30分钟；另留加油还车时间', color: '#8e8e93', locations: [
+    {name:'喀什古城住宿区域',lat:39.4704,lng:75.9898,type:'hotel',time:'按航班-4h',desc:'早餐、退房、检查证件和儿童用品，不安排远郊。',dianping:false},
+    {name:'喀什徕宁国际机场',lat:39.5437,lng:76.0200,type:'transport',time:'航班前3h',desc:'预留加油、验车、托运和国庆安检时间。',detail:'航班时间确定后，再反推前一晚是否需要提前还车。',gmap:'喀什徕宁国际机场',dianping:false}
+  ]}
+];
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  REPLACE THIS SECTION — Overview tab content                ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+function overviewContent() {
+  return `
+<div class="hero"><h1>南疆亲子 · 方案 B</h1><p class="subtitle">喀什2晚 → 莎车2晚 → 喀什1晚 → 塔县2晚 → 喀什1晚</p></div>
+<div class="info-grid">
+  <div class="info-card"><div class="label">同行</div><div class="value">4位大人 + 2位5岁儿童</div></div>
+  <div class="info-card"><div class="label">车辆</div><div class="value">7座MPV + 2张安全座椅</div></div>
+  <div class="info-card"><div class="label">里程</div><div class="value">约1,100–1,400 km · 视支线取舍</div></div>
+  <div class="info-card"><div class="label">住宿</div><div class="value">喀什4晚 / 莎车2晚 / 塔县2晚</div></div>
+</div>
+<div class="pay-summary"><h4>为什么这样排序</h4>先在喀什适应，再去低海拔莎车；返回喀什休息一晚后才进帕米尔。莎车和塔县不直连，避免把长途转场与快速升高叠在同一天。塔县严格3天2晚，10月9日下撤到喀什，10月10日返程。</div>
+<div class="pay-summary"><h4>儿童高海拔红线</h4>喀拉库勒湖约3600米、塔县约3100米、木吉火山约3400–3500米、盘龙古道高点接近4000米。孩子不会准确描述头痛；持续哭闹、精神差、拒食、呕吐、步态异常、嗜睡、静息呼吸困难或口唇发紫，都应视为危险信号：停止上升、立即下撤并就医。不要自行给5岁儿童服用成人高反药。</div>
+<div class="pay-summary"><h4>地图线说明</h4>总览地图上的彩色线按每天点位顺序连接，是行程与驾驶方向示意，不是实时道路轨迹；实际导航以当天高德/路况为准。每天卡片顶部会显示纯驾驶时间与含休息的建议时长。</div>
+<div class="pay-summary"><h4>尚待补齐</h4>往返航班时间、酒店、MPV取还车点未提供；当前以10月2日下午抵达、10月10日白天离开作参考，获得订单后应重新倒排D1/D9。</div>
+<div class="section-head">行程概览</div>
+<div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div><div class="desc">🚗 ${d.drive||'按当天路况机动'}</div></div>`).join('')}</div>
+<div class="section-head">出发前确认</div>
+<div class="pay-summary"><h4>必须提前做</h4>所有人身份证件与边境通行材料、木吉当期通行/报备、盘龙古道交通管控、塔县住宿、两张儿童安全座椅、驾驶员轮换。南疆昼夜温差大，带防晒、润唇、保暖层、饮水和儿童常用药；是否携氧与用药请提前咨询儿科/旅行医学医生。</div>
+<div class="pay-summary"><h4>用餐和支付</h4>夜市少量多样、只吃滚烫现制；儿童避开生冷和过辣。城镇移动支付普遍可用，但小店和路上仍备少量现金。</div>
+<div class="section-head">图例</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-red)"></div>餐厅</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-blue)"></div>景点</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-purple)"></div>茶饮</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--tint-orange)"></div>酒店</div>
+</div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ENGINE — Do not modify below unless customizing behavior   ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const map = L.map('map', { center: [HOTEL.lat || 39.47, HOTEL.lng || 75.99], zoom: 12, zoomControl: false, attributionControl: true });
+L.control.zoom({ position: 'topright' }).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+
+/* ── Geolocation ── */
+const LocateControl = L.Control.extend({
+  options: { position: 'bottomright' },
+  onAdd() {
+    const btn = L.DomUtil.create('button', 'locate-btn');
+    btn.innerHTML = '📍';
+    btn.title = '我的位置';
+    L.DomEvent.disableClickPropagation(btn);
+    btn.addEventListener('click', () => {
+      btn.classList.add('active');
+      map.locate({ setView: true, maxZoom: 15 });
+    });
+    this._btn = btn;
+    return btn;
+  }
+});
+new LocateControl().addTo(map);
+let locMarker, locCircle;
+map.on('locationfound', e => {
+  const r = e.accuracy / 2;
+  if (locMarker) { locMarker.setLatLng(e.latlng); locCircle.setLatLng(e.latlng).setRadius(r); }
+  else {
+    locMarker = L.marker(e.latlng, {
+      icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#007aff;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,122,255,.5)"></div><div class="loc-pulse" style="position:absolute;top:0;left:0"></div>', iconSize:[14,14], iconAnchor:[7,7] }),
+      zIndexOffset: 2000
+    }).addTo(map);
+    locCircle = L.circle(e.latlng, { radius: r, color: '#007aff', fillColor: '#007aff', fillOpacity: .08, weight: 1 }).addTo(map);
+  }
+});
+map.on('locationerror', () => {});
+
+function icon(color, emoji) {
+  return L.divIcon({ className: '', html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.18)">${emoji||''}</div>`, iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-16] });
+}
+
+if (HOTEL.lat) L.marker([HOTEL.lat, HOTEL.lng], { icon: icon('#ff9500','🏨'), zIndexOffset: 1000 }).addTo(map).bindPopup(`<b>${HOTEL.name}</b>`);
+
+let markers = [], polylines = [];
+const emojis = { food:'🍽️', spot:'📍', hotel:'🏨', transport:'🚃', drink:'🍺' };
+
+function clearMap() { markers.forEach(m=>map.removeLayer(m)); polylines.forEach(p=>map.removeLayer(p)); markers=[]; polylines=[]; }
+
+function showDay(idx) {
+  clearMap();
+  if (idx === 0) {
+    const pts = [];
+    DAYS.forEach(d => d.locations.forEach(l => { if(l.lat) pts.push([l.lat,l.lng]); }));
+    if(pts.length) map.fitBounds(pts, {padding:[30,30]});
+    DAYS.slice(1).forEach(d => {
+      const routePts = d.locations.filter(l=>l.time!=='—' && l.lat).map(l => [l.lat,l.lng]);
+      if(routePts.length > 1) {
+        const route = L.polyline(routePts, { color:d.color, weight:3, opacity:.72, dashArray:'8,6' }).addTo(map);
+        route.bindPopup(`<b>${d.label} · ${d.title}</b><br>🚗 ${d.drive||'按当天路况机动'}<br><span style="color:#86868b">路线为示意线，点击日期查看详细卡片</span>`);
+        polylines.push(route);
+      }
+      d.locations.filter(l=>l.time!=='—' && l.lat).forEach(l => {
+        const m = L.circleMarker([l.lat,l.lng], { radius:5, fillColor:d.color, color:'#fff', weight:1.5, fillOpacity:.95 }).addTo(map).bindPopup(`<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${d.title}</span><br>🚗 ${d.drive||'按当天路况机动'}`);
+        markers.push(m);
+      });
+    });
+    return;
+  }
+  const day = DAYS.find(d=>d.id===idx);
+  if(!day) return;
+  const coords = [];
+  day.locations.forEach(l => {
+    if(!l.lat) return;
+    const m = L.marker([l.lat,l.lng], { icon: icon(day.color, emojis[l.type]||'📌') }).addTo(map);
+    const gmapQ = l.gmap||encodeURIComponent(l.name+' 新疆');
+    m.bindPopup(`<b>${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><a href="#" onclick="event.preventDefault();openAS('${l.name.replace(/'/g,"\\'")}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</a>${l.xhs?' · <a href="'+l.xhs+'" target="_blank">📕 小红书</a>':''}`);
+    markers.push(m);
+    if(l.time!=='—') coords.push([l.lat,l.lng]);
+  });
+  if(coords.length>1) {
+    const pl = L.polyline(coords, { color:day.color, weight:3, opacity:.72, dashArray:'8,6' }).addTo(map);
+    pl.bindPopup(`<b>${day.label} · ${day.title}</b><br>🚗 ${day.drive||'按当天路况机动'}<br><span style="color:#86868b">行程顺序示意，实际路线以导航为准</span>`);
+    polylines.push(pl);
+  }
+  if(coords.length) map.fitBounds(coords, { padding:[40,40], maxZoom:14 });
+}
+
+// ══════════ RENDER ══════════
+function payChips(pay) {
+  if(!pay) return '';
+  let h = '<div class="pays">';
+  const m = { cash:'💴', card:'💳', suica:'Suica', paypay:'PayPay', alipay:'支付宝', wechat:'微信' };
+  for(const [k,label] of Object.entries(m)) {
+    if(pay[k]!==undefined) { const c = pay[k]===1?'ok':pay[k]===0.5?'idk':'no'; h += `<span class="pay ${c}">${label}</span>`; }
+  }
+  return h+'</div>';
+}
+
+// ── 运行环境检测：在第三方 App 的 WebView 里，自定义 scheme 基本会被拦截 ──
+const IN_APP_WEBVIEW = (() => {
+  const ua = (navigator.userAgent || '').toLowerCase();
+  return /micromessenger|xhs|xhsdiscover|discover\/|tiktok|aweme|weibo|qq\/|qqbrowser|alipayclient|dingtalk|lark|feishu|ucbrowser|baiduboxapp|toutiao|newsarticle/.test(ua);
+})();
+
+function xhsKeyword(loc) {
+  if(loc.xhsKeyword) return loc.xhsKeyword.trim();
+  return (loc.name||'').replace(/⭐.*$/g,'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();
+}
+function xhsAppUrl(loc) { return `xhsdiscover://search/result?keyword=${encodeURIComponent(xhsKeyword(loc))}&target_search=notes&source=deeplink`; }
+function xhsWebUrl(loc) { return `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(xhsKeyword(loc))}&source=web_explore_feed`; }
+
+function dpKeyword(loc) {
+  if(loc.dianpingKeyword) return loc.dianpingKeyword.trim();
+  return (loc.name||'').replace(/⭐.*$/g,'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();
+}
+function dpAppUrl(loc) { return `dianping://searchshoplist?keyword=${encodeURIComponent(dpKeyword(loc))}`; }
+function dpWebUrl(loc) { return `https://m.dianping.com/searchshop?keyword=${encodeURIComponent(dpKeyword(loc))}`; }
+
+window._extLocs = {};
+DAYS.forEach(d => d.locations.forEach(l => { window._extLocs[`${d.id}::${l.name}`] = l; }));
+window._xhsLocs = window._extLocs;
+
+function openExt(key, kind) {
+  const loc = window._extLocs[key]; if(!loc) return false;
+  if (IN_APP_WEBVIEW) {
+    window.location.href = kind==='dp' ? dpWebUrl(loc) : xhsWebUrl(loc);
+  } else {
+    window.location.href = kind==='dp' ? dpAppUrl(loc) : xhsAppUrl(loc);
+  }
+  return false;
+}
+function openXhs(key) { return openExt(key, 'xhs'); }
+function openDp(key)  { return openExt(key, 'dp'); }
+
+function locCard(loc, dayIdx) {
+  const dot = loc.type==='food'?'food':loc.type==='spot'?'spot':loc.type==='drink'?'drink':loc.type==='hotel'?'hotel':'transport';
+  const bdg = loc.type==='food'?'<span class="badge food">餐</span>':loc.type==='spot'?'<span class="badge spot">景</span>':loc.type==='drink'?'<span class="badge drink">饮</span>':'';
+  const uid = `d${dayIdx}-${loc.name.replace(/\W/g,'')}`;
+  const locKey = `${dayIdx}::${loc.name}`;
+  const gmapQ = loc.gmap||encodeURIComponent(loc.name+' 新疆');
+  let lnk = `<button class="btn nav" onclick="openAS('${loc.name.replace(/'/g,"\\'")}',${loc.lat},${loc.lng},'${gmapQ}')">📍 导航</button>`;
+  if(loc.xhs||loc.xhsKeyword) {
+    const xhsHref = IN_APP_WEBVIEW ? xhsWebUrl(loc) : xhsAppUrl(loc);
+    const xhsLabel = IN_APP_WEBVIEW ? '📕 小红书' : '📕 小红书 App';
+    lnk += `<a href="${xhsHref}" onclick="return openXhs('${locKey.replace(/'/g,"\\'")}')" class="btn xhs">${xhsLabel}</a>`;
+  }
+  const dpEnabled = loc.dianping !== false &&
+    (loc.dianping || loc.dianpingKeyword || loc.type==='food' || loc.type==='drink');
+  if(dpEnabled) {
+    const dpHref = IN_APP_WEBVIEW ? dpWebUrl(loc) : dpAppUrl(loc);
+    const dpLabel = IN_APP_WEBVIEW ? '🍜 大众点评' : '🍜 大众点评 App';
+    lnk += `<a href="${dpHref}" onclick="return openDp('${locKey.replace(/'/g,"\\'")}')" class="btn dp">${dpLabel}</a>`;
+  }
+  if(loc.reserve) lnk += `<a href="${loc.reserve}" target="_blank" class="btn rsv">📅 预约</a>`;
+  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name">${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
+}
+
+function renderDay(idx) {
+  const d = DAYS.find(x=>x.id===idx); if(!d) return '';
+  const main = d.locations.filter(l=>l.time!=='—');
+  const alt = d.locations.filter(l=>l.time==='—');
+  let h = `<div class="day-head"><h2>${d.title}</h2><p>${d.date}</p></div>`;
+  h += `<div class="route-bar"><strong>🚗 当天驾驶</strong>\n${d.drive||'按当天路况机动'}\n<span style="font-size:12px">地图折线为点位顺序示意，实际驾驶请使用导航。</span></div>`;
+  if(main.length) { h += '<div class="section-head">行程</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  if(alt.length) { h += '<div class="section-head">备选</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  return h;
+}
+
+// ══════════ NAV ══════════
+let cur = 0;
+const tabsEl = document.getElementById('tabs');
+const contentEl = document.getElementById('content');
+
+DAYS.forEach(d => {
+  const btn = document.createElement('button');
+  btn.className = 'tab' + (d.id===0?' active':'');
+  btn.dataset.day = d.id;
+  btn.textContent = d.label;
+  tabsEl.appendChild(btn);
+});
+
+function go(idx) {
+  cur = idx;
+  tabsEl.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.day===idx));
+  contentEl.innerHTML = idx===0 ? overviewContent() : renderDay(idx);
+  showDay(idx);
+  contentEl.scrollTo({top:0});
+  const tab = tabsEl.querySelector(`[data-day="${idx}"]`);
+  if(tab) tab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}
+
+function toggle(id) { const el=document.getElementById(id); if(el) el.classList.toggle('closed'); }
+
+tabsEl.addEventListener('click', e => { const t=e.target.closest('.tab'); if(t) go(+t.dataset.day); });
+
+go(0);
+
+/* ── Action Sheet for Navigation ── */
+const asOverlay = document.createElement('div');
+asOverlay.className = 'as-overlay';
+asOverlay.innerHTML = `<div class="as-sheet">
+  <div class="as-group" id="as-opts"></div>
+  <div class="as-group"><button class="as-item as-cancel" onclick="closeAS()">取消</button></div>
+</div>`;
+document.body.appendChild(asOverlay);
+asOverlay.addEventListener('click', e => { if (e.target === asOverlay) closeAS(); });
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+function amapAppUrl(name, lat, lng) {
+  const scheme = IS_IOS ? 'iosamap' : 'androidamap';
+  return `${scheme}://viewMap?sourceApplication=trip&poiname=${encodeURIComponent(name)}&lat=${lat}&lon=${lng}&dev=0`;
+}
+function amapWebUrl(name, lat, lng) {
+  return `https://uri.amap.com/marker?position=${lng},${lat}&name=${encodeURIComponent(name)}&src=trip&coordinate=wgs84&callnative=1`;
+}
+function openAmap(name, lat, lng) {
+  if (IN_APP_WEBVIEW) { window.open(amapWebUrl(name, lat, lng)); return; }
+  window.location.href = amapAppUrl(name, lat, lng);
+}
+
+function openAS(name, lat, lng, gmap) {
+  const q = gmap || encodeURIComponent(name + ' 新疆');
+  const encName = encodeURIComponent(name);
+  const safeName = name.replace(/'/g,"\\'");
+  // WebView 内 maps:// 通常被拦截，改用 https Apple Maps URL —— iOS 系统会自动拉起 Apple Maps
+  const appleUrl = IN_APP_WEBVIEW
+    ? `https://maps.apple.com/?q=${lat},${lng}&ll=${lat},${lng}&name=${encName}`
+    : `maps://maps.apple.com/?q=${lat},${lng}&name=${encName}`;
+  const googleUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  document.getElementById('as-opts').innerHTML =
+    `<button class="as-item" onclick="window.open('${appleUrl}');closeAS()">🍎 Apple Maps</button>` +
+    `<button class="as-item" onclick="window.open('${googleUrl}');closeAS()">🗺️ Google Maps</button>` +
+    `<button class="as-item" onclick="openAmap('${safeName}',${lat},${lng});closeAS()">🧭 高德地图 App</button>`;
+  asOverlay.classList.add('show');
+}
+function closeAS() { asOverlay.classList.remove('show'); }
+</script>
+</body>
+</html>
