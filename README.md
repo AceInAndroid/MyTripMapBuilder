@@ -6,7 +6,8 @@
 - 路线：喀什 → 塔县 → 莎车 → 和田 → 阿拉尔 → 库车/克孜尔 → 阿克苏
 - 同行：4 位大人、2 位 5 岁儿童
 - 地图：高德地图 JavaScript API 2.0
-- 在线地址：[my-trip-map-builder.vercel.app](https://my-trip-map-builder.vercel.app/)
+- 国内访问（CloudBase）：[mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com](https://mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com/)
+- 境外备用（Vercel）：[my-trip-map-builder.vercel.app](https://my-trip-map-builder.vercel.app/)
 
 ## 功能
 
@@ -29,6 +30,7 @@
 ├── index.html                       # Vercel 入口和完整源码
 ├── 南疆自驾9天完整版攻略.html        # 可直接发送给朋友的静态副本
 ├── 南疆自驾9天完整版攻略.zip         # 静态副本压缩包
+├── cloudbaserc.json                  # CloudBase 环境绑定（不含密钥）
 ├── README.md
 ├── assets/                          # 原始旅行地图模板资源
 └── references/                      # 行程研究方法与参考资料
@@ -193,6 +195,34 @@ Vercel 配置：
 git add .
 git commit -m "update trip map"
 git push origin main
+```
+
+## CloudBase 国内部署
+
+CloudBase 环境：`mytripmap-d3gxxk1psd0b28d72`（上海地域）。正式国内访问地址：
+
+```text
+https://mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com/
+```
+
+项目根目录的 `cloudbaserc.json` 只保存环境 ID，不包含 API Key。更新页面后使用 CloudBase CLI 发布：
+
+```bash
+tcb hosting deploy ./index.html /index.html \
+  --env-id mytripmap-d3gxxk1psd0b28d72
+```
+
+发布后验证：
+
+```bash
+tcb hosting list /index.html \
+  --env-id mytripmap-d3gxxk1psd0b28d72 --json
+```
+
+CloudBase API Key 只能保存在本机登录状态或 CI 密钥中，不得写入源码、README、`cloudbaserc.json` 或 GitHub。高德 Web JS API Key 的安全域名白名单还需加入：
+
+```text
+mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com
 ```
 
 ## 上线前检查
