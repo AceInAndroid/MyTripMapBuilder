@@ -93,6 +93,15 @@ a:hover { text-decoration: underline; }
 
 /* ── Main content ── */
 .content { max-width: 680px; margin: 0 auto; padding: 16px 16px calc(24px + var(--safe-bottom)); }
+.pdf-export {
+  position: fixed; right: 16px; bottom: calc(18px + var(--safe-bottom)); z-index: 500;
+  border: none; border-radius: 999px; padding: 11px 16px;
+  background: #1d1d1f; color: #fff; box-shadow: var(--shadow-lg);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pdf-export:active { transform: scale(.97); }
+.print-root { display: none; }
 
 /* ── Overview ── */
 .hero { text-align: center; padding: 28px 20px 20px; }
@@ -221,6 +230,32 @@ a:hover { text-decoration: underline; }
 .amap-info-content a { color: var(--accent); }
 .amap-info-close { top: 8px !important; right: 8px !important; }
 .amap-marker-label { border: none; background: transparent; padding: 0; }
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: #fff !important; color: #111 !important; height: auto !important; overflow: visible !important; }
+  #map, .tabs, .content, .pdf-export, .as-overlay { display: none !important; }
+  .print-root { display: block !important; max-width: none; margin: 0; padding: 0; }
+  .print-root .hero { padding: 0 0 14px; text-align: left; border-bottom: 2px solid #111; margin-bottom: 14px; }
+  .print-root .hero h1 { font-size: 25px; }
+  .print-root .hero .subtitle { font-size: 13px; }
+  .print-root .info-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
+  .print-root .info-card, .print-root .pay-summary, .print-root .route-bar, .print-root .card {
+    box-shadow: none; border: 1px solid #d9d9de; background: #fff;
+  }
+  .print-root .day-list .card { break-inside: avoid; }
+  .print-day { break-before: page; }
+  .print-day .day-head { padding-top: 0; border-bottom: 2px solid #111; margin-bottom: 12px; }
+  .print-root .tl-item, .print-root .card, .print-root .route-bar, .print-root .pay-summary { break-inside: avoid; }
+  .print-root .links { display: none !important; }
+  .print-root .details, .print-root .details.closed { display: block !important; }
+  .print-root .section-head { padding-top: 12px; }
+  .print-root .timeline { padding-left: 22px; }
+  .print-root .card { padding: 10px 12px; }
+  .print-root .card .name { font-size: 15px; }
+  .print-root .card .desc, .print-root .details { font-size: 12px; }
+  .print-note { margin: 0 0 14px; font-size: 11px; color: #666; }
+}
 </style>
 </head>
 <body>
@@ -228,6 +263,8 @@ a:hover { text-decoration: underline; }
 <div id="map"></div>
 <div class="tabs" id="tabs"></div>
 <div class="content" id="content"></div>
+<button class="pdf-export" type="button" onclick="exportPDF()" aria-label="导出完整行程为PDF" title="打开打印对话框并选择存储为PDF">⬇️ 导出 PDF</button>
+<div class="print-root" id="print-root"></div>
 
 <script>
 // ╔══════════════════════════════════════════════════════════════╗
@@ -537,6 +574,22 @@ function toggle(id) { const el=document.getElementById(id); if(el) el.classList.
 tabsEl.addEventListener('click', e => { const t=e.target.closest('.tab'); if(t) go(+t.dataset.day); });
 
 go(0);
+
+/* ── PDF export: build all days, then use the browser's Save as PDF ── */
+const printRoot = document.getElementById('print-root');
+function buildPrintDocument() {
+  printRoot.innerHTML = `${overviewContent()}<p class="print-note">导出说明：地图未嵌入打印稿；路线、封路和实时驾驶时间以出发当天高德导航为准。</p>` +
+    DAYS.slice(1).map(d => `<section class="print-day">${renderDay(d.id)}</section>`).join('');
+}
+function exportPDF() {
+  buildPrintDocument();
+  document.title = '南疆自驾9天完整版攻略';
+  requestAnimationFrame(() => setTimeout(() => window.print(), 80));
+}
+window.addEventListener('beforeprint', buildPrintDocument);
+window.addEventListener('afterprint', () => {
+  document.title = '南疆自驾9天完整版攻略 · 喀什进阿克苏出';
+});
 
 /* ── Action Sheet for Navigation ── */
 const asOverlay = document.createElement('div');
