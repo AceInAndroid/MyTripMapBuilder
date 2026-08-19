@@ -106,7 +106,7 @@ a:hover { text-decoration: underline; }
 .print-root { display: none; }
 .print-root.exporting {
   display: block; position: relative; z-index: 800;
-  width: 794px; margin: 0 auto; padding: 38px; background: #fff; color: #111;
+  width: 100%; margin: 0; padding: 28px; background: #fff; color: #111;
 }
 .print-root.exporting .hero { padding: 0 0 14px; text-align: left; border-bottom: 2px solid #111; margin-bottom: 14px; }
 .print-root.exporting .hero h1 { font-size: 25px; }
@@ -121,7 +121,10 @@ a:hover { text-decoration: underline; }
 .print-root.exporting .card,
 .print-root.exporting .route-bar,
 .print-root.exporting .pay-summary { break-inside: avoid; page-break-inside: avoid; }
-.print-root.exporting .print-day { break-before: page; page-break-before: always; }
+.print-root.exporting .print-day {
+  padding-top: 16px; break-before: page; page-break-before: always;
+  break-inside: avoid; page-break-inside: avoid;
+}
 .print-root.exporting .print-day .day-head { padding-top: 0; border-bottom: 2px solid #111; margin-bottom: 12px; }
 .print-root.exporting .links { display: none !important; }
 .print-root.exporting .details,
@@ -649,11 +652,10 @@ async function exportPDF() {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: 794
+        backgroundColor: '#ffffff'
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'], before: '.print-day' }
+      pagebreak: { mode: ['css', 'legacy'], before: '.print-day', avoid: ['.print-day'] }
     }).from(printRoot).save();
   } catch (error) {
     console.error('html2pdf export failed; falling back to browser print.', error);
