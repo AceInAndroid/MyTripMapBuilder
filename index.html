@@ -7,8 +7,7 @@
 <meta name="description" content="2026年10月2日至10日，4位大人和2位5岁儿童的喀什—塔县—莎车—和田—阿拉尔—阿克苏MPV自驾参考行程">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://webapi.amap.com/maps?v=2.0&key=2db40ae1a1e3d333b94111e5937a8964"></script>
 <style>
 /* ═══════════════════════════════════════════
    Design System — edit :root to change theme
@@ -216,14 +215,12 @@ a:hover { text-decoration: underline; }
 .legend-item { display: flex; align-items: center; gap: 5px; }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-/* ── Leaflet overrides ── */
-.leaflet-popup-content-wrapper { border-radius: var(--radius-md) !important; box-shadow: var(--shadow-lg) !important; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important; }
-.leaflet-popup-content { font-size: 14px !important; line-height: 1.5 !important; margin: 12px 14px !important; }
-.leaflet-popup-content a { color: var(--accent) !important; }
-.leaflet-popup-tip { background: #fff !important; }
-.leaflet-control-zoom a { width: 34px !important; height: 34px !important; line-height: 34px !important; font-size: 16px !important; border-radius: 10px !important; background: rgba(255,255,255,.85) !important; -webkit-backdrop-filter: blur(10px) !important; backdrop-filter: blur(10px) !important; border: .5px solid var(--separator) !important; color: var(--text-primary) !important; }
-.leaflet-control-zoom { border-radius: 12px !important; overflow: hidden; box-shadow: var(--shadow-md) !important; border: none !important; }
-.leaflet-control-attribution { font-size: 9px !important; opacity: .5; }
+/* ── AMap overrides ── */
+.amap-logo, .amap-copyright { opacity: .65; }
+.amap-info-content { border-radius: var(--radius-md); box-shadow: var(--shadow-lg); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; font-size: 14px; line-height: 1.5; padding: 12px 14px; }
+.amap-info-content a { color: var(--accent); }
+.amap-info-close { top: 8px !important; right: 8px !important; }
+.amap-marker-label { border: none; background: transparent; padding: 0; }
 </style>
 </head>
 <body>
@@ -339,70 +336,76 @@ function overviewContent() {
 // ║  ENGINE — Do not modify below unless customizing behavior   ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-const map = L.map('map', { center: [HOTEL.lat || 39.47, HOTEL.lng || 75.99], zoom: 12, zoomControl: false, attributionControl: true });
-L.control.zoom({ position: 'topright' }).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+function wgs84ToGcj02(lng, lat) {
+  const a = 6378245.0, ee = 0.00669342162296594323, pi = Math.PI;
+  if (lng < 72.004 || lng > 137.8347 || lat < 0.8293 || lat > 55.8271) return [lng, lat];
+  let dLat = -100 + 2*lng + 3*lat + .2*lat*lat + .1*lng*lat + .2*Math.sqrt(Math.abs(lng));
+  dLat += (20*Math.sin(6*lng*pi)+20*Math.sin(2*lng*pi))*2/3;
+  dLat += (20*Math.sin(lat*pi)+40*Math.sin(lat*pi/3))*2/3;
+  dLat += (160*Math.sin(lat*pi/12)+320*Math.sin(lat*pi/30))*2/3;
+  let dLng = 300 + lng + 2*lat + .1*lng*lng + .1*lng*lat + .1*Math.sqrt(Math.abs(lng));
+  dLng += (20*Math.sin(6*lng*pi)+20*Math.sin(2*lng*pi))*2/3;
+  dLng += (20*Math.sin(lng*pi)+40*Math.sin(lng*pi/3))*2/3;
+  dLng += (150*Math.sin(lng*pi/12)+300*Math.sin(lng*pi/30))*2/3;
+  const radLat = lat / 180 * pi;
+  let magic = Math.sin(radLat); magic = 1 - ee*magic*magic;
+  const sqrtMagic = Math.sqrt(magic);
+  dLat = dLat*180 / ((a*(1-ee))/(magic*sqrtMagic)*pi);
+  dLng = dLng*180 / (a/sqrtMagic*Math.cos(radLat)*pi);
+  return [lng+dLng, lat+dLat];
+}
+function amapPos(lat, lng) { return wgs84ToGcj02(lng, lat); }
 
-/* ── Geolocation ── */
-const LocateControl = L.Control.extend({
-  options: { position: 'bottomright' },
-  onAdd() {
-    const btn = L.DomUtil.create('button', 'locate-btn');
-    btn.innerHTML = '📍';
-    btn.title = '我的位置';
-    L.DomEvent.disableClickPropagation(btn);
-    btn.addEventListener('click', () => {
-      btn.classList.add('active');
-      map.locate({ setView: true, maxZoom: 15 });
-    });
-    this._btn = btn;
-    return btn;
-  }
+const map = new AMap.Map('map', {
+  viewMode: '2D',
+  zoom: 12,
+  center: amapPos(HOTEL.lat || 39.47, HOTEL.lng || 75.99),
+  mapStyle: 'amap://styles/normal'
 });
-new LocateControl().addTo(map);
-let locMarker, locCircle;
-map.on('locationfound', e => {
-  const r = e.accuracy / 2;
-  if (locMarker) { locMarker.setLatLng(e.latlng); locCircle.setLatLng(e.latlng).setRadius(r); }
-  else {
-    locMarker = L.marker(e.latlng, {
-      icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#007aff;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,122,255,.5)"></div><div class="loc-pulse" style="position:absolute;top:0;left:0"></div>', iconSize:[14,14], iconAnchor:[7,7] }),
-      zIndexOffset: 2000
-    }).addTo(map);
-    locCircle = L.circle(e.latlng, { radius: r, color: '#007aff', fillColor: '#007aff', fillOpacity: .08, weight: 1 }).addTo(map);
-  }
+AMap.plugin(['AMap.ToolBar','AMap.Geolocation'], () => {
+  map.addControl(new AMap.ToolBar({ position:'RT' }));
+  map.addControl(new AMap.Geolocation({ position:'RB', enableHighAccuracy:true, timeout:10000, zoomToAccuracy:true }));
 });
-map.on('locationerror', () => {});
 
-function icon(color, emoji) {
-  return L.divIcon({ className: '', html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.18)">${emoji||''}</div>`, iconSize: [28,28], iconAnchor: [14,14], popupAnchor: [0,-16] });
+const infoWindow = new AMap.InfoWindow({ offset:new AMap.Pixel(0,-18), closeWhenClickMap:true });
+function markerContent(color, emoji, small=false) {
+  const size = small ? 12 : 28;
+  const border = small ? 1.5 : 2.5;
+  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:${border}px solid #fff;display:flex;align-items:center;justify-content:center;font-size:${small?0:13}px;box-shadow:0 2px 8px rgba(0,0,0,.18)">${emoji||''}</div>`;
+}
+function addMarker(position, color, emoji, html, small=false, zIndex=100) {
+  const size = small ? 12 : 28;
+  const marker = new AMap.Marker({ position, content:markerContent(color,emoji,small), offset:new AMap.Pixel(-size/2,-size/2), zIndex });
+  marker.setMap(map);
+  if (html) marker.on('click', () => { infoWindow.setContent(html); infoWindow.open(map, position); });
+  return marker;
 }
 
-if (HOTEL.lat) L.marker([HOTEL.lat, HOTEL.lng], { icon: icon('#ff9500','🏨'), zIndexOffset: 1000 }).addTo(map).bindPopup(`<b>${HOTEL.name}</b>`);
+if (HOTEL.lat) addMarker(amapPos(HOTEL.lat,HOTEL.lng), '#ff9500', '🏨', `<b>${HOTEL.name}</b>`, false, 1000);
 
 let markers = [], polylines = [];
 const emojis = { food:'🍽️', spot:'📍', hotel:'🏨', transport:'🚃', drink:'🍺' };
 
-function clearMap() { markers.forEach(m=>map.removeLayer(m)); polylines.forEach(p=>map.removeLayer(p)); markers=[]; polylines=[]; }
+function clearMap() { map.remove(markers.concat(polylines)); infoWindow.close(); markers=[]; polylines=[]; }
 
 function showDay(idx) {
   clearMap();
   if (idx === 0) {
     const pts = [];
-    DAYS.forEach(d => d.locations.forEach(l => { if(l.lat) pts.push([l.lat,l.lng]); }));
-    if(pts.length) map.fitBounds(pts, {padding:[30,30]});
+    DAYS.forEach(d => d.locations.forEach(l => { if(l.lat) pts.push(amapPos(l.lat,l.lng)); }));
     DAYS.slice(1).forEach(d => {
-      const routePts = d.locations.filter(l=>l.time!=='—' && l.lat).map(l => [l.lat,l.lng]);
+      const routePts = d.locations.filter(l=>l.time!=='—' && l.lat).map(l => amapPos(l.lat,l.lng));
       if(routePts.length > 1) {
-        const route = L.polyline(routePts, { color:d.color, weight:3, opacity:.72, dashArray:'8,6' }).addTo(map);
-        route.bindPopup(`<b>${d.label} · ${d.title}</b><br>🚗 ${d.drive||'按当天路况机动'}<br><span style="color:#86868b">路线为示意线，点击日期查看详细卡片</span>`);
+        const route = new AMap.Polyline({ map, path:routePts, strokeColor:d.color, strokeWeight:3, strokeOpacity:.72, strokeStyle:'dashed' });
+        route.on('click', e => { infoWindow.setContent(`<b>${d.label} · ${d.title}</b><br>🚗 ${d.drive||'按当天路况机动'}<br><span style="color:#86868b">路线为示意线，点击日期查看详细卡片</span>`); infoWindow.open(map,e.lnglat); });
         polylines.push(route);
       }
       d.locations.filter(l=>l.time!=='—' && l.lat).forEach(l => {
-        const m = L.circleMarker([l.lat,l.lng], { radius:5, fillColor:d.color, color:'#fff', weight:1.5, fillOpacity:.95 }).addTo(map).bindPopup(`<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${d.title}</span><br>🚗 ${d.drive||'按当天路况机动'}`);
+        const m = addMarker(amapPos(l.lat,l.lng), d.color, '', `<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${d.title}</span><br>🚗 ${d.drive||'按当天路况机动'}`, true);
         markers.push(m);
       });
     });
+    if(markers.length) map.setFitView(markers.concat(polylines), false, [30,30,30,30], 9);
     return;
   }
   const day = DAYS.find(d=>d.id===idx);
@@ -410,18 +413,19 @@ function showDay(idx) {
   const coords = [];
   day.locations.forEach(l => {
     if(!l.lat) return;
-    const m = L.marker([l.lat,l.lng], { icon: icon(day.color, emojis[l.type]||'📌') }).addTo(map);
+    const position = amapPos(l.lat,l.lng);
     const gmapQ = l.gmap||encodeURIComponent(l.name+' 新疆');
-    m.bindPopup(`<b>${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><a href="#" onclick="event.preventDefault();openAS('${l.name.replace(/'/g,"\\'")}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</a>${l.xhs?' · <a href="'+l.xhs+'" target="_blank">📕 小红书</a>':''}`);
+    const html = `<b>${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><a href="#" onclick="event.preventDefault();openAS('${l.name.replace(/'/g,"\\'")}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</a>${l.xhs?' · <a href="'+l.xhs+'" target="_blank">📕 小红书</a>':''}`;
+    const m = addMarker(position, day.color, emojis[l.type]||'📌', html);
     markers.push(m);
-    if(l.time!=='—') coords.push([l.lat,l.lng]);
+    if(l.time!=='—') coords.push(position);
   });
   if(coords.length>1) {
-    const pl = L.polyline(coords, { color:day.color, weight:3, opacity:.72, dashArray:'8,6' }).addTo(map);
-    pl.bindPopup(`<b>${day.label} · ${day.title}</b><br>🚗 ${day.drive||'按当天路况机动'}<br><span style="color:#86868b">行程顺序示意，实际路线以导航为准</span>`);
+    const pl = new AMap.Polyline({ map, path:coords, strokeColor:day.color, strokeWeight:3, strokeOpacity:.72, strokeStyle:'dashed' });
+    pl.on('click', e => { infoWindow.setContent(`<b>${day.label} · ${day.title}</b><br>🚗 ${day.drive||'按当天路况机动'}<br><span style="color:#86868b">行程顺序示意，实际路线以导航为准</span>`); infoWindow.open(map,e.lnglat); });
     polylines.push(pl);
   }
-  if(coords.length) map.fitBounds(coords, { padding:[40,40], maxZoom:14 });
+  if(markers.length) map.setFitView(markers.concat(polylines), false, [40,40,40,40], 14);
 }
 
 // ══════════ RENDER ══════════
