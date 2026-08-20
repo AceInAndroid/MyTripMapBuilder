@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>南疆自驾9天完整版攻略 · 喀什进阿克苏出</title>
-<meta name="description" content="2026年10月2日至10日，4位大人和2位5岁儿童的喀什—塔县—莎车—和田—阿拉尔—阿克苏MPV自驾参考行程">
+<meta name="description" content="2026年10月2日至10日，4位大人和2位5岁儿童的喀什—塔县—莎车—和田—库车—阿克苏MPV自驾参考行程">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://webapi.amap.com/maps?v=2.0&key=2db40ae1a1e3d333b94111e5937a8964"></script>
@@ -313,13 +313,13 @@ a:hover { text-decoration: underline; }
 // ║  REPLACE THIS SECTION — Hotel and Days data                 ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-const HOTEL = { name: '阿克苏机场住宿区域', lat: 41.1780, lng: 80.2920 };
+const HOTEL = { name: '阿克苏老街河南东路亚朵酒店', lat: 41.1680, lng: 80.2790 };
 
 const DAYS = [
   { id: 0, label: '总览', color: '#0071e3', locations: [] },
   { id: 1, label: '10/2 喀什', date: '10月2日 · 抵达喀什 · 约20–40 km', title: '古城人文与夜市', drive:'喀什机场→古城约25–35分钟；市内约20分钟', color: '#ff9500', locations: [
     {name:'喀什徕宁国际机场',lat:39.5437,lng:76.0200,type:'transport',time:'按航班',desc:'取7座MPV，确认两张合规儿童安全座椅后前往酒店。',detail:'国庆期间取车排队和市内拥堵都要留余量。',gmap:'喀什徕宁国际机场',dianping:false},
-    {name:'格林豪泰（喀什古城景区店）',lat:39.4708,lng:75.9920,type:'hotel',time:'抵达后',desc:'首选住宿：靠近古城，自驾前需再次确认酒店专用或合作停车位。',detail:'备选：如家精选（喀什古城东门店）。',xhsKeyword:'喀什古城 酒店 停车 亲子',dianpingKeyword:'格林豪泰 喀什古城景区店'},
+    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'抵达后',desc:'靠近古城，方便步行游览；订房时确认MPV停车位、家庭房和儿童早餐政策。',detail:'国庆房源紧张，优先选择可免费取消的房型。',xhsKeyword:'喀什古城步行街 亚朵酒店 停车 亲子',dianpingKeyword:'喀什古城步行街亚朵酒店'},
     {name:'喀什古城',lat:39.4704,lng:75.9858,type:'spot',time:'下午',desc:'慢逛古城街巷、手工艺店与居民生活区，不追密集打卡。',detail:'喀什约1290米，孩子落地日仍应补水、早休息。',xhsKeyword:'喀什古城 亲子 路线',dianping:false,gmap:'喀什古城'},
     {name:'艾提尕尔清真寺',lat:39.4701,lng:75.9855,type:'spot',time:'16:30',desc:'了解喀什宗教与城市历史；遇礼拜或管控时只看外观。',xhsKeyword:'艾提尕尔清真寺 游览 注意事项',dianping:false},
     {name:'喀什国际大巴扎（东巴扎）',lat:39.4870,lng:76.0120,type:'spot',time:'17:30',desc:'按抵达时间和孩子体力选逛，时间紧可直接删除。',xhsKeyword:'喀什东巴扎 国庆 避坑',dianping:false},
@@ -331,14 +331,14 @@ const DAYS = [
     {name:'喀拉库勒湖',lat:38.4453,lng:75.0563,type:'spot',time:'13:00',desc:'正面远眺慕士塔格峰，不加入冰川、骑马或长距离环湖。',detail:'湖区约3600米；孩子若精神差、拒食、呕吐或嗜睡，立即下撤。',xhsKeyword:'喀拉库勒湖 慕士塔格峰 亲子 高反',dianping:false},
     {name:'慕士塔格峰公路观景点',lat:38.2761,lng:75.1159,type:'spot',time:'14:00',desc:'仅在安全停车点短暂停留，不登山。',xhsKeyword:'慕士塔格峰 观景点 自驾',dianping:false},
     {name:'石头城与金草滩',lat:37.7720,lng:75.2230,type:'spot',time:'日落前',desc:'到达早且全员状态良好才看日落；晚到或孩子疲劳直接入住。',detail:'不要为追日落超速或延长高海拔户外停留。',xhsKeyword:'塔县 石头城 金草滩 日落 亲子',dianping:false},
-    {name:'全季酒店（塔县金草滩店）',lat:37.7740,lng:75.2260,type:'hotel',time:'18:30',desc:'首选制氧房；入住后清淡热食、补水、早睡。',detail:'塔县约3100米。备选：雪上酒店观景房；订房时确认供氧形式、停车与取消政策。',xhsKeyword:'塔县 全季 金草滩 制氧房',dianpingKeyword:'全季酒店 塔县金草滩店'}
+    {name:'喀什塔县帕米尔旅游区亚朵酒店',lat:37.7740,lng:75.2260,type:'hotel',time:'18:30',desc:'入住后清淡热食、补水、早睡；订房时必须确认供氧方式、停车和取消政策。',detail:'塔县约3100米。亚朵品牌不等于房间一定供氧，如无制氧房需另备经过确认的供氧方案。',xhsKeyword:'塔县 帕米尔旅游区 亚朵酒店 供氧',dianpingKeyword:'喀什塔县帕米尔旅游区亚朵酒店'}
   ]},
   { id: 3, label: '10/4 喀什', date: '10月4日 · 塔县→盘龙古道/班迪尔→喀什 · 约420–480 km', title: '高原支线后下撤喀什', drive:'纯驾驶约8–10小时；含游玩可能超过12小时，属于全程最累的一天', color: '#34c759', locations: [
     {name:'塔什库尔干县城',lat:37.7708,lng:75.2281,type:'transport',time:'07:00',desc:'只有全员睡眠和精神状态良好才跑支线；否则直接沿G314下撤喀什。',detail:'5岁儿童出现持续哭闹、呕吐、嗜睡、步态异常或呼吸困难，立即下撤并就医。',dianping:false},
     {name:'盘龙古道入口',lat:37.6287,lng:75.4542,type:'spot',time:'08:30',desc:'开放且无冰雪时才进入；639道弯只做短停打卡。',detail:'10月可能因降雪、结冰或交通管控封闭；禁止绕卡。高点接近4000米，不建议孩子长时间停留。',xhsKeyword:'盘龙古道 10月 封路 路况',dianping:false},
     {name:'帕米尔大地之眼观景区域',lat:37.7030,lng:75.4380,type:'spot',time:'10:30',desc:'按当天开放道路和现场指引短停，点位以导航和官方公告为准。',detail:'该网红称呼对应点位可能变化，不为找机位驶入非铺装或无人道路。',xhsKeyword:'帕米尔大地之眼 塔县 路线',dianping:false},
     {name:'班迪尔蓝湖',lat:37.8379,lng:75.4218,type:'spot',time:'11:30',desc:'与盘龙古道视天气和孩子状态取舍；赶时间就取消。',detail:'原文把盘龙、班迪尔和返喀什放在同日，执行压力很大；以安全下撤为唯一刚性目标。',xhsKeyword:'班迪尔蓝湖 10月 路况 亲子',dianping:false},
-    {name:'格林豪泰（喀什古城景区店）',lat:39.4708,lng:75.9920,type:'hotel',time:'预计20:00后',desc:'返回D1同一家酒店，提前确认寄存行李和停车；不是与塔县连续住宿。',detail:'若当日支线耗时过长，应在安全地点调整，不疲劳驾驶硬赶。',dianpingKeyword:'格林豪泰 喀什古城景区店'}
+    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'预计20:00后',desc:'返回D1同一家亚朵，提前确认寄存行李和停车；不是与塔县连续住宿。',detail:'若当日支线耗时过长，应在安全地点调整，不疲劳驾驶硬赶。',dianpingKeyword:'喀什古城步行街亚朵酒店'}
   ]},
   { id: 4, label: '10/5 莎车', date: '10月5日 · 喀什→莎车 · 约190–200 km', title: '叶尔羌历史与木卡姆', drive:'纯驾驶约2.5–3小时；莎车市内约20–30分钟', color: '#007aff', locations: [
     {name:'喀什古城住宿区域',lat:39.4704,lng:75.9898,type:'hotel',time:'09:30',desc:'高原下撤后的恢复日，不早起；早餐后再南下莎车。',dianping:false},
@@ -346,34 +346,36 @@ const DAYS = [
     {name:'莎车老城与喀赞其老街',lat:38.4142,lng:77.2406,type:'spot',time:'16:00',desc:'看街巷、巴扎、手工作坊与居民生活。',xhsKeyword:'莎车老城 喀赞其老街 亲子',dianping:false},
     {name:'莎车百年老茶馆',lat:38.4160,lng:77.2435,type:'drink',time:'17:00',desc:'短坐喝茶、听木卡姆；表演以当天安排为准。',budget:'全家 ¥80–160',xhsKeyword:'莎车 百年老茶馆 木卡姆',dianpingKeyword:'莎车老茶馆',pay:{alipay:1,wechat:1,cash:1}},
     {name:'莎车夜市',lat:38.4165,lng:77.2420,type:'food',time:'19:00',desc:'鸽子汤、薄皮包子、烤包子少量分食，儿童避免生冷和过辣。',budget:'全家 ¥250–420',xhsKeyword:'莎车夜市 必吃 本地人',dianpingKeyword:'莎车夜市',pay:{alipay:1,wechat:1,cash:1}},
-    {name:'凯里亚德酒店（莎车干果市场店）',lat:38.4310,lng:77.2600,type:'hotel',time:'20:00',desc:'当晚住宿；订房时复核免费停车、早餐和亲子房型。',dianpingKeyword:'凯里亚德酒店 莎车干果市场店'}
+    {name:'亚朵酒店（莎车人民政府迎宾路店）',lat:38.4310,lng:77.2600,type:'hotel',time:'20:00',desc:'当晚住宿；订房时复核免费停车、早餐和亲子房型。',detail:'门店位于沪新西路、莎车县人民政府西侧一带。',dianpingKeyword:'亚朵酒店 莎车人民政府迎宾路店'}
   ]},
   { id: 5, label: '10/6 和田', date: '10月6日 · 莎车→和田 · 约320–340 km', title: '团城、玉龙喀什河与夜市', drive:'纯驾驶约4.5–5小时；每60–90分钟休息一次', color: '#5856d6', locations: [
     {name:'莎车县',lat:38.4142,lng:77.2406,type:'transport',time:'08:30',desc:'早餐后加满油出发，驾驶员轮换。',dianping:false},
     {name:'和田团城',lat:37.1128,lng:79.9277,type:'spot',time:'14:30',desc:'彩色传统民居、木作与艾德莱斯元素；到达晚就缩短。',xhsKeyword:'和田团城 亲子 拍照 路线',dianping:false},
     {name:'玉龙喀什河安全河滩',lat:37.1095,lng:79.9840,type:'spot',time:'16:30',desc:'只在安全、可停车区域体验找石头，不下深水。',detail:'河床石头不等于和田玉；孩子始终保持在成人一臂范围内，风大或天黑直接取消。',xhsKeyword:'玉龙喀什河 捡玉 亲子 注意',dianping:false},
     {name:'和田夜市',lat:37.1133,lng:79.9196,type:'food',time:'19:00',desc:'酸奶粽子、烤鸽子等少量尝试，只选滚烫现制、明码标价。',budget:'全家 ¥300–500',xhsKeyword:'和田夜市 必吃 避坑 亲子',dianpingKeyword:'和田夜市',pay:{alipay:1,wechat:1,cash:1}},
-    {name:'和田希尔顿欢朋酒店',lat:37.1160,lng:79.9130,type:'hotel',time:'20:30',desc:'长途休整，订房时确认洗衣房、停车与儿童早餐政策。',dianpingKeyword:'和田希尔顿欢朋酒店'}
+    {name:'和田博物馆迎宾路亚朵酒店',lat:37.1160,lng:79.9130,type:'hotel',time:'20:30',desc:'长途休整，订房时确认洗衣房、停车与儿童早餐政策。',dianpingKeyword:'和田博物馆迎宾路亚朵酒店'}
   ]},
-  { id: 6, label: '10/7 阿拉尔', date: '10月7日 · 和田→塔克拉玛干沙漠公路→阿拉尔 · 约420–450 km', title: '穿越沙漠公路', drive:'纯驾驶约5.5–6.5小时；含休息与拍照约8小时', color: '#af52de', locations: [
-    {name:'和田市',lat:37.1120,lng:79.9220,type:'transport',time:'08:00',desc:'加满油、检查胎压，备足饮水、熟食和儿童用品。',dianping:false},
+  { id: 6, label: '10/7 库车', date: '10月7日 · 和田→塔克拉玛干沙漠公路→阿拉尔→库车 · 约690–740 km', title: '穿越沙漠公路后直达库车', drive:'纯驾驶约9–11小时；含休息与短停约11–13小时，必须两位以上驾驶员轮换', color: '#af52de', locations: [
+    {name:'和田市',lat:37.1120,lng:79.9220,type:'transport',time:'06:30',desc:'天亮即出发，加满油、检查胎压，备足饮水、熟食和儿童用品。',detail:'这是全程最长转场日；每60–90分钟停车活动，任何司机疲劳或儿童不适都应在阿拉尔住宿，不强行赶库车。',dianping:false},
     {name:'和田—阿拉尔沙漠公路零公里',lat:37.4300,lng:80.0600,type:'spot',time:'09:00',desc:'在安全停车区拍零公里标志，不停在车道或视线盲区。',xhsKeyword:'和田 阿拉尔 沙漠公路 零公里',dianping:false},
     {name:'塔克拉玛干沙漠公路观景段',lat:39.0000,lng:80.6400,type:'spot',time:'12:00',desc:'只在明确允许停车处短停看沙丘，不驶入无路沙漠。',detail:'白天暴晒、风沙和路面横风都可能很强；孩子不赤脚跑沙丘，车辆不离开铺装路。',xhsKeyword:'和田 阿拉尔 沙漠公路 自驾 亲子',dianping:false},
-    {name:'兰欧国际酒店（阿拉尔不夜城店）',lat:40.5480,lng:81.2810,type:'hotel',time:'17:00',desc:'当晚住宿，市区补给；订房时确认停车场。',dianpingKeyword:'兰欧国际酒店 阿拉尔不夜城店'}
+    {name:'阿拉尔市补给点',lat:40.5480,lng:81.2810,type:'transport',time:'14:30',desc:'加油、吃热食并让孩子充分活动；评估司机状态后再决定是否继续。',detail:'若15:30后仍未完成补给，或司机/孩子状态不好，当天应在阿拉尔止步。',dianping:false},
+    {name:'库车步行街五一南路亚朵酒店',lat:41.7179,lng:82.9620,type:'hotel',time:'预计19:30–21:30',desc:'到店后只吃简餐并休息，不再安排夜游。',detail:'订房时确认停车、洗衣房、儿童早餐和延迟到店保留政策。',dianpingKeyword:'库车步行街五一南路亚朵酒店'}
   ]},
-  { id: 7, label: '10/8 阿克苏', date: '10月8日 · 阿拉尔→库车→克孜尔千佛洞→阿克苏 · 约580–650 km', title: '龟兹石窟与超长转场', drive:'纯驾驶约8–9.5小时；加游览约11–13小时，原文“260 km / 4小时”不可执行', color: '#ff2d55', locations: [
-    {name:'阿拉尔市',lat:40.5480,lng:81.2810,type:'transport',time:'06:30',desc:'超长驾驶日，必须早出发、两位以上驾驶员轮换。',detail:'带5岁儿童时每60–90分钟休息；若出发晚或天气差，取消库车市区停留。',dianping:false},
-    {name:'库车市',lat:41.7179,lng:82.9620,type:'transport',time:'10:30',desc:'仅作路线节点和补给，不安排额外景点。',xhsKeyword:'库车 自驾 补给',dianping:false},
-    {name:'克孜尔千佛洞',lat:41.7830,lng:82.5000,type:'spot',time:'12:30',desc:'游览约2小时，建议请讲解员理解龟兹早期壁画。',detail:'必须提前核对国庆开放、预约、末班入园和洞窟轮换；无法按时抵达就取消，不能压缩夜间安全驾驶时间。',xhsKeyword:'克孜尔千佛洞 讲解 预约 亲子',dianping:false},
-    {name:'盛元酒店（阿克苏红旗坡机场店）',lat:41.1780,lng:80.2920,type:'hotel',time:'预计20:00后',desc:'入住后不再外出；订房时确认免费接送机与停车。',detail:'备选：维也纳酒店阿克苏机场店。',dianpingKeyword:'盛元酒店 阿克苏红旗坡机场店'}
+  { id: 7, label: '10/8 阿克苏', date: '10月8日 · 库车→库车王府/老城→克孜尔千佛洞→阿克苏 · 约330–380 km', title: '龟兹文化精华后转场阿克苏', drive:'纯驾驶约5–6小时；含两处游览与休息约9–11小时', color: '#ff2d55', locations: [
+    {name:'库车步行街五一南路亚朵酒店',lat:41.7179,lng:82.9620,type:'hotel',time:'08:00',desc:'早餐后退房；当天只选“库车王府/老城 + 克孜尔千佛洞”两项核心内容。',dianping:false},
+    {name:'库车王府',lat:41.7188,lng:82.9646,type:'spot',time:'08:30',desc:'看龟兹与库车地方历史、王府建筑，建议游览约1小时。',detail:'若前一晚到店太晚需要补觉，可删除本点，直接前往克孜尔千佛洞。',xhsKeyword:'库车王府 讲解 亲子',dianping:false},
+    {name:'库车老城/热斯坦历史文化街区',lat:41.7220,lng:82.9580,type:'spot',time:'09:40',desc:'短走老街、民居和市井街巷，控制在30–45分钟。',detail:'与库车王府相邻顺路；不要在这里安排长时间餐饮排队。',xhsKeyword:'库车老城 热斯坦 街区',dianping:false},
+    {name:'克孜尔千佛洞',lat:41.7830,lng:82.5000,type:'spot',time:'11:30',desc:'游览约2小时，建议请讲解员理解早于莫高窟的龟兹壁画体系。',detail:'提前核对国庆开放、预约、末班入园和洞窟轮换；无法按时抵达就取消，不压缩安全驾驶时间。',xhsKeyword:'克孜尔千佛洞 讲解 预约 亲子',dianping:false},
+    {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'预计18:30–20:00',desc:'入住后不再安排远距离活动；订房时确认停车、洗衣房和儿童早餐。',detail:'这家亚朵位于市区，不是机场酒店，次日去温宿大峡谷更方便。',dianpingKeyword:'阿克苏老街河南东路亚朵酒店'}
   ]},
   { id: 8, label: '10/9 阿克苏', date: '10月9日 · 阿克苏→温宿托木尔大峡谷→阿克苏 · 往返约220–260 km', title: '温宿大峡谷全天', drive:'往返纯驾驶约3–4小时；景区含区间车约3.5–4小时', color: '#34c759', locations: [
-    {name:'阿克苏机场住宿区域',lat:41.1780,lng:80.2920,type:'hotel',time:'08:00',desc:'早餐后出发，车上只带当日轻装。',dianping:false},
+    {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'08:00',desc:'早餐后出发，车上只带当日轻装。',dianping:false},
     {name:'温宿托木尔大峡谷',lat:41.7120,lng:80.1900,type:'spot',time:'10:00',desc:'看红层峡谷和“火星地貌”，按景区区间车线路游玩。',detail:'原文“往返120 km、单程1小时”偏低；请以当天导航为准。雨雪、大风或景区关闭就留在阿克苏休整。',xhsKeyword:'温宿托木尔大峡谷 亲子 区间车 路况',dianping:false},
-    {name:'盛元酒店（阿克苏红旗坡机场店）',lat:41.1780,lng:80.2920,type:'hotel',time:'17:30',desc:'续住同一酒店，收拾行李并确认次日送机。',dianpingKeyword:'盛元酒店 阿克苏红旗坡机场店'}
+    {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'17:30',desc:'续住同一家亚朵，收拾行李并确认次日还车路线。',dianpingKeyword:'阿克苏老街河南东路亚朵酒店'}
   ]},
-  { id: 9, label: '10/10 返程', date: '10月10日 · 阿克苏→广州 · 仅返程', title: '还车、送机、飞广州', drive:'机场酒店→阿克苏机场约15–25分钟；另留加油还车时间', color: '#8e8e93', locations: [
-    {name:'盛元酒店（阿克苏红旗坡机场店）',lat:41.1780,lng:80.2920,type:'hotel',time:'按航班-4h',desc:'早餐、退房、检查身份证、边防证与儿童用品。',dianping:false},
+  { id: 9, label: '10/10 返程', date: '10月10日 · 阿克苏→广州 · 仅返程', title: '还车、送机、飞广州', drive:'市区亚朵→阿克苏机场约25–40分钟；另留加油还车时间', color: '#8e8e93', locations: [
+    {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'按航班-4h',desc:'早餐、退房、检查身份证、边防证与儿童用品。',dianping:false},
     {name:'阿克苏红旗坡机场',lat:41.2625,lng:80.2917,type:'transport',time:'航班前3h',desc:'预留加油、异地还车验车、托运和国庆返程安检时间。',detail:'提前确认租车公司支持喀什取车、阿克苏异地还车及费用；酒店接送机不能代替还车流程。',gmap:'阿克苏红旗坡机场',dianping:false}
   ]}
 ];
@@ -389,13 +391,14 @@ function overviewContent() {
   <div class="info-card"><div class="label">同行</div><div class="value">4位大人 + 2位5岁儿童</div></div>
   <div class="info-card"><div class="label">车辆</div><div class="value">7座MPV + 2张安全座椅</div></div>
   <div class="info-card"><div class="label">总里程</div><div class="value">约2,400–2,700 km</div></div>
-  <div class="info-card"><div class="label">住宿</div><div class="value">喀什2晚 / 塔县1晚 / 莎车1晚 / 和田1晚 / 阿拉尔1晚 / 阿克苏2晚</div></div>
+  <div class="info-card"><div class="label">住宿</div><div class="value">喀什2晚 / 塔县1晚 / 莎车1晚 / 和田1晚 / 库车1晚 / 阿克苏2晚</div></div>
 </div>
-<div class="pay-summary"><h4>路线主线</h4>喀什 → 白沙湖 → 喀拉库勒湖/慕士塔格峰 → 塔县 → 盘龙古道/班迪尔 → 喀什 → 莎车 → 和田 → 塔克拉玛干沙漠公路 → 阿拉尔 → 库车/克孜尔千佛洞 → 阿克苏 → 温宿托木尔大峡谷 → 阿克苏机场。</div>
-<div class="pay-summary"><h4>这版行程的三个高压日</h4>D3 塔县跑高原支线后返喀什、D7 阿拉尔经库车和克孜尔到阿克苏、D8 阿克苏往返温宿大峡谷，都比原文写的车程更长。D3和D7必须设置放弃条件：天气、封路、出发晚、孩子不舒服或司机疲劳时，优先取消支线/景点，不压缩休息和夜间驾驶安全。</div>
+<div class="pay-summary"><h4>路线主线</h4>喀什 → 白沙湖 → 喀拉库勒湖/慕士塔格峰 → 塔县 → 盘龙古道/班迪尔 → 喀什 → 莎车 → 和田 → 塔克拉玛干沙漠公路 → 阿拉尔（补给）→ 库车住宿 → 库车王府/老城 → 克孜尔千佛洞 → 阿克苏 → 温宿托木尔大峡谷 → 阿克苏机场。</div>
+<div class="pay-summary"><h4>这版行程的两个高压日</h4>D3 塔县跑高原支线后返喀什，D6 和田穿越沙漠公路并继续开到库车，都是11–13小时级别的长日。D6必须06:30左右出发、两位以上驾驶员轮换，并把阿拉尔设为安全止损点：天气差、出发晚、孩子不舒服或司机疲劳时，就在阿拉尔住宿，不强行夜驾到库车。</div>
 <div class="pay-summary"><h4>儿童高海拔红线</h4>白沙湖约3300米、喀拉库勒湖约3600米、塔县约3100米、盘龙古道高点接近4000米。5岁孩子可能不会准确描述头痛；持续哭闹、精神差、拒食、呕吐、步态异常、嗜睡、静息呼吸困难或口唇发紫，都应视为危险信号：停止上升、立即下撤并就医。不要自行给儿童服用成人高反药。</div>
 <div class="pay-summary"><h4>地图线说明</h4>总览地图上的彩色线按每天点位顺序连接，是行程与驾驶方向示意，不是实时道路轨迹；实际导航以当天高德/路况为准。每天卡片顶部会显示纯驾驶时间与含休息的建议时长。</div>
-<div class="pay-summary"><h4>住宿安排</h4>D1 格林豪泰（喀什古城景区店）→ D2 全季（塔县金草滩店，制氧房）→ D3 返回喀什同一家酒店 → D4 凯里亚德（莎车干果市场店）→ D5 和田希尔顿欢朋 → D6 兰欧国际（阿拉尔不夜城店）→ D7–D8 盛元酒店（阿克苏红旗坡机场店）。所有酒店名称、停车、供氧、接送机和营业状态均须在预订平台再次核实。</div>
+<div class="pay-summary"><h4>住宿安排 · 全部亚朵</h4>D1 喀什古城步行街亚朵 → D2 喀什塔县帕米尔旅游区亚朵 → D3 返回喀什同一家亚朵 → D4 莎车人民政府迎宾路亚朵 → D5 和田博物馆迎宾路亚朵 → D6 库车步行街五一南路亚朵 → D7–D8 阿克苏老街河南东路亚朵。所有门店房态、停车、供氧和儿童政策均须在预订平台再次核实；尤其不能默认塔县亚朵一定有制氧房。</div>
+<div class="pay-summary"><h4>库车还有哪些值得玩</h4>本行程优先保留库车王府、热斯坦老街和克孜尔千佛洞，兼顾地方历史、城市人文与龟兹艺术。若愿意给库车增加完整一天，可再考虑天山神秘大峡谷（自然风景，往返较远）、苏巴什佛寺遗址（丝路考古）、库车大寺，以及预约敏感的龟兹魏晋古墓遗址博物馆；不要把这些全部塞进D7。</div>
 <div class="section-head">行程概览</div>
 <div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div><div class="desc">🚗 ${d.drive||'按当天路况机动'}</div></div>`).join('')}</div>
 <div class="section-head">出发前确认</div>

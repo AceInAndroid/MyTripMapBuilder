@@ -3,7 +3,7 @@
 南疆自驾 9 天交互式行程地图，适用于手机浏览和分享。
 
 - 日期：2026 年 10 月 2 日—10 月 10 日
-- 路线：喀什 → 塔县 → 莎车 → 和田 → 阿拉尔 → 库车/克孜尔 → 阿克苏
+- 路线：喀什 → 塔县 → 莎车 → 和田 → 阿拉尔（补给）→ 库车住宿/龟兹文化 → 阿克苏
 - 同行：4 位大人、2 位 5 岁儿童
 - 地图：高德地图 JavaScript API 2.0
 - 国内访问（CloudBase）：[mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com](https://mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com/)
