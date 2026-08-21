@@ -43,6 +43,5 @@ Page({
   },
   markCompleted: function () { var self = this; wx.showModal({ title: "把这段旅程收进地图？", content: "完成后它会成为女儿成长地图上的一枚足迹。", success: function (result) { if (!result.confirm) return; var trip = self.data.trip; trip.status = "completed"; trip.progress = 100; repo.saveTrip(trip).then(function () { self.setData({ trip: trip }); wx.showToast({ title: "已收进足迹", icon: "success" }); }); } }); },
   shareTrip: function () { wx.navigateTo({ url: "/pages/share/select?tripId=" + this.tripId }); },
-  deleteTrip: function () { var self = this; wx.showModal({ title: "移到最近删除？", content: "这本旅行绘本会保留30天，期间可以恢复。", confirmColor: "#C85E50", success: function (result) { if (!result.confirm) return; repo.deleteTrip(self.tripId).then(function () { wx.showToast({ title: "已移到最近删除", icon: "none" }); setTimeout(function () { wx.switchTab({ url: "/pages/plans/index" }); }, 500); }); } }); },
-  onShareAppMessage: function () { return { title: this.data.trip ? this.data.trip.title : "我们的旅行绘本", path: this.data.shareToken ? "/pages/share/view?token=" + this.data.shareToken : "/pages/index/index" }; }
+  deleteTrip: function () { var self = this; wx.showModal({ title: "移到最近删除？", content: "这本旅行绘本会保留30天，期间可以恢复。", confirmColor: "#C85E50", success: function (result) { if (!result.confirm) return; repo.deleteTrip(self.tripId).then(function () { wx.showToast({ title: "已移到最近删除", icon: "none" }); setTimeout(function () { wx.switchTab({ url: "/pages/plans/index" }); }, 500); }); } }); }
 });

@@ -1,4 +1,4 @@
-<view class="page paper-grain safe-bottom">
+<view wx:if="{{unauthorized}}" class="page paper-grain safe-bottom private-gate"><view class="storybook-title title">这是一本私人的旅行绘本</view><text>只有受邀的家人可以打开完整内容。</text><button bindtap="joinFamily">输入家人邀请码</button></view><view wx:else class="page paper-grain safe-bottom">
   <view class="map-stage">
     <view class="masthead"><view class="mini-title">OUR LITTLE WORLD</view><view class="storybook-title title">她去过的世界</view><view class="subtitle">{{greeting}}</view></view>
     <map class="world-map" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}" markers="{{markers}}" bindmarkertap="markerTap" enable-traffic="false"></map>

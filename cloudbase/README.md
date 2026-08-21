@@ -41,3 +41,8 @@
 - 照片上传队列同时保留原图文件 ID 和压缩展示图文件 ID，断网时留在本地队列，恢复网络后续传。
 
 部署前仍需由项目管理员在 CloudBase 创建集合、设置“客户端禁止直接读写”的权限、部署云函数并完成 AI 资格检查；代码编译验证不等于云端资源已经部署。
+# 私密家庭访问变更
+
+小程序运行时使用 `wx.cloud` 文档数据库，需在当前 CloudBase 环境创建 `family_invites` 集合（字段由 `travelBook` 云函数写入），并确保云函数账号拥有该集合读写权限。`families`、`profiles`、`trips`、`share_snapshots` 继续由云函数访问。
+
+`bootstrap` 不再为陌生微信用户自动创建家庭；只有已在 `families.memberOpenids` 或 `profiles.ownerOpenid` 中的用户可进入家庭。家长邀请码保存 SHA-256 摘要，一次性使用、24 小时过期。分享 token 也只保存摘要，快照默认 7 天过期并可撤销。

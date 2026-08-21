@@ -4,7 +4,6 @@ var date = require("../utils/date.js");
 
 var TRIPS_KEY = "travel-book:trips:v2";
 var PROFILE_KEY = "travel-book:profile:v2";
-var SHARES_KEY = "travel-book:shares:v2";
 var DELETED_KEY = "travel-book:deleted:v1";
 var PENDING_KEY = "travel-book:pending-mutations:v1";
 
@@ -14,14 +13,7 @@ function read(key, fallback) {
 }
 function write(key, value) { wx.setStorageSync(key, value); return value; }
 function enqueueMutation(action, payload) { var pending = read(PENDING_KEY, []); pending.push({ id: Date.now() + "-" + Math.random(), action: action, payload: clone(payload) }); write(PENDING_KEY, pending); }
-function restoreSeedTrips(trips) {
-  var next = (trips || []).slice();
-  (seed.trips || []).forEach(function (seedTrip) {
-    next = next.filter(function (trip) { return trip.id === seedTrip.id || trip.startDate !== seedTrip.startDate || trip.endDate !== seedTrip.endDate; });
-    if (!next.some(function (trip) { return trip.id === seedTrip.id; })) next.unshift(clone(seedTrip));
-  });
-  return next;
-}
+function restoreSeedTrips(trips) { return (trips || []).slice(); }
 
 function callCloud(action, data) {
   var app = getApp();
@@ -52,18 +44,19 @@ function callCloud(action, data) {
 }
 
 function bootstrap() {
-  var local = { trips: restoreSeedTrips(read(TRIPS_KEY, seed.trips)), profile: read(PROFILE_KEY, seed.profile), source: "local" };
-  return flushPending().then(function () { return callCloud("bootstrap", { seedTrips: seed.trips, seedTrip: seed.trips[0] }); }).then(function (data) {
+  var local = { trips: restoreSeedTrips(read(TRIPS_KEY, [])), profile: read(PROFILE_KEY, seed.profile), source: "local" };
+  return flushPending().then(function () { return callCloud("bootstrap", {}); }).then(function (data) {
     var cloudTrips = restoreSeedTrips(data.trips || []);
     cloudTrips.forEach(function (trip) { trip.childAge = date.ageAt(data.profile.childBirthday, trip.startDate) || trip.childAge; });
     if (cloudTrips.length) write(TRIPS_KEY, cloudTrips);
-    (seed.trips || []).forEach(function (seedTrip) { if (!(data.trips || []).some(function (trip) { return trip.id === seedTrip.id; })) callCloud("saveTrip", { trip: seedTrip }).catch(function () {}); });
     if (data.profile) write(PROFILE_KEY, data.profile);
-    return { trips: cloudTrips, profile: data.profile || local.profile, source: "cloud" };
+    return { trips: cloudTrips, profile: data.profile || local.profile, source: "cloud", authorized: true };
   }).catch(function (error) {
     local.trips.forEach(function (trip) { trip.childAge = date.ageAt(local.profile.childBirthday, trip.startDate) || trip.childAge; });
     local.syncError = [error && (error.errCode || error.code), error && (error.errMsg || error.message)].filter(Boolean).join(": ") || "CLOUD_SYNC_FAILED";
     console.error("[travelBook] Bootstrap fell back to local draft", { syncError: local.syncError, error: error });
+    local.authorized = false;
+    local.trips = []; local.profile = null;
     return local;
   });
 }
@@ -99,23 +92,7 @@ function saveProfile(profile) {
   return callCloud("saveProfile", { profile: profile }).catch(function () { enqueueMutation("saveProfile", { profile: profile }); return { queued: true }; }).then(function () { return profile; });
 }
 function createShare(trip) {
-  var token = "share-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-  var snapshot = {
-    token: token, tripId: trip.id, title: trip.title, dateRange: trip.dateRange,
-    memory: trip.memory, expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
-    days: trip.days.map(function (day) {
-      return {
-        dayNumber: day.dayNumber, date: day.date, city: day.city, title: day.title,
-        places: day.places.filter(function (place) { return place.type !== "住宿"; }).map(function (place) {
-          return { name: place.name, description: place.description, type: place.type };
-        }),
-        diary: day.shareDiary !== false && day.diary && day.diary.updatedAt ? day.diary : null,
-        photos: (day.photos || []).filter(function (photo) { return photo.shareSelected !== false; }).map(function (photo) { return { displayUrl: photo.displayUrl || photo.tempPath, caption: photo.caption || "" }; })
-      };
-    })
-  };
-  var shares = read(SHARES_KEY, {}); shares[token] = snapshot; write(SHARES_KEY, shares);
-  return callCloud("createShare", { tripId: trip.id }).then(function (cloudSnapshot) { return cloudSnapshot; }).catch(function () { return snapshot; });
+  return callCloud("createShare", { tripId: trip.id });
 }
 function deleteTrip(id) {
   var trips = read(TRIPS_KEY, seed.trips); var deleted = read(DELETED_KEY, []);
@@ -131,12 +108,14 @@ function restoreTrip(id) {
   return callCloud("restoreTrip", { tripId: id }).catch(function () { enqueueMutation("restoreTrip", { tripId: id }); return { queued: true }; });
 }
 function getShare(token) {
-  return callCloud("getShare", { token: token }).catch(function () { return read(SHARES_KEY, {})[token] || null; });
+  return callCloud("getShare", { token: token });
 }
+function revokeShare(token) { return callCloud("revokeShare", { token: token }); }
+function listShares() { return callCloud("listShares", {}); }
 
 function inviteParent() {
   return callCloud("createInvite", {});
 }
 function joinFamily(code) { return callCloud("joinFamily", { code: String(code || "").trim().toUpperCase() }); }
 
-module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, inviteParent: inviteParent, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };
+module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, listShares: listShares, revokeShare: revokeShare, inviteParent: inviteParent, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };
