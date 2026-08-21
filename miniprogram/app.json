@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/plans/index",
+    "pages/profile/index",
+    "pages/trip/detail",
+    "pages/planner/form",
+    "pages/planner/chat",
+    "pages/diary/edit",
+    "pages/share/select",
+    "pages/share/view"
+    ,"pages/recycle/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "我们的旅行绘本",
+    "navigationBarBackgroundColor": "#FFF8E8",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFF8E8",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8C7767",
+    "selectedColor": "#E96A58",
+    "backgroundColor": "#FFFDF6",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "足迹" },
+      { "pagePath": "pages/plans/index", "text": "计划" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "cloud": true,
+  "sitemapLocation": "sitemap.json"
+}

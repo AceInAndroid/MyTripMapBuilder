@@ -1,0 +1,4 @@
+{
+  "desc": "南疆自驾行程页面",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

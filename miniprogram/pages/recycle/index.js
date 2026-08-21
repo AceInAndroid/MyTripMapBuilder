@@ -1,0 +1,2 @@
+var repo = require("../../services/repository.js");
+Page({ data: { items: [], loading: true }, onShow: function () { var self = this; repo.listDeleted().then(function (items) { self.setData({ items: items || [], loading: false }); }); }, restore: function (e) { var self = this; repo.restoreTrip(e.currentTarget.dataset.id).then(function () { wx.showToast({ title: "已恢复", icon: "success" }); self.onShow(); }); } });

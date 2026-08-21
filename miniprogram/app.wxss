@@ -1,0 +1,22 @@
+page {
+  --paper: #FFF8E8;
+  --coral: #FF7A66;
+  --corn: #F6C85F;
+  --leaf: #5FAF8B;
+  --ink: #5B4636;
+  --muted: #927D6D;
+  --white: #FFFDF6;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Source Han Sans CN", "PingFang SC", sans-serif;
+}
+
+button { font-family: inherit; }
+button::after { border: 0; }
+.storybook-title { font-family: "LXGW WenKai Screen", "Kaiti SC", serif; }
+.safe-bottom { padding-bottom: calc(150rpx + env(safe-area-inset-bottom)); }
+.paper-grain {
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(91,70,54,.055) 1rpx, transparent 1rpx);
+  background-size: 12rpx 12rpx;
+}

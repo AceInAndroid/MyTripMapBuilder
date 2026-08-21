@@ -1,0 +1,6 @@
+{
+  "name": "trip-ai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": { "@cloudbase/node-sdk": "^3.16.0", "wx-server-sdk": "latest" }
+}

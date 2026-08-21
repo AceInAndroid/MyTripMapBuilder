@@ -1,0 +1,19 @@
+<view class="page paper-grain safe-bottom">
+  <view class="map-stage">
+    <view class="masthead"><view class="mini-title">OUR LITTLE WORLD</view><view class="storybook-title title">她去过的世界</view><view class="subtitle">{{greeting}}</view></view>
+    <map class="world-map" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}" markers="{{markers}}" bindmarkertap="markerTap" enable-traffic="false"></map>
+    <view class="map-tape">成长地图 · 只收藏已经抵达的远方</view>
+    <view wx:if="{{!completed.length && !loading}}" class="empty-footprints"><view class="footprint-art"><i></i><i></i><i></i></view><view class="storybook-title">第一枚足迹，还在路上</view><text>旅行完成后，它会被画进这张地图</text></view>
+  </view>
+  <view class="journey-sheet">
+    <view class="sheet-pin"></view><view class="section-head"><view><text class="kicker">TRAVEL NOTES</text><view class="storybook-title heading">最近的旅行</view></view><text class="count">{{trips.length}} 本绘本</text></view>
+    <view wx:if="{{loading}}" class="loading">正在翻开旅行绘本…</view>
+    <view wx:for="{{trips}}" wx:key="id" class="trip-card status-{{item.status}}" data-id="{{item.id}}" bindtap="openTrip">
+      <view class="cover" style="background: {{item.coverColor}}"><view class="stamp">{{item.dayCount}} DAYS</view><view class="cover-line"></view><view class="cover-label">{{item.coverLabel}}</view></view>
+      <view class="trip-copy"><view class="status-row"><text class="status">{{item.statusLabel}}</text><text wx:if="{{item.countdown}}" class="countdown">{{item.countdown}}</text></view><view class="storybook-title trip-title">{{item.title}}</view><view class="trip-date">{{item.dateRange}} · {{item.childAge}}</view><view wx:if="{{item.status !== 'completed'}}" class="progress"><i style="width: {{item.progress}}%"></i></view><view wx:else class="memory">“{{item.memory}}”</view></view><view class="arrow">›</view>
+    </view>
+    <view wx:if="{{!trips.length && !loading}}" class="empty-book"><view class="storybook-title">画下第一段旅程</view><text>从一个想去的地方开始，慢慢写成我们的故事。</text><button bindtap="createTrip">开始计划</button></view>
+    <view class="sync-note">{{source === 'cloud' ? '家庭绘本已同步' : '当前为本地草稿模式，连接云端后自动同步'}}</view>
+    <view wx:if="{{syncError}}" class="sync-error">诊断信息：{{syncError}}</view>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+.tab-shell { position: fixed; z-index: 999; left: 28rpx; right: 28rpx; bottom: calc(18rpx + env(safe-area-inset-bottom)); height: 106rpx; display: flex; align-items: center; border: 2rpx solid #E9DCC8; border-radius: 35rpx 42rpx 31rpx 39rpx; background: rgba(255,253,246,.96); box-shadow: 0 12rpx 32rpx rgba(91,70,54,.14); }
+.tab { flex: 1; display: flex; flex-direction: column; align-items: center; color: #927D6D; font-size: 20rpx; }
+.mark { width: 34rpx; height: 34rpx; margin-bottom: 4rpx; line-height: 31rpx; text-align: center; border: 3rpx solid currentColor; transform: rotate(-4deg); font-size: 0; }
+.tab:nth-child(1) .mark { border-radius: 50%; }
+.tab:nth-child(2) .mark { border-radius: 50% 50% 8rpx 8rpx; transform: rotate(45deg) scale(.8); }
+.tab:nth-child(3) .mark { border-radius: 7rpx 11rpx 8rpx 10rpx; transform: rotate(4deg); }
+.tab.active { color: #E96A58; font-weight: 700; }
+.tab.active .mark { background: #F6C85F; }

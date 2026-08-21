@@ -1,0 +1,5 @@
+<view class="tab-shell">
+  <view wx:for="{{tabs}}" wx:key="pagePath" class="tab {{selected === index ? 'active' : ''}}" data-index="{{index}}" bindtap="switchTab">
+    <view class="mark">{{item.mark}}</view><text>{{item.text}}</text>
+  </view>
+</view>
