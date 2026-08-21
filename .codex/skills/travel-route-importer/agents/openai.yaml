@@ -1,0 +1,7 @@
+interface:
+  display_name: "旅行路线导入器"
+  short_description: "把电脑端旅行规划转换并同步到旅行绘本小程序"
+  default_prompt: "使用 $travel-route-importer 将这份旅行规划转换为小程序路线并安全同步数据库。"
+
+policy:
+  allow_implicit_invocation: true

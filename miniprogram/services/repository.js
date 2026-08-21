@@ -14,10 +14,12 @@ function read(key, fallback) {
 }
 function write(key, value) { wx.setStorageSync(key, value); return value; }
 function enqueueMutation(action, payload) { var pending = read(PENDING_KEY, []); pending.push({ id: Date.now() + "-" + Math.random(), action: action, payload: clone(payload) }); write(PENDING_KEY, pending); }
-function restoreSeedTrip(trips) {
-  var seedTrip = seed.trips[0];
-  var next = (trips || []).filter(function (trip) { return !seedTrip || trip.id === seedTrip.id || trip.startDate !== seedTrip.startDate || trip.endDate !== seedTrip.endDate; });
-  if (seedTrip && !next.some(function (trip) { return trip.id === seedTrip.id; })) next.unshift(clone(seedTrip));
+function restoreSeedTrips(trips) {
+  var next = (trips || []).slice();
+  (seed.trips || []).forEach(function (seedTrip) {
+    next = next.filter(function (trip) { return trip.id === seedTrip.id || trip.startDate !== seedTrip.startDate || trip.endDate !== seedTrip.endDate; });
+    if (!next.some(function (trip) { return trip.id === seedTrip.id; })) next.unshift(clone(seedTrip));
+  });
   return next;
 }
 
@@ -50,12 +52,12 @@ function callCloud(action, data) {
 }
 
 function bootstrap() {
-  var local = { trips: restoreSeedTrip(read(TRIPS_KEY, seed.trips)), profile: read(PROFILE_KEY, seed.profile), source: "local" };
-  return flushPending().then(function () { return callCloud("bootstrap", { seedTrip: seed.trips[0] }); }).then(function (data) {
-    var cloudTrips = restoreSeedTrip(data.trips || []);
+  var local = { trips: restoreSeedTrips(read(TRIPS_KEY, seed.trips)), profile: read(PROFILE_KEY, seed.profile), source: "local" };
+  return flushPending().then(function () { return callCloud("bootstrap", { seedTrips: seed.trips, seedTrip: seed.trips[0] }); }).then(function (data) {
+    var cloudTrips = restoreSeedTrips(data.trips || []);
     cloudTrips.forEach(function (trip) { trip.childAge = date.ageAt(data.profile.childBirthday, trip.startDate) || trip.childAge; });
     if (cloudTrips.length) write(TRIPS_KEY, cloudTrips);
-    if (!(data.trips || []).some(function (trip) { return trip.id === seed.trips[0].id; })) callCloud("saveTrip", { trip: seed.trips[0] }).catch(function () {});
+    (seed.trips || []).forEach(function (seedTrip) { if (!(data.trips || []).some(function (trip) { return trip.id === seedTrip.id; })) callCloud("saveTrip", { trip: seedTrip }).catch(function () {}); });
     if (data.profile) write(PROFILE_KEY, data.profile);
     return { trips: cloudTrips, profile: data.profile || local.profile, source: "cloud" };
   }).catch(function (error) {
@@ -67,7 +69,7 @@ function bootstrap() {
 }
 
 function flushPending() {
-  var pending = read(PENDING_KEY, []).filter(function (mutation) { var tripId = mutation && mutation.payload && mutation.payload.trip && mutation.payload.trip.id; return !tripId || tripId.indexOf("south-xinjiang-2026") !== 0; }); var remaining = []; var chain = Promise.resolve();
+  var seedIds = (seed.trips || []).map(function (trip) { return trip.id; }); var pending = read(PENDING_KEY, []).filter(function (mutation) { var tripId = mutation && mutation.payload && mutation.payload.trip && mutation.payload.trip.id; return !tripId || seedIds.indexOf(tripId) < 0; }); var remaining = []; var chain = Promise.resolve();
   pending.forEach(function (mutation) { chain = chain.then(function () { return callCloud(mutation.action, mutation.payload).catch(function () { remaining.push(mutation); }); }); });
   return chain.then(function () { write(PENDING_KEY, remaining); return remaining; });
 }

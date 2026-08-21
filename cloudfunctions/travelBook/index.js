@@ -34,10 +34,8 @@ async function bootstrap(openid, payload) {
     if (payload.seedTrip) { const t = clean(payload.seedTrip); await db.collection("trips").doc(t.id).set({ data: { familyId, status: t.status || "planned", startDate: t.startDate || null, endDate: t.endDate || null, title: t.title || "未命名旅行", representative: t.representative || null, payload: t, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } }); }
     item = await family(openid);
   }
-  if (payload.seedTrip) {
-    const seedTrip = clean(payload.seedTrip); const existingSeed = seedTrip.id ? await doc("trips", seedTrip.id) : null;
-    if (seedTrip.id && !existingSeed) { const timestamp = now(); await db.collection("trips").doc(seedTrip.id).set({ data: { familyId: item._id, status: seedTrip.status || "planned", startDate: seedTrip.startDate || null, endDate: seedTrip.endDate || null, title: seedTrip.title || "未命名旅行", representative: seedTrip.representative || null, payload: seedTrip, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } }); }
-  }
+  const seedTrips = Array.isArray(payload.seedTrips) ? payload.seedTrips : payload.seedTrip ? [payload.seedTrip] : [];
+  for (const rawSeedTrip of seedTrips) { const seedTrip = clean(rawSeedTrip); const existingSeed = seedTrip.id ? await doc("trips", seedTrip.id) : null; if (seedTrip.id && !existingSeed) { const timestamp = now(); await db.collection("trips").doc(seedTrip.id).set({ data: { familyId: item._id, status: seedTrip.status || "planned", startDate: seedTrip.startDate || null, endDate: seedTrip.endDate || null, title: seedTrip.title || "未命名旅行", representative: seedTrip.representative || null, payload: seedTrip, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } }); } }
   const trips = await db.collection("trips").where({ familyId: item._id, deletedAt: null }).orderBy("startDate", "desc").limit(100).get();
   const profiles = await db.collection("profiles").where({ familyId: item._id }).limit(20).get();
   const child = profiles.data.find(value => value.role === "child") || {};
