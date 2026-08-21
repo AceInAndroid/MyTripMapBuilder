@@ -25,7 +25,7 @@ var tripDays = original.days.map(function (day) {
 });
 
 var southXinjiang = {
-  id: "south-xinjiang-2026",
+  id: "south-xinjiang-2026-restored",
   title: "南疆 9 日亲子自驾",
   subtitle: "喀什进 · 阿克苏出",
   status: "planned",
@@ -56,7 +56,6 @@ var profile = {
   childBirthday: "2021-01-01",
   parentRole: "管理员",
   parentCount: 1,
-  aiQuota: { plansLeft: 5, editsLeft: 20 },
   storage: { usedMB: 0, limitMB: 5120 },
   activeShares: 0,
   recycleCount: 0

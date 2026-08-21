@@ -1,8 +1,7 @@
 <view class="page paper-grain safe-bottom">
-  <view class="header"><view class="kicker">NEXT CHAPTER</view><view class="storybook-title title">下一页，去哪里？</view><view class="subtitle">先把期待写下来，再慢慢走进风景里。</view></view>
-  <view wx:if="{{features.aiPlannerEnabled}}" class="creator ai" bindtap="createAI"><view class="scribble"></view><view class="creator-copy"><text>智能规划</text><view>表单生成路线，再用聊天慢慢调整</view></view><view class="quota">本月 {{aiPlansLeft}} 次</view><view class="chevron">›</view></view>
-  <view class="creator manual" bindtap="createManual"><view class="plus">＋</view><view class="creator-copy"><text>手动新建</text><view>从日期和目的地开始写一趟旅行</view></view><view class="chevron">›</view></view>
+  <view class="header"><view class="kicker">OUR JOURNEYS</view><view class="storybook-title title">旅行记录</view><view class="subtitle">电脑上规划好行程后导入这里，出发时只管记录。</view></view>
   <view class="section-title"><text>计划中的旅行</text><i></i></view><view wx:if="{{loading}}" class="loading">正在整理计划…</view>
   <view wx:for="{{planned}}" wx:key="id" class="plan" data-id="{{item.id}}" bindtap="openTrip"><view class="date-stamp"><strong>{{item.startDate}}</strong><text>出发</text></view><view class="plan-copy"><view class="storybook-title">{{item.title}}</view><text>{{item.countdown}} · {{item.dayCount}}天</text><view class="bar"><i style="width: {{item.progress}}%"></i></view></view><view class="tag">计划中</view></view>
-  <view wx:if="{{drafts.length}}" class="section-title"><text>还没写完的草稿</text><i></i></view><view wx:for="{{drafts}}" wx:key="id" class="draft" data-id="{{item.id}}" bindtap="openTrip"><view><text class="storybook-title">{{item.title}}</text><small>{{item.dateRange}}</small></view><view>继续编辑 ›</view></view>
+  <view wx:if="{{drafts.length}}" class="section-title"><text>待整理的导入行程</text><i></i></view><view wx:for="{{drafts}}" wx:key="id" class="draft" data-id="{{item.id}}" bindtap="openTrip"><view><text class="storybook-title">{{item.title}}</text><small>{{item.dateRange}}</small></view><view>打开记录 ›</view></view>
+  <view wx:if="{{!planned.length && !drafts.length && !loading}}" class="empty-state">电脑端导入旅行后，这里会出现路线记录。</view>
 </view>

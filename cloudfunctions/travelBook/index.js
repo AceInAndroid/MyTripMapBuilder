@@ -24,34 +24,26 @@ async function familyFor(openid) {
 async function family(openid) { const item = await familyFor(openid); if (!item || item.deletedAt) throw new Error("FAMILY_NOT_FOUND"); return item; }
 function admin(item, openid) { if (!(item.adminOpenids || []).includes(openid)) throw new Error("ADMIN_REQUIRED"); }
 function trip(row) { return Object.assign({}, row.payload || {}, { id: row._id, familyId: row.familyId, status: row.status, startDate: row.startDate, endDate: row.endDate, title: row.title, representative: row.representative, deletedAt: row.deletedAt, createdAt: row.createdAt, updatedAt: row.updatedAt }); }
-async function clientFeatures() {
-  const defaults = { aiPlannerEnabled: false, aiChatEnabled: false };
-  try {
-    const value = await doc("app_config", "client_features");
-    return Object.assign(defaults, value ? { aiPlannerEnabled: value.aiPlannerEnabled === true, aiChatEnabled: value.aiChatEnabled === true } : {});
-  } catch (error) {
-    console.error("[travelBook] feature config unavailable; keeping AI disabled", { message: error && error.message, errCode: error && error.errCode });
-    return defaults;
-  }
-}
-
 async function bootstrap(openid, payload) {
   let item = await familyFor(openid);
   if (!item) {
     const familyId = id("family"); const timestamp = now();
-    await db.collection("families").doc(familyId).set({ data: { name: "我们的家", memberOpenids: [openid], adminOpenids: [openid], childProfileId: `${familyId}-child`, aiQuota: { month: timestamp.slice(0, 7), plansUsed: 0, plansLimit: 5, editsUsed: 0, editsLimit: 20 }, inviteCode: null, inviteExpiresAt: null, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } });
+    await db.collection("families").doc(familyId).set({ data: { name: "我们的家", memberOpenids: [openid], adminOpenids: [openid], childProfileId: `${familyId}-child`, inviteCode: null, inviteExpiresAt: null, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } });
     await db.collection("profiles").doc(`${familyId}-parent-${crypto.randomBytes(4).toString("hex")}`).set({ data: { familyId, ownerOpenid: openid, role: "parent", createdAt: timestamp, updatedAt: timestamp } });
     await db.collection("profiles").doc(`${familyId}-child`).set({ data: { familyId, role: "child", childNickname: "宝贝", childBirthday: "2021-01-01", avatarUrl: "", createdAt: timestamp, updatedAt: timestamp } });
     if (payload.seedTrip) { const t = clean(payload.seedTrip); await db.collection("trips").doc(t.id).set({ data: { familyId, status: t.status || "planned", startDate: t.startDate || null, endDate: t.endDate || null, title: t.title || "未命名旅行", representative: t.representative || null, payload: t, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } }); }
     item = await family(openid);
+  }
+  if (payload.seedTrip) {
+    const seedTrip = clean(payload.seedTrip); const existingSeed = seedTrip.id ? await doc("trips", seedTrip.id) : null;
+    if (seedTrip.id && !existingSeed) { const timestamp = now(); await db.collection("trips").doc(seedTrip.id).set({ data: { familyId: item._id, status: seedTrip.status || "planned", startDate: seedTrip.startDate || null, endDate: seedTrip.endDate || null, title: seedTrip.title || "未命名旅行", representative: seedTrip.representative || null, payload: seedTrip, deletedAt: null, createdAt: timestamp, updatedAt: timestamp } }); }
   }
   const trips = await db.collection("trips").where({ familyId: item._id, deletedAt: null }).orderBy("startDate", "desc").limit(100).get();
   const profiles = await db.collection("profiles").where({ familyId: item._id }).limit(20).get();
   const child = profiles.data.find(value => value.role === "child") || {};
   const shares = await db.collection("share_snapshots").where({ familyId: item._id, revokedAt: null }).limit(100).get();
   const deleted = await db.collection("trips").where({ familyId: item._id, deletedAt: _.neq(null) }).limit(100).get();
-  const quota = item.aiQuota || { plansLimit: 5, plansUsed: 0, editsLimit: 20, editsUsed: 0 };
-  return { trips: trips.data.map(trip), profile: { familyName: item.name, childNickname: child.childNickname || "宝贝", childBirthday: child.childBirthday || "2021-01-01", parentRole: "管理员", parentCount: (item.adminOpenids || []).length, aiQuota: { plansLeft: Math.max(0, quota.plansLimit - quota.plansUsed), editsLeft: Math.max(0, quota.editsLimit - quota.editsUsed) }, storage: { usedMB: 0, limitMB: 5120 }, activeShares: shares.data.filter(value => new Date(value.expiresAt).getTime() > Date.now()).length, recycleCount: deleted.data.length }, features: await clientFeatures() };
+  return { trips: trips.data.map(trip), profile: { familyName: item.name, childNickname: child.childNickname || "宝贝", childBirthday: child.childBirthday || "2021-01-01", parentRole: "管理员", parentCount: (item.adminOpenids || []).length, storage: { usedMB: 0, limitMB: 5120 }, activeShares: shares.data.filter(value => new Date(value.expiresAt).getTime() > Date.now()).length, recycleCount: deleted.data.length } };
 }
 
 async function saveTrip(openid, payload) {

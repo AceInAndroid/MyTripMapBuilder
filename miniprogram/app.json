@@ -4,8 +4,6 @@
     "pages/plans/index",
     "pages/profile/index",
     "pages/trip/detail",
-    "pages/planner/form",
-    "pages/planner/chat",
     "pages/diary/edit",
     "pages/share/select",
     "pages/share/view"
@@ -25,7 +23,7 @@
     "backgroundColor": "#FFFDF6",
     "list": [
       { "pagePath": "pages/index/index", "text": "足迹" },
-      { "pagePath": "pages/plans/index", "text": "计划" },
+      { "pagePath": "pages/plans/index", "text": "行程" },
       { "pagePath": "pages/profile/index", "text": "我的" }
     ]
   },

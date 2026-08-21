@@ -3,9 +3,9 @@ var queue = require("../../services/photo-queue.js");
 var coords = require("../../utils/coords.js");
 
 Page({
-  data: { trip: null, selected: 0, routeView: "overview", routeViewLabel: "完整 9 天路线", tab: "route", loading: true, uploading: false, shareText: "分享精选", features: { aiPlannerEnabled: false, aiChatEnabled: false }, routeMarkers: [], routePolylines: [], routePoints: [], routeLatitude: 35.8617, routeLongitude: 104.1954, routeScale: 5 },
+  data: { trip: null, selected: 0, routeView: "overview", routeViewLabel: "完整 9 天路线", tab: "route", loading: true, uploading: false, shareText: "分享精选", routeMarkers: [], routePolylines: [], routePoints: [], routeLatitude: 35.8617, routeLongitude: 104.1954, routeScale: 5 },
   onLoad: function (options) { this.tripId = options.id; this.load(); },
-  load: function () { var self = this; repo.getTrip(this.tripId).then(function (trip) { if (!trip) return wx.showToast({ title: "找不到这本绘本", icon: "none" }); var mapData = self.buildRouteMap(trip, null); self.setData({ trip: trip, tab: trip.status === "completed" ? "diary" : "route", loading: false, features: repo.currentFeatures(), routeMarkers: mapData.markers, routePolylines: mapData.polylines, routePoints: mapData.points, routeLatitude: mapData.latitude, routeLongitude: mapData.longitude, routeScale: mapData.scale }); queue.flush(); }); },
+  load: function () { var self = this; repo.getTrip(this.tripId).then(function (trip) { if (!trip) return wx.showToast({ title: "找不到这本绘本", icon: "none" }); var mapData = self.buildRouteMap(trip, null); self.setData({ trip: trip, tab: trip.status === "completed" ? "diary" : "route", loading: false, routeMarkers: mapData.markers, routePolylines: mapData.polylines, routePoints: mapData.points, routeLatitude: mapData.latitude, routeLongitude: mapData.longitude, routeScale: mapData.scale }); queue.flush(); }); },
   buildRouteMap: function (trip, selectedDay) {
     var markers = [], polylines = [], all = [], markerId = 1;
     (trip.days || []).forEach(function (day, dayIndex) {
@@ -30,7 +30,6 @@ Page({
   switchTab: function (event) { this.setData({ tab: event.currentTarget.dataset.tab }); },
   navigate: function (event) { var place = this.data.trip.days[this.data.selected].places[Number(event.currentTarget.dataset.index)]; var point = coords.wgs84ToGcj02(place.longitude, place.latitude); wx.openLocation({ latitude: point[1], longitude: point[0], name: place.name, address: place.description, scale: 15 }); },
   editDiary: function () { var day = this.data.trip.days[this.data.selected]; wx.navigateTo({ url: "/pages/diary/edit?tripId=" + this.tripId + "&dayId=" + day.id }); },
-  editPlan: function () { var self = this; repo.bootstrap().then(function (data) { if (!data.features || !data.features.aiChatEnabled) return wx.showToast({ title: "聊天调整暂未开放", icon: "none" }); wx.navigateTo({ url: "/pages/planner/chat?tripId=" + self.tripId }); }); },
   choosePhotos: function () {
     var self = this; var day = this.data.trip.days[this.data.selected];
     wx.chooseMedia({ count: 9, mediaType: ["image"], sourceType: ["album", "camera"] , success: function (result) {
