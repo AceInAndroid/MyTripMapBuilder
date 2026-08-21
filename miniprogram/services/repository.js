@@ -7,6 +7,8 @@ var PROFILE_KEY = "travel-book:profile:v2";
 var SHARES_KEY = "travel-book:shares:v2";
 var DELETED_KEY = "travel-book:deleted:v1";
 var PENDING_KEY = "travel-book:pending-mutations:v1";
+var DEFAULT_FEATURES = { aiPlannerEnabled: false, aiChatEnabled: false };
+var runtimeFeatures = clone(DEFAULT_FEATURES);
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 function read(key, fallback) {
@@ -44,19 +46,23 @@ function callCloud(action, data) {
 }
 
 function bootstrap() {
-  var local = { trips: read(TRIPS_KEY, seed.trips), profile: read(PROFILE_KEY, seed.profile), source: "local" };
+  var local = { trips: read(TRIPS_KEY, seed.trips), profile: read(PROFILE_KEY, seed.profile), features: clone(DEFAULT_FEATURES), source: "local" };
   return flushPending().then(function () { return callCloud("bootstrap", { seedTrip: seed.trips[0] }); }).then(function (data) {
     (data.trips || []).forEach(function (trip) { trip.childAge = date.ageAt(data.profile.childBirthday, trip.startDate) || trip.childAge; });
     if (data.trips && data.trips.length) write(TRIPS_KEY, data.trips);
     if (data.profile) write(PROFILE_KEY, data.profile);
-    return { trips: data.trips || local.trips, profile: data.profile || local.profile, source: "cloud" };
+    runtimeFeatures = Object.assign(clone(DEFAULT_FEATURES), data.features || {});
+    return { trips: data.trips || local.trips, profile: data.profile || local.profile, features: clone(runtimeFeatures), source: "cloud" };
   }).catch(function (error) {
+    runtimeFeatures = clone(DEFAULT_FEATURES);
     local.trips.forEach(function (trip) { trip.childAge = date.ageAt(local.profile.childBirthday, trip.startDate) || trip.childAge; });
     local.syncError = [error && (error.errCode || error.code), error && (error.errMsg || error.message)].filter(Boolean).join(": ") || "CLOUD_SYNC_FAILED";
     console.error("[travelBook] Bootstrap fell back to local draft", { syncError: local.syncError, error: error });
     return local;
   });
 }
+
+function currentFeatures() { return clone(runtimeFeatures); }
 
 function flushPending() {
   var pending = read(PENDING_KEY, []); var remaining = []; var chain = Promise.resolve();
@@ -129,4 +135,4 @@ function inviteParent() {
 }
 function joinFamily(code) { return callCloud("joinFamily", { code: String(code || "").trim().toUpperCase() }); }
 
-module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, inviteParent: inviteParent, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };
+module.exports = { bootstrap: bootstrap, currentFeatures: currentFeatures, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, inviteParent: inviteParent, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };

@@ -3,7 +3,7 @@ var planner = require("../../services/planner.js");
 
 Page({
   data: { trip: null, messages: [], input: "", sending: false },
-  onLoad: function (options) { this.tripId = options.tripId; this.load(); },
+  onLoad: function (options) { var self = this; this.tripId = options.tripId; repo.bootstrap().then(function (data) { if (!data.features || !data.features.aiChatEnabled) { wx.showToast({ title: "聊天调整暂未开放", icon: "none" }); setTimeout(function () { wx.navigateBack(); }, 500); return; } self.load(); }); },
   load: function () { var self = this; repo.getTrip(this.tripId).then(function (trip) { self.setData({ trip: trip, messages: [{ role: "assistant", text: "草案已经画好啦。你可以说：加入莎车、减少高海拔停留、某天放慢一点。" }] }); }); },
   input: function (e) { this.setData({ input: e.detail.value }); },
   useQuick: function (e) { this.setData({ input: e.currentTarget.dataset.value }); },

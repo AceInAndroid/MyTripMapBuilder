@@ -13,7 +13,7 @@ function buildLocalDraft(form) {
       id: "draft-day-" + (i + 1), dayNumber: i + 1, date: date.dateOnly(current), city: form.destination,
       title: focus, distance: "待导航核验", drive: "生成后请根据实时导航核验",
       warning: form.childAge ? "带儿童出行，控制节奏并预留午休与机动时间。" : "",
-      places: [{ id: "draft-place-" + (i + 1), name: focus, time: i === 0 ? "抵达后" : "上午", type: "景点", description: "AI 草案占位点，保存前请补充准确地点与坐标。", verifyRequired: true }],
+      places: [{ id: "draft-place-" + (i + 1), name: focus, time: i === 0 ? "抵达后" : "上午", type: "景点", description: "手动计划占位点，保存后请补充准确地点与坐标。", verifyRequired: true }],
       diary: { parentNote: "", childQuote: "", favorite: "", photoStory: "", updatedAt: "" }, photos: []
     });
   }
@@ -25,7 +25,7 @@ function buildLocalDraft(form) {
     childAge: form.childAge, travelers: form.travelers, transport: form.transport,
     coverColor: "#5FAF8B", coverLabel: form.interests, representative: null,
     memory: "这趟旅行还在慢慢长成。", progress: 35, photoCount: 0, footprintCount: 0,
-    aiGenerated: true, needsVerification: true, days: days,
+    aiGenerated: false, needsVerification: true, days: days,
     plannerForm: form, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
   };
 }

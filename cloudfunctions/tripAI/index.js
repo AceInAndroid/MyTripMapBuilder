@@ -15,6 +15,16 @@ async function familyFor(openid) {
   return result.data[0] || null;
 }
 
+async function featureEnabled(action) {
+  try {
+    const value = (await db.collection("app_config").doc("client_features").get()).data || {};
+    return action === "generate" ? value.aiPlannerEnabled === true : action === "adjust" ? value.aiChatEnabled === true : false;
+  } catch (error) {
+    console.error("[tripAI] feature config unavailable; denying request", { action, message: error && error.message, errCode: error && error.errCode });
+    return false;
+  }
+}
+
 async function reserveQuota(family, action) {
   const isPlan = action === "generate"; const field = isPlan ? "plansUsed" : "editsUsed"; const limitField = isPlan ? "plansLimit" : "editsLimit";
   const quota = family.aiQuota || {}; if (quota.month !== monthKey()) { quota.month = monthKey(); quota.plansUsed = 0; quota.editsUsed = 0; }
@@ -24,13 +34,15 @@ async function reserveQuota(family, action) {
 
 exports.main = async (event) => {
   try {
+    const action = event && event.action;
+    if (!await featureEnabled(action)) throw new Error("AI_FEATURE_DISABLED");
     const { OPENID } = cloud.getWXContext(); const family = await familyFor(OPENID);
     if (!family || family.adminOpenids.indexOf(OPENID) < 0) throw new Error("ADMIN_REQUIRED");
     const group = process.env.AI_GROUP; const modelId = process.env.AI_MODEL;
     if (!group || !modelId) throw new Error("AI_NOT_CONFIGURED");
-    const app = tcb.init({ env: process.env.TCB_ENV || "mytripmap-d3gxxk1psd0b28d72" });
+    const app = tcb.init({ env: process.env.TCB_ENV || "mytripmap-d3gvmwvxd5dba118e" });
     const model = app.ai().createModel(group);
-    const action = event.action; const payload = event.payload || {};
+    const payload = event.payload || {};
     const userContent = action === "generate" ? "为这个家庭生成亲子旅行草案：" + JSON.stringify(payload.form) : "根据家长要求调整已有结构化草案。要求：" + String(payload.message || "") + "。原草案：" + JSON.stringify(payload.draft);
     const result = await model.generateText({ model: modelId, messages: [{ role: "system", content: schemaPrompt() }, { role: "user", content: userContent }], temperature: 0.3 });
     const text = String(result.text || "").trim().replace(/^```json\s*/i, "").replace(/```$/i, "");
