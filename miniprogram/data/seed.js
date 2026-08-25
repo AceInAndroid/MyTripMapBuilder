@@ -16,7 +16,7 @@ var tripDays = original.days.map(function (day) {
         id: "south-xinjiang-place-" + day.id + "-" + index,
         name: item[0], latitude: item[1], longitude: item[2],
         time: item[3], description: item[4], type: item[5],
-        verifyRequired: /开放|预约|供氧|封闭|核对|确认/.test(item[4])
+        verifyRequired: /开放|预约|供氧|封闭|核对|核验|确认/.test(item[4])
       };
     }),
     diary: { parentNote: "", childQuote: "", favorite: "", photoStory: "", updatedAt: "" },
