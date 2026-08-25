@@ -5,7 +5,7 @@ var coords = require("../../utils/coords.js");
 Page({
   data: { trip: null, selected: 0, routeView: "overview", routeViewLabel: "完整 9 天路线", tab: "route", loading: true, uploading: false, shareText: "分享精选", routeMarkers: [], routePolylines: [], routePoints: [], routeLatitude: 35.8617, routeLongitude: 104.1954, routeScale: 5 },
   onLoad: function (options) { this.tripId = options.id; this.load(); },
-  load: function () { var self = this; repo.getTrip(this.tripId).then(function (trip) { if (!trip) return wx.showToast({ title: "找不到这本绘本", icon: "none" }); var mapData = self.buildRouteMap(trip, null); self.setData({ trip: trip, tab: trip.status === "completed" ? "diary" : "route", loading: false, routeMarkers: mapData.markers, routePolylines: mapData.polylines, routePoints: mapData.points, routeLatitude: mapData.latitude, routeLongitude: mapData.longitude, routeScale: mapData.scale }); queue.flush(); }); },
+  load: function () { var self = this; repo.getTrip(this.tripId).then(function (trip) { if (!trip) return wx.showToast({ title: "找不到这本绘本", icon: "none" }); var mapData = self.buildRouteMap(trip, null); self.setData({ trip: trip, tab: trip.status === "completed" ? "diary" : "route", loading: false, routeMarkers: mapData.markers, routePolylines: mapData.polylines, routePoints: mapData.points, routeLatitude: mapData.latitude, routeLongitude: mapData.longitude, routeScale: mapData.scale }); if (!trip.readOnly) queue.flush(); }); },
   buildRouteMap: function (trip, selectedDay) {
     var markers = [], polylines = [], all = [], markerId = 1;
     (trip.days || []).forEach(function (day, dayIndex) {
@@ -29,8 +29,9 @@ Page({
   routeMarkerTap: function (event) { var marker = this.data.routeMarkers.find(function (item) { return item.id === Number(event.detail.markerId); }); if (marker) this.showRouteDay(marker.dayIndex); },
   switchTab: function (event) { this.setData({ tab: event.currentTarget.dataset.tab }); },
   navigate: function (event) { var place = this.data.trip.days[this.data.selected].places[Number(event.currentTarget.dataset.index)]; var point = coords.wgs84ToGcj02(place.longitude, place.latitude); wx.openLocation({ latitude: point[1], longitude: point[0], name: place.name, address: place.description, scale: 15 }); },
-  editDiary: function () { var day = this.data.trip.days[this.data.selected]; wx.navigateTo({ url: "/pages/diary/edit?tripId=" + this.tripId + "&dayId=" + day.id }); },
+  editDiary: function () { if (this.data.trip.readOnly) return; var day = this.data.trip.days[this.data.selected]; wx.navigateTo({ url: "/pages/diary/edit?tripId=" + this.tripId + "&dayId=" + day.id }); },
   choosePhotos: function () {
+    if (this.data.trip.readOnly) return;
     var self = this; var day = this.data.trip.days[this.data.selected];
     wx.chooseMedia({ count: 9, mediaType: ["image"], sourceType: ["album", "camera"] , success: function (result) {
       var items = result.tempFiles.map(function (file, index) { return { id: "photo-" + Date.now() + "-" + index, tripId: self.tripId, dayId: day.id, tempPath: file.tempFilePath, status: "waiting", shareSelected: true, caption: "" }; });
@@ -41,7 +42,7 @@ Page({
       });
     } });
   },
-  markCompleted: function () { var self = this; wx.showModal({ title: "把这段旅程收进地图？", content: "完成后它会成为女儿成长地图上的一枚足迹。", success: function (result) { if (!result.confirm) return; var trip = self.data.trip; trip.status = "completed"; trip.progress = 100; repo.saveTrip(trip).then(function () { self.setData({ trip: trip }); wx.showToast({ title: "已收进足迹", icon: "success" }); }); } }); },
-  shareTrip: function () { wx.navigateTo({ url: "/pages/share/select?tripId=" + this.tripId }); },
-  deleteTrip: function () { var self = this; wx.showModal({ title: "移到最近删除？", content: "这本旅行绘本会保留30天，期间可以恢复。", confirmColor: "#C85E50", success: function (result) { if (!result.confirm) return; repo.deleteTrip(self.tripId).then(function () { wx.showToast({ title: "已移到最近删除", icon: "none" }); setTimeout(function () { wx.switchTab({ url: "/pages/plans/index" }); }, 500); }); } }); }
+  markCompleted: function () { if (this.data.trip.readOnly) return; var self = this; wx.showModal({ title: "把这段旅程收进地图？", content: "完成后它会成为女儿成长地图上的一枚足迹。", success: function (result) { if (!result.confirm) return; var trip = self.data.trip; trip.status = "completed"; trip.progress = 100; repo.saveTrip(trip).then(function () { self.setData({ trip: trip }); wx.showToast({ title: "已收进足迹", icon: "success" }); }); } }); },
+  shareTrip: function () { if (this.data.trip.readOnly) return; wx.navigateTo({ url: "/pages/share/select?tripId=" + this.tripId }); },
+  deleteTrip: function () { if (this.data.trip.readOnly) return; var self = this; wx.showModal({ title: "移到最近删除？", content: "这本旅行绘本会保留30天，期间可以恢复。", confirmColor: "#C85E50", success: function (result) { if (!result.confirm) return; repo.deleteTrip(self.tripId).then(function () { wx.showToast({ title: "已移到最近删除", icon: "none" }); setTimeout(function () { wx.switchTab({ url: "/pages/plans/index" }); }, 500); }); } }); }
 });

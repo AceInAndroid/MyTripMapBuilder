@@ -13,8 +13,8 @@ function markerFor(trip, index) {
 }
 
 Page({
-  data: { loading: true, unauthorized: false, source: "local", syncError: "", trips: [], completed: [], planned: [], markers: [], latitude: 35.8617, longitude: 104.1954, scale: 3.4, greeting: "陪她把世界一页页画下来" },
-  onShow: function () { if (this.getTabBar()) this.getTabBar().setData({ selected: 0 }); this.load(); },
+  data: { loading: true, unauthorized: false, readOnly: false, source: "local", syncError: "", trips: [], completed: [], planned: [], markers: [], latitude: 35.8617, longitude: 104.1954, scale: 3.4, greeting: "陪她把世界一页页画下来" },
+  onShow: function () { if (this.getTabBar()) this.getTabBar().setData({ selected: 0, hidden: true }); this.load(); },
   load: function () {
     var self = this;
     repo.bootstrap().then(function (data) {
@@ -24,7 +24,10 @@ Page({
         return trip;
       });
       var completed = trips.filter(function (trip) { return trip.status === "completed"; });
-      self.setData({ loading: false, unauthorized: data.authorized === false, source: data.source, syncError: data.syncError || "", trips: trips, completed: completed, planned: trips.filter(function (trip) { return trip.status !== "completed"; }), markers: completed.map(markerFor).filter(Boolean) });
+      var unauthorized = data.authorized === false;
+      var readOnly = Boolean(data.profile && data.profile.canEdit === false);
+      var tab = self.getTabBar && self.getTabBar(); if (tab) tab.setData({ selected: 0, hidden: unauthorized || readOnly });
+      self.setData({ loading: false, unauthorized: unauthorized, readOnly: readOnly, source: data.source, syncError: data.syncError || "", trips: trips, completed: completed, planned: trips.filter(function (trip) { return trip.status !== "completed"; }), markers: completed.map(markerFor).filter(Boolean) });
     });
   },
   openTrip: function (event) { wx.navigateTo({ url: "/pages/trip/detail?id=" + event.currentTarget.dataset.id }); },

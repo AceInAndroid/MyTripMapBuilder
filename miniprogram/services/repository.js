@@ -57,6 +57,9 @@ function bootstrap() {
     console.error("[travelBook] Bootstrap fell back to local draft", { syncError: local.syncError, error: error });
     local.authorized = false;
     local.trips = []; local.profile = null;
+    if (error && (error.code === "ACCESS_DENIED" || error.message === "ACCESS_DENIED")) {
+      try { wx.removeStorageSync(TRIPS_KEY); wx.removeStorageSync(PROFILE_KEY); wx.removeStorageSync(DELETED_KEY); wx.removeStorageSync(PENDING_KEY); } catch (clearError) { console.warn("[travelBook] Unable to clear unauthorized cache", clearError); }
+    }
     return local;
   });
 }
@@ -116,6 +119,8 @@ function listShares() { return callCloud("listShares", {}); }
 function inviteParent() {
   return callCloud("createInvite", {});
 }
+function createReviewInvite() { return callCloud("createReviewInvite", {}); }
+function revokeReviewAccess() { return callCloud("revokeReviewAccess", {}); }
 function joinFamily(code) { return callCloud("joinFamily", { code: String(code || "").trim().toUpperCase() }); }
 
-module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, listShares: listShares, revokeShare: revokeShare, inviteParent: inviteParent, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };
+module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, listShares: listShares, revokeShare: revokeShare, inviteParent: inviteParent, createReviewInvite: createReviewInvite, revokeReviewAccess: revokeReviewAccess, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };
