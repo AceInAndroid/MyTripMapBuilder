@@ -47,7 +47,7 @@ var southXinjiang = {
   needsVerification: true,
   days: tripDays,
   createdAt: "2026-08-20T00:00:00.000Z",
-  updatedAt: "2026-08-25T00:00:00.000Z"
+  updatedAt: "2026-08-26T00:00:00.000Z"
 };
 
 var profile = {

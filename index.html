@@ -7,6 +7,7 @@
 <meta name="description" content="2026年10月2日至10日，4位大人和2位5岁儿童的喀什—塔县—莎车—和田—库车—阿克苏MPV自驾参考行程">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>window._AMapSecurityConfig={securityJsCode:'7d057c52d4a3e01e9565eff1a1ff8530'};</script>
 <script src="https://webapi.amap.com/maps?v=2.0&key=2db40ae1a1e3d333b94111e5937a8964"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
 <style>
@@ -183,6 +184,7 @@ a:hover { text-decoration: underline; }
 .card .time { font-size: 12px; font-weight: 600; color: var(--text-tertiary); letter-spacing: .01em; }
 .card .name { font-size: 17px; font-weight: 600; margin: 2px 0 4px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; }
 .card .desc { font-size: 14px; color: var(--text-secondary); line-height: 1.45; }
+.card .order-badge { flex: 0 0 auto; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 14px; color: #fff; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; font-size: 13px; font-weight: 800; line-height: 1; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
 
 /* Badge */
 .badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
@@ -271,6 +273,8 @@ a:hover { text-decoration: underline; }
 .amap-info-content a { color: var(--accent); }
 .amap-info-close { top: 8px !important; right: 8px !important; }
 .amap-marker-label { border: none; background: transparent; padding: 0; }
+.route-order-marker { min-width: 30px; height: 30px; padding: 0 7px; border: 2px solid #fff; border-radius: 16px; color: #fff; display: flex; align-items: center; justify-content: center; box-sizing: border-box; font-size: 13px; font-weight: 800; line-height: 1; letter-spacing: -.2px; box-shadow: 0 2px 8px rgba(0,0,0,.28); white-space: nowrap; }
+.route-order-marker.overview { min-width: 34px; height: 22px; padding: 0 6px; border-width: 1.5px; border-radius: 11px; font-size: 10px; box-shadow: 0 1px 5px rgba(0,0,0,.24); }
 
 @media print {
   @page { size: A4; margin: 12mm; }
@@ -319,7 +323,7 @@ const DAYS = [
   { id: 0, label: '总览', color: '#0071e3', locations: [] },
   { id: 1, label: '10/2 喀什', date: '10月2日 · 抵达喀什 · 约25–35 km', title: '抵达喀什与古城烟火', drive:'机场到古城约25–35分钟；市内约25–40分钟，不含步行和用餐', color: '#ff9500', locations: [
     {name:'喀什徕宁国际机场',lat:39.5437,lng:76.0200,type:'transport',time:'按航班',desc:'取7座MPV，确认两张合规儿童安全座椅后前往酒店。',detail:'国庆期间取车排队和市内拥堵都要留余量。',gmap:'喀什徕宁国际机场',dianping:false},
-    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'抵达后',desc:'靠近古城，方便步行游览；订房时确认MPV停车位、家庭房和儿童早餐政策。',detail:'国庆房源紧张，优先选择可免费取消的房型。',xhsKeyword:'喀什古城步行街 亚朵酒店 停车 亲子',dianpingKeyword:'喀什古城步行街亚朵酒店'},
+    {name:'喀什古城高台民居亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'抵达后',desc:'靠近古城和高台民居片区，方便步行游览；订房时确认MPV停车位、家庭房和儿童早餐政策。',detail:'国庆房源紧张，优先选择可免费取消的房型；当前地图沿用古城片区坐标，酒店精确入口出发前用高德核验。',xhsKeyword:'喀什古城高台民居 亚朵酒店 停车 亲子',dianpingKeyword:'喀什古城高台民居亚朵酒店'},
     {name:'喀什古城',lat:39.4704,lng:75.9858,type:'spot',time:'下午',desc:'只走古城核心街巷，让孩子适应旅途节奏，不追密集打卡。',detail:'喀什约1290米，孩子落地日仍应补水、早休息。',xhsKeyword:'喀什古城 亲子 路线',dianping:false,gmap:'喀什古城'},
     {name:'布袋巷（可选）',lat:39.4708,lng:75.9872,type:'spot',time:'16:15',desc:'古城步行支线，适合看传统民居与地毯装饰。',detail:'地图点为古城片区，具体巷口出发前用高德核验；孩子疲劳就跳过。',xhsKeyword:'喀什古城 布袋巷 塔哈其巷',dianping:false},
     {name:'爷爷的爷爷的爸爸的馕（可选）',lat:39.4712,lng:75.9890,type:'food',time:'16:40',desc:'顺路买一个现烤馕全家分食，不把零食变成正餐。',detail:'门店位置和营业时间出发前用高德核验。',budget:'全家 ¥20–50',xhsKeyword:'爷爷的爷爷的爸爸的馕 喀什古城',dianpingKeyword:'爷爷的爷爷的爸爸的馕',pay:{alipay:1,wechat:1,cash:1}},
@@ -328,19 +332,19 @@ const DAYS = [
     {name:'汗巴扎夜市（晚餐二选一）',lat:39.4689,lng:75.9922,type:'food',time:'18:30',desc:'与蓝公羊烤肉店二选一；想多尝小吃选这里，儿童优先热汤主食。',budget:'全家 ¥250–450',xhsKeyword:'喀什汗巴扎夜市 美食 亲子',dianpingKeyword:'喀什汗巴扎夜市',pay:{alipay:1,wechat:1,cash:1}}
   ]},
   { id: 2, label: '10/3 喀什', date: '10月3日 · 喀什人文历史一日 · 约40–55 km', title: '博物馆、高台民居与老茶馆', drive:'市内纯驾驶约1.5–2小时；不含参观、用餐、停车和古城步行', color: '#ff3b30', locations: [
-    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'09:00',desc:'喀什连住第二晚，大件行李留在酒店。',detail:'下午百年老茶馆与国际大巴扎二选一，孩子疲劳就回酒店。',dianpingKeyword:'喀什古城步行街亚朵酒店'},
+    {name:'喀什古城高台民居亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'09:00',desc:'喀什连住第二晚，大件行李留在酒店。',detail:'下午百年老茶馆与国际大巴扎二选一，孩子疲劳就回酒店；精确入口出发前用高德核验。',dianpingKeyword:'喀什古城高台民居亚朵酒店'},
     {name:'喀什博物馆',lat:39.4895,lng:76.0180,type:'spot',time:'09:30',desc:'先了解西域、丝路与喀什历史。',detail:'开放时间和预约要求须在出发前核验。',xhsKeyword:'喀什博物馆 预约 亲子',dianping:false},
     {name:'香妃园',lat:39.5354,lng:76.0476,type:'spot',time:'11:30',desc:'重点看建筑与家族墓园，人多时缩短演出停留。',xhsKeyword:'香妃园 亲子 游览',dianping:false},
     {name:'艾力扎提抓饭馆',lat:39.4735,lng:76.0129,type:'food',time:'13:00',desc:'午餐建议点小份抓饭和清淡配菜。',detail:'地址线索为塔吾古孜路17号；地图点是道路附近估算，门店与营业时间出发前用高德核验。',budget:'全家 ¥180–320',xhsKeyword:'艾力扎提抓饭馆 喀什',dianpingKeyword:'艾力扎提抓饭馆 喀什',pay:{alipay:1,wechat:1,cash:1}},
-    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'14:15',desc:'回酒店午休约60–90分钟，下午不追求全部打卡。',dianpingKeyword:'喀什古城步行街亚朵酒店'},
+    {name:'喀什古城高台民居亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'14:15',desc:'回酒店午休约60–90分钟，下午不追求全部打卡。',dianpingKeyword:'喀什古城高台民居亚朵酒店'},
     {name:'高台民居（Kozichi Yarbeshi）',lat:39.4702,lng:76.0000,type:'spot',time:'16:00',desc:'看生土建筑、街巷与传统生活空间。',detail:'开放区域和入场规则出发前核验。',xhsKeyword:'高台民居 Kozichi Yarbeshi 喀什',dianping:false},
     {name:'买买提的老房子（巴依老爷的家）',lat:39.4721,lng:75.9919,type:'spot',time:'16:50',desc:'与高台民居顺路安排，重点看老宅空间和生活陈设。',detail:'名称、开放时间和门票以现场为准。',xhsKeyword:'买买提的老房子 巴依老爷的家 喀什',dianping:false},
     {name:'喀什百年老茶馆（推荐）',lat:39.4705,lng:75.9830,type:'drink',time:'17:40',desc:'坐下喝茶、听当地音乐，让孩子休息；与国际大巴扎二选一。',detail:'演出时间、座位和最低消费以当天为准。',budget:'全家 ¥80–180',xhsKeyword:'喀什百年老茶馆 表演 亲子',dianpingKeyword:'喀什百年老茶馆',pay:{alipay:1,wechat:1,cash:1}},
     {name:'喀什国际大巴扎（备选）',lat:39.4870,lng:76.0120,type:'spot',time:'17:40',desc:'若更想采购高原路上的水和常温食品，则替换百年老茶馆，不两处都赶。',xhsKeyword:'喀什国际大巴扎 国庆 避坑',dianping:false},
-    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'20:00',desc:'早点休息，为次日帕米尔长途做准备。',dianpingKeyword:'喀什古城步行街亚朵酒店'}
+    {name:'喀什古城高台民居亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'20:00',desc:'早点休息，为次日帕米尔长途做准备。',dianpingKeyword:'喀什古城高台民居亚朵酒店'}
   ]},
   { id: 3, label: '10/4 塔县', date: '10月4日 · 牛羊大巴扎→白沙湖→喀拉库勒湖→塔县 · 约310–330 km', title: '周日牛羊大巴扎与帕米尔景观', drive:'纯驾驶约6–7小时；含市场、查验和观景约10–12小时', color: '#34c759', locations: [
-    {name:'喀什古城步行街亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'08:20',desc:'退房并带齐边防证、热水、熟食、薄羽绒和儿童常用药。',detail:'选择牛羊大巴扎后预计较晚抵达塔县，石头城按时间和状态灵活决定。',dianpingKeyword:'喀什古城步行街亚朵酒店'},
+    {name:'喀什古城高台民居亚朵酒店',lat:39.4708,lng:75.9920,type:'hotel',time:'08:20',desc:'退房并带齐边防证、热水、熟食、薄羽绒和儿童常用药。',detail:'选择牛羊大巴扎后预计较晚抵达塔县，石头城按时间和状态灵活决定；精确入口出发前用高德核验。',dianpingKeyword:'喀什古城高台民居亚朵酒店'},
     {name:'喀什市牛羊大巴扎（周日可选）',lat:39.5218,lng:75.9327,type:'spot',time:'09:00–10:00',desc:'体验周日传统活畜交易，只走安全公共区域，孩子不靠近受惊牲畜。',detail:'2026年10月4日为星期日；出发前仍须核验国庆期间开市、停车、卫生与现场管控。',xhsKeyword:'喀什 牛羊大巴扎 周日 荒地乡 亲子',dianping:false},
     {name:'白沙湖/布伦口水库',lat:38.7203,lng:74.9863,type:'spot',time:'预计14:00',desc:'短停看白沙山、雪山与湖面，只在正规观景区活动。',detail:'约3300米上下；孩子不奔跑，停留约25–30分钟。',xhsKeyword:'白沙湖 喀什 帕米尔 亲子',dianping:false},
     {name:'喀拉库勒湖',lat:38.4453,lng:75.0563,type:'spot',time:'预计15:30',desc:'正面远眺慕士塔格峰，不加入冰川、骑马或长距离环湖。',detail:'湖区约3600米；孩子若精神差、拒食、呕吐或嗜睡，立即下撤。',xhsKeyword:'喀拉库勒湖 慕士塔格峰 亲子 高反',dianping:false},
@@ -348,10 +352,12 @@ const DAYS = [
     {name:'石头城与金草滩（时间允许可选）',lat:37.7720,lng:75.2230,type:'spot',time:'视抵达时间',desc:'根据抵达时间、末班入园、天气和全员状态灵活决定；条件允许可游览45–60分钟。',detail:'来不及就直接入住，不为追日落超速或延长儿童高海拔户外停留。',xhsKeyword:'塔县 石头城 金草滩 日落 亲子',dianping:false},
     {name:'喀什塔县帕米尔旅游区亚朵酒店',lat:37.7740,lng:75.2260,type:'hotel',time:'预计19:00–20:30',desc:'晚到就清淡热食、补水并立即休息；订房时必须确认供氧方式、停车和取消政策。',detail:'塔县约3100米。亚朵品牌不等于房间一定供氧，如无制氧房需另备经过确认的供氧方案。',xhsKeyword:'塔县 帕米尔旅游区 亚朵酒店 供氧',dianpingKeyword:'喀什塔县帕米尔旅游区亚朵酒店'}
   ]},
-  { id: 4, label: '10/5 莎车', date: '10月5日 · 塔县→喀什外围→莎车 · 约500–540 km', title: '塔县下撤，直达莎车', drive:'纯驾驶约8–9.5小时；不含检查、休息和用餐', color: '#007aff', locations: [
-    {name:'喀什塔县帕米尔旅游区亚朵酒店',lat:37.7740,lng:75.2260,type:'hotel',time:'07:00',desc:'早餐后直接下撤，出发前确认G314实时路况。',detail:'当天不走盘龙古道。若道路结冰、封闭或出发晚，在喀什止步，不疲劳驾驶硬赶莎车。',dianpingKeyword:'喀什塔县帕米尔旅游区亚朵酒店'},
-    {name:'白沙湖沿线安全休息点',lat:38.7203,lng:74.9863,type:'transport',time:'10:30',desc:'只作上洗手间、补水和观察孩子状态的短休息。',dianping:false},
-    {name:'喀什外围补给点',lat:39.4200,lng:76.0800,type:'transport',time:'14:00',desc:'加油、吃热食并更换驾驶员，不进入古城市区。',dianping:false},
+  { id: 4, label: '10/5 莎车', date: '10月5日 · 塔县→高原支线（可选）→莎车 · 直达约500–540 km', title: '高原支线可选后前往莎车', drive:'塔县直达莎车按高德约6.5小时；可选支线预计额外增加约3–4.5小时，均不含检查、休息和用餐', color: '#007aff', locations: [
+    {name:'喀什塔县帕米尔旅游区亚朵酒店',lat:37.7740,lng:75.2260,type:'hotel',time:'06:00–06:30',desc:'先查盘龙古道和沿线路况；不满足开放、天气、儿童状态和早出发条件，就直接驶往莎车。',detail:'主线仍是直接下撤莎车。走支线必须全员睡眠充足，两个孩子无头痛、呕吐、嗜睡或呼吸异常。',dianpingKeyword:'喀什塔县帕米尔旅游区亚朵酒店'},
+    {name:'盘龙古道入口（可选）',lat:37.6287,lng:75.4542,type:'spot',time:'07:30左右',desc:'仅在官方确认开放、无冰雪时进入；639道弯只做短停打卡。',detail:'10月可能因降雪、结冰或交通管控封闭；禁止绕卡。高点接近4000米，不让孩子奔跑或久留。',xhsKeyword:'盘龙古道 10月 封路 路况',dianping:false},
+    {name:'帕米尔大地之眼观景区域（可选）',lat:37.7030,lng:75.4380,type:'spot',time:'09:00左右',desc:'按开放道路和现场指引短停，点位以当天导航和官方公告为准。',detail:'网红称呼对应点位可能变化，不为寻找机位驶入非铺装或无人道路。',xhsKeyword:'帕米尔大地之眼 塔县 路线',dianping:false},
+    {name:'班迪尔蓝湖（可选）',lat:37.8379,lng:75.4218,type:'spot',time:'09:40–10:20',desc:'只在前两站没有延误且孩子状态良好时短停；10:30为硬性离开时间，超时直接取消。',detail:'三处全走会把当天变成约11–13小时长日；任何一项超时都优先保障安全转场。',xhsKeyword:'班迪尔蓝湖 10月 路况 亲子',dianping:false},
+    {name:'塔县直达莎车主线',lat:37.7708,lng:75.2281,type:'transport',time:'最晚10:30',desc:'开始约6.5小时纯驾驶转场；每60–90分钟休息并轮换驾驶员。',detail:'实际路线、里程和抵达时间以当天高德及交通管制为准；不夜驾、不疲劳驾驶。',dianping:false},
     {name:'苏碧夜市（早到可选）',lat:38.4165,lng:77.2420,type:'food',time:'19:00后',desc:'到达早且孩子状态良好再逛约60分钟，尝现做热食、看当地歌舞；位置、开放与国庆营业安排出发前核验。',budget:'全家 ¥250–420',xhsKeyword:'莎车 苏碧夜市 小吃 歌舞',dianpingKeyword:'莎车苏碧夜市',pay:{alipay:1,wechat:1,cash:1}},
     {name:'木卡姆故乡餐厅（晚餐二选一）',lat:38.4180,lng:77.2460,type:'food',time:'19:00后',desc:'与苏碧夜市二选一，可尝馕坑烤鸽子；门店位置、营业时间和是否需要预订出发前核验。',budget:'全家 ¥300–500',xhsKeyword:'莎车 木卡姆故乡餐厅 馕坑烤鸽子',dianpingKeyword:'木卡姆故乡餐厅',pay:{alipay:1,wechat:1,cash:1}},
     {name:'亚朵酒店莎车人民政府迎宾路店',lat:38.4310,lng:77.2600,type:'hotel',time:'19:30–21:00',desc:'抵达后休息，叶尔羌历史与老城留到次日上午。',detail:'订房时复核免费停车、早餐、亲子房型及延迟到店保留政策。',dianpingKeyword:'亚朵酒店 莎车人民政府迎宾路店'}
@@ -374,14 +380,16 @@ const DAYS = [
     {name:'和田—阿拉尔沙漠公路零公里',lat:37.4300,lng:80.0600,type:'spot',time:'09:00',desc:'在安全停车区拍零公里标志，不停在车道或视线盲区。',xhsKeyword:'和田 阿拉尔 沙漠公路 零公里',dianping:false},
     {name:'塔克拉玛干沙漠公路观景段',lat:39.0000,lng:80.6400,type:'spot',time:'12:00',desc:'只在明确允许停车处短停看沙丘，不驶入无路沙漠。',detail:'白天暴晒、风沙和路面横风都可能很强；孩子不赤脚跑沙丘，车辆不离开铺装路。',xhsKeyword:'和田 阿拉尔 沙漠公路 自驾 亲子',dianping:false},
     {name:'阿拉尔市补给点',lat:40.5480,lng:81.2810,type:'transport',time:'14:30',desc:'加油、吃热食并让孩子充分活动；评估司机状态后再决定是否继续。',detail:'若15:30后仍未完成补给，或司机/孩子状态不好，当天应在阿拉尔止步。',dianping:false},
-    {name:'库车步行街五一南路亚朵酒店',lat:41.7179,lng:82.9620,type:'hotel',time:'预计19:30–21:30',desc:'到店后只吃简餐并休息，不再安排夜游。',detail:'订房时确认停车、洗衣房、儿童早餐和延迟到店保留政策。',dianpingKeyword:'库车步行街五一南路亚朵酒店'}
+    {name:'库车步行街五一南路亚朵酒店',lat:41.7179,lng:82.9620,type:'hotel',time:'预计19:30–21:30',desc:'到店后只吃简餐并休息；若19:30前到达且孩子精神好，可在附近尝库车大馕或手工冰淇淋。',detail:'乌恰巴扎夜市、喀尔博瓦爷冰淇淋均为低强度参考，不为打卡压缩睡眠。订房时确认停车、洗衣房、儿童早餐和延迟到店保留政策。',dianpingKeyword:'库车步行街五一南路亚朵酒店'}
   ]},
-  { id: 7, label: '10/8 阿克苏', date: '10月8日 · 库车→库车王府/老城→克孜尔千佛洞→阿克苏 · 约330–380 km', title: '龟兹文化精华后转场阿克苏', drive:'纯驾驶约5–6小时；含两处游览与休息约9–11小时', color: '#ff2d55', locations: [
-    {name:'库车步行街五一南路亚朵酒店',lat:41.7179,lng:82.9620,type:'hotel',time:'08:00',desc:'早餐后退房；当天只选“库车王府/老城 + 克孜尔千佛洞”两项核心内容。',dianping:false},
-    {name:'库车王府',lat:41.7188,lng:82.9646,type:'spot',time:'08:30',desc:'看龟兹与库车地方历史、王府建筑，建议游览约1小时。',detail:'若前一晚到店太晚需要补觉，可删除本点，直接前往克孜尔千佛洞。',xhsKeyword:'库车王府 讲解 亲子',dianping:false},
-    {name:'库车老城/热斯坦历史文化街区',lat:41.7220,lng:82.9580,type:'spot',time:'09:40',desc:'短走老街、民居和市井街巷，控制在30–45分钟。',detail:'与库车王府相邻顺路；不要在这里安排长时间餐饮排队。',xhsKeyword:'库车老城 热斯坦 街区',dianping:false},
-    {name:'克孜尔千佛洞',lat:41.7830,lng:82.5000,type:'spot',time:'11:30',desc:'游览约2小时，建议请讲解员理解早于莫高窟的龟兹壁画体系。',detail:'提前核对国庆开放、预约、末班入园和洞窟轮换；无法按时抵达就取消，不压缩安全驾驶时间。',xhsKeyword:'克孜尔千佛洞 讲解 预约 亲子',dianping:false},
-    {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'预计18:30–20:00',desc:'入住后不再安排远距离活动；订房时确认停车、洗衣房和儿童早餐。',detail:'这家亚朵位于市区，不是机场酒店，次日去温宿大峡谷更方便。',dianpingKeyword:'阿克苏老街河南东路亚朵酒店'}
+  { id: 7, label: '10/8 阿克苏', date: '10月8日 · 库车市区人文候选→克孜尔千佛洞→阿克苏 · 约330–390 km', title: '库车人文候选与龟兹石窟', drive:'纯驾驶约5–6小时；市区人文只选1组，含千佛洞游览与休息约9–11小时', color: '#ff2d55', locations: [
+    {name:'库车步行街五一南路亚朵酒店',lat:41.7179,lng:82.9620,type:'hotel',time:'08:30',desc:'早餐后退房；特窟预约成功时直接前往克孜尔，只有普通参观模式才考虑市区人文。',detail:'D7按预约结果二选一：A普窟模式可短走市区；B特窟模式取消全部市区项目。',dianping:false},
+    {name:'库车老城/热斯坦路与龟兹小巷（可选）',lat:41.7220,lng:82.9580,type:'spot',time:'09:00–09:40',desc:'短走彩绘民居、雕花门廊与市井街巷，控制在30–40分钟。',detail:'地图点为老城片区，具体巷口和停车点出发前用高德核验；不在这里安排长时间排队。',xhsKeyword:'库车 热斯坦路 龟兹小巷 Citywalk',dianping:false},
+    {name:'龟兹魏晋古墓遗址博物馆（人文二选一）',lat:41.7124,lng:82.9575,type:'spot',time:'10:00左右',desc:'与库车王府二选一，优先预约成功的一处；博物馆建于遗址之上，适合系统了解魏晋时期龟兹。',detail:'提前核对国庆开放、预约、儿童参观要求和讲解场次；若开馆晚或排队，直接放弃。',xhsKeyword:'龟兹魏晋古墓遗址博物馆 预约 讲解',dianping:false},
+    {name:'库车王府（人文二选一）',lat:41.7188,lng:82.9646,type:'spot',time:'10:00左右',desc:'与古墓遗址博物馆二选一；时间紧或更在意性价比，可只在门口看建筑外观。',detail:'不要与古墓博物馆都做完整游览，最晚11:00离开库车市区。',xhsKeyword:'库车王府 门票 讲解 亲子',dianping:false},
+    {name:'库车大馕（顺路补给可选）',lat:41.7220,lng:82.9580,type:'food',time:'10:40前',desc:'在热斯坦路附近选现烤大馕全家分食，也可带作路餐；不必专程进入大馕城。',detail:'可同时留意烤包子；选择明码标价、现烤热食，不因网红排队耽误出发。',xhsKeyword:'库车大馕 热斯坦路',dianping:false},
+    {name:'克孜尔千佛洞',lat:41.7830,lng:82.5000,type:'spot',time:'普窟12:30/特窟上午',desc:'普窟参考开放谷西8、10、27、32、34、38窟；如特窟确认成功则上午直接到景区。',detail:'特窟按官方最新流程提前申请并等讲解老师确认；谷东178、179、180、188、189可作优先申请组合，17、171仅现场允许时问询，不保证开放。票价、窟号、讲解费和开放状态出发前再次核验。',xhsKeyword:'克孜尔千佛洞 特窟 预约 讲解',dianping:false},
+    {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'19:00–20:30',desc:'入住后不再安排远距离活动。',detail:'如库车市区超时，优先删减项目而不是夜间赶路。连续住两晚，确认停车、洗衣房、早餐和机场还车时间。',dianpingKeyword:'阿克苏老街河南东路亚朵酒店'}
   ]},
   { id: 8, label: '10/9 阿克苏', date: '10月9日 · 阿克苏→温宿托木尔大峡谷→阿克苏 · 往返约220–260 km', title: '温宿大峡谷全天', drive:'往返纯驾驶约3–4小时；景区含区间车约3.5–4小时', color: '#34c759', locations: [
     {name:'阿克苏老街河南东路亚朵酒店',lat:41.1680,lng:80.2790,type:'hotel',time:'08:00',desc:'早餐后出发，车上只带当日轻装。',dianping:false},
@@ -407,14 +415,20 @@ function overviewContent() {
   <div class="info-card"><div class="label">总里程</div><div class="value">约2,400–2,700 km</div></div>
   <div class="info-card"><div class="label">住宿</div><div class="value">喀什2晚 / 塔县1晚 / 莎车1晚 / 和田1晚 / 库车1晚 / 阿克苏2晚</div></div>
 </div>
-<div class="pay-summary"><h4>路线主线</h4>喀什（连住2晚）→ 周日牛羊大巴扎（可选）→ 白沙湖 → 喀拉库勒湖/慕士塔格峰 → 塔县 → 喀什外围补给 → 莎车 → 和田 → 塔克拉玛干沙漠公路 → 阿拉尔（补给）→ 库车住宿 → 库车王府/老城 → 克孜尔千佛洞 → 阿克苏 → 温宿托木尔大峡谷 → 阿克苏机场。</div>
+<div class="pay-summary"><h4>路线主线</h4>喀什（连住2晚）→ 周日牛羊大巴扎（可选）→ 白沙湖 → 喀拉库勒湖/慕士塔格峰 → 塔县 → 盘龙古道/帕米尔之眼/班迪尔蓝湖（仅作可选支线）→ 莎车 → 和田 → 塔克拉玛干沙漠公路 → 阿拉尔（补给）→ 库车住宿 → 库车王府/老城 → 克孜尔千佛洞 → 阿克苏 → 温宿托木尔大峡谷 → 阿克苏机场。</div>
 <div class="pay-summary"><h4>D3 周日限定与灵活安排</h4>2026年10月4日正好是星期日，可在09:00开市后体验喀什市牛羊大巴扎约1小时，再沿G314前往塔县。石头城与金草滩作为时间允许可选项：根据实际抵达时间、景区末班入园、天气和孩子状态决定是否游览45–60分钟；条件不合适就直接入住，不追日落。</div>
-<div class="pay-summary"><h4>这版行程的两个高压日</h4>D4 塔县下撤后直达莎车约8–9.5小时纯驾驶，D6 和田穿越沙漠公路并继续开到库车约9–11小时纯驾驶。两天都须尽早出发、两位以上驾驶员轮换；D4遇帕米尔道路异常就在喀什止步，D6把阿拉尔设为安全止损点，不强行夜驾。</div>
+<div class="pay-summary"><h4>这版行程的两个高压日</h4>D4 塔县直达莎车按高德约6.5小时纯驾驶；若加入盘龙古道、帕米尔之眼和班迪尔蓝湖，可选支线预计额外增加约3–4.5小时，使全天达到约11–13小时，只能在06:30前出发、道路开放、孩子状态良好且10:30前离开班迪尔方向时执行。D6 和田穿越沙漠公路并继续开到库车约9–11小时纯驾驶。两天都须两位以上驾驶员轮换，不强行夜驾。</div>
 <div class="pay-summary"><h4>和田深度游备选</h4>如果更重视古于阗文化，应在和田额外增加1晚：上午和田博物馆约2小时 → 午餐玫瑰花烤肉 → 下午团城约2小时，可在团城与玉龙喀什河捡石体验中二选一 → 傍晚约特干故城约3小时看日落和夜间演出。此方案必须同步减少库车或阿克苏行程，不能直接叠加到当前9天路线；博物馆开放、讲解、河道安全、约特干演出与票务均需出发前核验。</div>
-<div class="pay-summary"><h4>儿童高海拔红线</h4>白沙湖约3300米、喀拉库勒湖约3600米、塔县约3100米。5岁孩子可能不会准确描述头痛；持续哭闹、精神差、拒食、呕吐、步态异常、嗜睡、静息呼吸困难或口唇发紫，都应视为危险信号：停止上升、立即下撤并就医。不要自行给儿童服用成人高反药。</div>
+<div class="pay-summary"><h4>儿童高海拔红线</h4>白沙湖约3300米、喀拉库勒湖约3600米、塔县约3100米、盘龙古道高点接近4000米。5岁孩子可能不会准确描述头痛；持续哭闹、精神差、拒食、呕吐、步态异常、嗜睡、静息呼吸困难或口唇发紫，都应视为危险信号：停止上升、立即下撤并就医。不要自行给儿童服用成人高反药。</div>
 <div class="pay-summary"><h4>地图线说明</h4>总览地图上的彩色线按每天点位顺序连接，是行程与驾驶方向示意，不是实时道路轨迹；实际导航以当天高德/路况为准。每天卡片顶部会显示纯驾驶时间与含休息的建议时长。</div>
-<div class="pay-summary"><h4>住宿安排 · 全部亚朵</h4>D1–D2 喀什古城步行街亚朵 → D3 喀什塔县帕米尔旅游区亚朵 → D4 莎车人民政府迎宾路亚朵 → D5 和田博物馆迎宾路亚朵 → D6 库车步行街五一南路亚朵 → D7–D8 阿克苏老街河南东路亚朵。所有门店房态、停车、供氧和儿童政策均须在预订平台再次核实；尤其不能默认塔县亚朵一定有制氧房。</div>
-<div class="pay-summary"><h4>库车还有哪些值得玩</h4>本行程优先保留库车王府、热斯坦老街和克孜尔千佛洞，兼顾地方历史、城市人文与龟兹艺术。若愿意给库车增加完整一天，可再考虑天山神秘大峡谷（自然风景，往返较远）、苏巴什佛寺遗址（丝路考古）、库车大寺，以及预约敏感的龟兹魏晋古墓遗址博物馆；不要把这些全部塞进D7。</div>
+<div class="pay-summary"><h4>住宿安排 · 全部亚朵</h4>D1–D2 喀什古城高台民居亚朵 → D3 喀什塔县帕米尔旅游区亚朵 → D4 莎车人民政府迎宾路亚朵 → D5 和田博物馆迎宾路亚朵 → D6 库车步行街五一南路亚朵 → D7–D8 阿克苏老街河南东路亚朵。所有门店房态、精确入口、停车、供氧和儿童政策均须在预订平台及高德再次核实；尤其不能默认塔县亚朵一定有制氧房。</div>
+<div class="pay-summary"><h4>库车当前行程怎么选</h4>D6 穿越沙漠公路后预计较晚到库车，只保留晚餐和休息；若19:30前到店且孩子精神好，可在酒店附近尝库车大馕或喀尔博瓦爷手工冰淇淋，乌恰巴扎夜市仅作低强度参考。D7 上午先短走热斯坦路/龟兹小巷，再在“龟兹魏晋古墓遗址博物馆”和“库车王府”中二选一，最晚11:00离开市区，下午以克孜尔千佛洞为核心后转场阿克苏。博物馆开放预约、龟兹小巷入口、餐饮门店和夜市营业均需出发前核验。</div>
+<div class="pay-summary"><h4>如果给库车完整增加1天</h4><b>自然地貌线：</b>上午天山神秘大峡谷 → 下午克孜尔千佛洞 → 时间、路况和开放均允许再考虑克孜尔红石林 → 回城前顺路拍独库公路终点碑。各点距离较远，必须按当天导航删减，不能默认全部完成。<br><b>龟兹人文线：</b>龟兹博物馆/龟兹魏晋古墓遗址博物馆二选一 → 热斯坦路与龟兹小巷 Citywalk → 库车王府门口或内部二选一 → 晚上乌恰巴扎夜市。更适合孩子、天气差或想慢节奏时选择。</div>
+<div class="pay-summary"><h4>龟兹石窟四个区域先分清</h4><b>克孜尔千佛洞</b>是本行程主景区，有常规开放窟与需单独申请的特窟。<b>库木吐喇、森木塞姆、克孜尔尕哈</b>是三个外围石窟点，位置分散、讲解力量有限，通常需要分别提前预约并等待老师电话确认，不能拿克孜尔主景区门票直接临时串游。本次D7还要赶往阿克苏，不建议叠加外围石窟；若想深度看龟兹石窟，至少给库车增加1–2天。</div>
+<div class="pay-summary"><h4>克孜尔普通窟与特窟怎么选</h4><b>普通参观：</b>游客经验参考票价70元，谷西区常见开放8、10、27、32、34、38窟，每窟讲解约5分钟；38窟“音乐窟”的穹顶伎乐天是重点。票价、实际开放窟和讲解方式会因保护轮换、维修及节假日调整，以2026年10月官方公告和售票页为准。<br><b>特窟参考：</b>谷东178、179、180、188、189窟可作为优先申请组合；游客经验为五窟合计70元、另付100元讲解费，但该价格不能视为2026年固定政策。谷西17窟位于较高处，申请表可能不显示；171窟也可能不在表内，两者只能在现场开放、保护条件和讲解老师允许时礼貌问询，绝不能按“必开”安排行程。</div>
+<div class="pay-summary"><h4>特窟预约执行清单</h4>① 出发前尽早从景区官方公众号、文旅官方渠道或游客中心确认当期申请表、预约电话/邮箱、可选窟号、年龄限制与收费，不使用未经核实的个人代订；② 提交时准备参观日期与时段、6人姓名及证件信息、联系人手机、希望申请的窟号和备选组合，并明确同行有两名5岁儿童；③ 提交不等于成功，必须等讲解老师或景区确认电话/消息，记录集合时间、地点、联系人和付款方式；④ 出发前7天及前1天各复核一次开放、天气和道路，电话未确认就按普通窟方案执行；⑤ 当天提前30–60分钟到游客中心，带原件核验，不因现场加窟影响16:00离开景区的硬截止时间。任何要求向私人账户提前支付大额费用的情况都先向官方核实。</div>
+<div class="pay-summary"><h4>亲子特窟推荐顺序</h4><b>方案A｜最稳：</b>普通窟完整参观，重点听38窟，约1.5–2小时后离开。<br><b>方案B｜特窟确认成功：</b>取消库车老城、古墓博物馆和王府，上午直接到克孜尔；先按老师安排看谷东组合，再视孩子体力决定是否继续。每个特窟讲解约20分钟，五窟本身约100分钟，另加谷东往返、等候和后山步行，不能再按普通窟的2小时预算。17窟位置较高，不建议为了加窟让5岁孩子疲劳攀爬；171窟仅在老师主动确认可开放且时间充足时考虑。洞内遵守禁拍、禁闪光、禁触摸等现场保护规定。</div>
+<div class="pay-summary"><h4>库车美食参考</h4>库车大馕适合现烤分食并带作路餐；喀尔博瓦爷冰淇淋可选原味或巴旦木坚果味；烤包子、艾克热木美食店过油肉拌面、阿克苏苹果辣子鸡均作为到店后按位置和排队情况选择。当前行程驾驶强度高，不为某一家店跨城绕路；儿童优先热食、少辣和充足饮水。</div>
 <div class="section-head">行程概览</div>
 <div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div><div class="desc">🚗 ${d.drive||'按当天路况机动'}</div></div>`).join('')}</div>
 <div class="section-head">出发前确认</div>
@@ -466,14 +480,13 @@ AMap.plugin(['AMap.ToolBar','AMap.Geolocation'], () => {
 });
 
 const infoWindow = new AMap.InfoWindow({ offset:new AMap.Pixel(0,-18), closeWhenClickMap:true });
-function markerContent(color, emoji, small=false) {
-  const size = small ? 12 : 28;
-  const border = small ? 1.5 : 2.5;
-  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:${border}px solid #fff;display:flex;align-items:center;justify-content:center;font-size:${small?0:13}px;box-shadow:0 2px 8px rgba(0,0,0,.18)">${emoji||''}</div>`;
+function markerContent(color, label, small=false) {
+  return `<div class="route-order-marker${small?' overview':''}" style="background:${color}">${label||''}</div>`;
 }
-function addMarker(position, color, emoji, html, small=false, zIndex=100) {
-  const size = small ? 12 : 28;
-  const marker = new AMap.Marker({ position, content:markerContent(color,emoji,small), offset:new AMap.Pixel(-size/2,-size/2), zIndex });
+function addMarker(position, color, label, html, small=false, zIndex=100) {
+  const width = small ? 34 : 30;
+  const height = small ? 22 : 30;
+  const marker = new AMap.Marker({ position, content:markerContent(color,label,small), offset:new AMap.Pixel(-width/2,-height/2), zIndex });
   marker.setMap(map);
   if (html) marker.on('click', () => { infoWindow.setContent(html); infoWindow.open(map, position); });
   return marker;
@@ -498,8 +511,10 @@ function showDay(idx) {
         route.on('click', e => { infoWindow.setContent(`<b>${d.label} · ${d.title}</b><br>🚗 ${d.drive||'按当天路况机动'}<br><span style="color:#86868b">路线为示意线，点击日期查看详细卡片</span>`); infoWindow.open(map,e.lnglat); });
         polylines.push(route);
       }
-      d.locations.filter(l=>l.time!=='—' && l.lat).forEach(l => {
-        const m = addMarker(amapPos(l.lat,l.lng), d.color, '', `<b>${l.name}</b><br><span style="color:#86868b">${d.label} · ${d.title}</span><br>🚗 ${d.drive||'按当天路况机动'}`, true);
+      d.locations.forEach((l, orderIndex) => {
+        if(l.time==='—' || !l.lat) return;
+        const orderLabel = `D${d.id}-${orderIndex+1}`;
+        const m = addMarker(amapPos(l.lat,l.lng), d.color, orderLabel, `<b>${orderLabel} · ${l.name}</b><br><span style="color:#86868b">${d.label} · ${d.title}</span><br>🚗 ${d.drive||'按当天路况机动'}`, true);
         markers.push(m);
       });
     });
@@ -509,12 +524,13 @@ function showDay(idx) {
   const day = DAYS.find(d=>d.id===idx);
   if(!day) return;
   const coords = [];
-  day.locations.forEach(l => {
+  day.locations.forEach((l, orderIndex) => {
     if(!l.lat) return;
     const position = amapPos(l.lat,l.lng);
     const gmapQ = l.gmap||encodeURIComponent(l.name+' 新疆');
-    const html = `<b>${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><a href="#" onclick="event.preventDefault();openAS('${l.name.replace(/'/g,"\\'")}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</a>${l.xhs?' · <a href="'+l.xhs+'" target="_blank">📕 小红书</a>':''}`;
-    const m = addMarker(position, day.color, emojis[l.type]||'📌', html);
+    const orderLabel = String(orderIndex+1);
+    const html = `<b>${orderLabel} · ${l.name}</b>${l.time!=='—'?'<br><span style="color:#86868b">'+l.time+'</span>':''}<br>${l.desc}${l.budget?'<br><span style="color:#ff9500">'+l.budget+'</span>':''}<br><a href="#" onclick="event.preventDefault();openAS('${l.name.replace(/'/g,"\\'")}',${l.lat},${l.lng},'${gmapQ}')">📍 导航</a>${l.xhs?' · <a href="'+l.xhs+'" target="_blank">📕 小红书</a>':''}`;
+    const m = addMarker(position, day.color, orderLabel, html);
     markers.push(m);
     if(l.time!=='—') coords.push(position);
   });
@@ -573,7 +589,7 @@ function openExt(key, kind) {
 function openXhs(key) { return openExt(key, 'xhs'); }
 function openDp(key)  { return openExt(key, 'dp'); }
 
-function locCard(loc, dayIdx) {
+function locCard(loc, dayIdx, orderIndex, dayColor) {
   const dot = loc.type==='food'?'food':loc.type==='spot'?'spot':loc.type==='drink'?'drink':loc.type==='hotel'?'hotel':'transport';
   const bdg = loc.type==='food'?'<span class="badge food">餐</span>':loc.type==='spot'?'<span class="badge spot">景</span>':loc.type==='drink'?'<span class="badge drink">饮</span>':'';
   const uid = `d${dayIdx}-${loc.name.replace(/\W/g,'')}`;
@@ -593,7 +609,7 @@ function locCard(loc, dayIdx) {
     lnk += `<a href="${dpHref}" onclick="return openDp('${locKey.replace(/'/g,"\\'")}')" class="btn dp">${dpLabel}</a>`;
   }
   if(loc.reserve) lnk += `<a href="${loc.reserve}" target="_blank" class="btn rsv">📅 预约</a>`;
-  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name">${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
+  return `<div class="tl-item"><div class="tl-dot ${dot}"></div><div class="card" onclick="if(!event.target.closest('.btn,.links'))toggle('${uid}')"><div class="time">${loc.time!=='—'?loc.time:'备选'}</div><div class="name"><span class="order-badge" style="background:${dayColor}">${orderIndex+1}</span>${bdg} ${loc.name}</div><div class="desc">${loc.desc}</div>${loc.budget?'<div class="budget">'+loc.budget+'</div>':''}${payChips(loc.pay)}<div class="links">${lnk}</div>${loc.detail?'<div class="details" id="'+uid+'">'+loc.detail.replace(/\n/g,'<br>')+'</div>':''}</div></div>`;
 }
 
 function renderDay(idx) {
@@ -602,8 +618,8 @@ function renderDay(idx) {
   const alt = d.locations.filter(l=>l.time==='—');
   let h = `<div class="day-head"><h2>${d.title}</h2><p>${d.date}</p></div>`;
   h += `<div class="route-bar"><strong>🚗 当天驾驶</strong>\n${d.drive||'按当天路况机动'}\n<span style="font-size:12px">地图折线为点位顺序示意，实际驾驶请使用导航。</span></div>`;
-  if(main.length) { h += '<div class="section-head">行程</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx)); h += '</div>'; }
-  if(alt.length) { h += '<div class="section-head">备选</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx)); h += '</div>'; }
+  if(main.length) { h += '<div class="section-head">行程</div><div class="timeline">'; main.forEach(l => h += locCard(l, idx, d.locations.indexOf(l), d.color)); h += '</div>'; }
+  if(alt.length) { h += '<div class="section-head">备选</div><div class="timeline">'; alt.forEach(l => h += locCard(l, idx, d.locations.indexOf(l), d.color)); h += '</div>'; }
   return h;
 }
 
