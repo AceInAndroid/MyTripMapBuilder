@@ -107,7 +107,8 @@ a:hover { text-decoration: underline; }
 .print-root { display: none; }
 .print-root.exporting {
   display: block; position: relative; z-index: 800;
-  width: 100%; margin: 0; padding: 28px; background: #fff; color: #111;
+  width: 100%; margin: 0; padding: 28px 28px 40px; background: #fff; color: #111;
+  line-height: 1.55;
 }
 .print-root.exporting .hero { padding: 0 0 14px; text-align: left; border-bottom: 2px solid #111; margin-bottom: 14px; }
 .print-root.exporting .hero h1 { font-size: 25px; }
@@ -123,8 +124,10 @@ a:hover { text-decoration: underline; }
 .print-root.exporting .route-bar,
 .print-root.exporting .pay-summary { break-inside: avoid; page-break-inside: avoid; }
 .print-root.exporting .print-day {
-  padding-top: 16px; break-before: page; page-break-before: always;
-  break-inside: avoid; page-break-inside: avoid;
+  padding-top: 24px; margin-bottom: 8px; break-before: page; page-break-before: always;
+  /* A day can be taller than one A4 page. Do not mark the whole section as
+     unbreakable: html2pdf otherwise clips the section instead of splitting it. */
+  break-inside: auto; page-break-inside: auto;
 }
 .print-root.exporting .print-day .day-head { padding-top: 0; border-bottom: 2px solid #111; margin-bottom: 12px; }
 .print-root.exporting .links { display: none !important; }
@@ -136,6 +139,14 @@ a:hover { text-decoration: underline; }
 .print-root.exporting .card .name { font-size: 15px; }
 .print-root.exporting .card .desc,
 .print-root.exporting .details { font-size: 12px; }
+.print-root.exporting p,
+.print-root.exporting .name,
+.print-root.exporting .desc,
+.print-root.exporting .details,
+.print-root.exporting h1,
+.print-root.exporting h2,
+.print-root.exporting h3,
+.print-root.exporting h4 { break-inside: avoid; page-break-inside: avoid; }
 .print-note { margin: 0 0 14px; font-size: 11px; color: #666; }
 .pdf-status {
   display: none; position: fixed; inset: 0; z-index: 1200;
@@ -687,10 +698,12 @@ async function exportPDF() {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        scrollY: 0,
+        windowHeight: printRoot.scrollHeight
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'], before: '.print-day', avoid: ['.print-day'] }
+      pagebreak: { mode: ['css'], before: '.print-day', avoid: ['p', '.name', '.desc', '.details', 'h1', 'h2', 'h3', 'h4', '.tl-item', '.card', '.route-bar', '.pay-summary'] }
     }).from(printRoot).save();
   } catch (error) {
     console.error('html2pdf export failed; falling back to browser print.', error);
