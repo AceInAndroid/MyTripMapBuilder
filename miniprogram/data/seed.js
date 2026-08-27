@@ -61,4 +61,17 @@ var profile = {
   recycleCount: 0
 };
 
-module.exports = { trips: [southXinjiang], profile: profile };
+var destinations = [{
+  id: "destination-south-xinjiang",
+  name: "南疆",
+  slug: "south-xinjiang",
+  status: "planned",
+  coverColor: "#5FAF8B",
+  summary: "喀什、帕米尔、莎车、和田、龟兹与阿克苏的家庭旅行资料。",
+  representativeLatitude: 39.4704,
+  representativeLongitude: 75.9858,
+  tags: ["人文", "美食", "风景", "亲子"],
+  updatedAt: "2026-08-27T00:00:00.000Z"
+}];
+
+module.exports = { trips: [southXinjiang], destinations: destinations, profile: profile };

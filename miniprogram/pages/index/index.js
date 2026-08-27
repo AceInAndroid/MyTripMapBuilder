@@ -32,6 +32,5 @@ Page({
   },
   openTrip: function (event) { wx.navigateTo({ url: "/pages/trip/detail?id=" + event.currentTarget.dataset.id }); },
   markerTap: function (event) { var marker = this.data.markers.find(function (item) { return item.id === Number(event.detail.markerId); }); if (marker) wx.navigateTo({ url: "/pages/trip/detail?id=" + marker.tripId }); },
-  createTrip: function () { wx.switchTab({ url: "/pages/plans/index" }); },
   joinFamily: function () { wx.switchTab({ url: "/pages/profile/index" }); }
 });

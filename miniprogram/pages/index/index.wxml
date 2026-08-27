@@ -13,7 +13,7 @@
       <view class="cover" style="background: {{item.coverColor}}"><view class="stamp">{{item.dayCount}} DAYS</view><view class="cover-line"></view><view class="cover-label">{{item.coverLabel}}</view></view>
       <view class="trip-copy"><view class="status-row"><text class="status">{{item.statusLabel}}</text><text wx:if="{{item.countdown}}" class="countdown">{{item.countdown}}</text></view><view class="storybook-title trip-title">{{item.title}}</view><view class="trip-date">{{item.dateRange}} · {{item.childAge}}</view><view wx:if="{{item.status !== 'completed'}}" class="progress"><i style="width: {{item.progress}}%"></i></view><view wx:else class="memory">“{{item.memory}}”</view></view><view class="arrow">›</view>
     </view>
-    <view wx:if="{{!trips.length && !loading}}" class="empty-book"><view class="storybook-title">画下第一段旅程</view><text>从一个想去的地方开始，慢慢写成我们的故事。</text><button bindtap="createTrip">开始计划</button></view>
+    <view wx:if="{{!trips.length && !loading}}" class="empty-book"><view class="storybook-title">还没有旅行计划</view><text>请在电脑端让 AI 生成完整攻略后，这里会出现路线绘本。</text></view>
     <view class="sync-note">{{source === 'cloud' ? '家庭绘本已同步' : '当前为本地草稿模式，连接云端后自动同步'}}</view>
     <view wx:if="{{syncError}}" class="sync-error">诊断信息：{{syncError}}</view>
   </view>

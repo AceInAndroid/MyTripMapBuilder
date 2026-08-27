@@ -23,7 +23,7 @@
     "backgroundColor": "#FFFDF6",
     "list": [
       { "pagePath": "pages/index/index", "text": "足迹" },
-      { "pagePath": "pages/plans/index", "text": "行程" },
+      { "pagePath": "pages/plans/index", "text": "计划" },
       { "pagePath": "pages/profile/index", "text": "我的" }
     ]
   },

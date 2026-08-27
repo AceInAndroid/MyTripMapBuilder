@@ -1,7 +1,38 @@
-<view wx:if="{{unauthorized}}" class="page paper-grain private-gate"><view class="storybook-title title">这是一本私人的旅行绘本</view><text>只有受邀的家人可以打开完整内容。</text><button bindtap="joinFamily">输入家人邀请码</button></view><view wx:else class="page paper-grain safe-bottom">
-  <view class="header"><view class="kicker">OUR JOURNEYS</view><view class="storybook-title title">旅行记录</view><view class="subtitle">电脑上规划好行程后导入这里，出发时只管记录。</view></view>
-  <view class="section-title"><text>计划中的旅行</text><i></i></view><view wx:if="{{loading}}" class="loading">正在整理计划…</view>
-  <view wx:for="{{planned}}" wx:key="id" class="plan" data-id="{{item.id}}" bindtap="openTrip"><view class="date-stamp"><strong>{{item.startDate}}</strong><text>出发</text></view><view class="plan-copy"><view class="storybook-title">{{item.title}}</view><text>{{item.countdown}} · {{item.dayCount}}天</text><view class="bar"><i style="width: {{item.progress}}%"></i></view></view><view class="tag">计划中</view></view>
-  <view wx:if="{{drafts.length}}" class="section-title"><text>待整理的导入行程</text><i></i></view><view wx:for="{{drafts}}" wx:key="id" class="draft" data-id="{{item.id}}" bindtap="openTrip"><view><text class="storybook-title">{{item.title}}</text><small>{{item.dateRange}}</small></view><view>打开记录 ›</view></view>
-  <view wx:if="{{!planned.length && !drafts.length && !loading}}" class="empty-state">电脑端导入旅行后，这里会出现路线记录。</view>
+<view wx:if="{{unauthorized}}" class="page paper-grain private-gate">
+  <view class="storybook-title title">这是一本私人的旅行绘本</view>
+  <text>只有受邀的家人可以查看旅行计划。</text>
+  <button bindtap="joinFamily">输入家人邀请码</button>
+</view>
+<view wx:else class="page paper-grain safe-bottom">
+  <view class="header">
+    <view class="kicker">OUR TRAVEL PLANS</view>
+    <view class="storybook-title title">旅行计划</view>
+    <view class="subtitle">每一张卡片都是一趟完整的旅行，路线、照片和日记都在里面。</view>
+  </view>
+  <view class="plan-hint">攻略和路线由电脑端 AI 生成后同步；小程序只负责查看、导航、照片和日记。</view>
+  <scroll-view class="status-filter" scroll-x="true">
+    <view wx:for="{{statusLabels}}" wx:key="key" class="filter {{status === item.key ? 'active' : ''}}" data-status="{{item.key}}" bindtap="filterStatus">{{item.label}}</view>
+  </scroll-view>
+  <view wx:if="{{loading}}" class="loading">正在整理旅行计划…</view>
+  <view wx:if="{{!loading && filteredTrips.length}}" class="trip-list">
+    <view wx:for="{{filteredTrips}}" wx:key="id" class="trip-card status-{{item.status}}" data-id="{{item.id}}" bindtap="openTrip">
+      <view class="trip-cover" style="background: {{item.coverColor || '#5FAF8B'}}">
+        <view class="cover-stamp">{{item.daysLabel}}</view>
+        <view class="cover-label">{{item.coverLabel || '我们的旅行绘本'}}</view>
+      </view>
+      <view class="trip-copy">
+        <view class="status-row"><text class="status">{{item.statusLabel}}</text><text wx:if="{{item.countdown}}" class="countdown">{{item.countdown}}</text></view>
+        <view class="storybook-title trip-title">{{item.title}}</view>
+        <view class="trip-date">{{item.dateRange || '日期待 AI 生成'}} · {{item.childAge || '家庭同行'}}</view>
+        <view class="route-summary">{{item.routeSummary}}</view>
+        <view wx:if="{{item.status !== 'completed'}}" class="progress"><i style="width: {{item.progress}}%"></i></view>
+        <view wx:else class="memory">“{{item.memory || '把这段旅程收进成长地图。'}}”</view>
+      </view>
+      <view class="arrow">›</view>
+    </view>
+  </view>
+  <view wx:if="{{!loading && !filteredTrips.length}}" class="empty-state">
+    <view class="storybook-title">还没有这一类旅行</view>
+    <text>在电脑端让 AI 生成完整攻略后，旅行计划会出现在这里。</text>
+  </view>
 </view>

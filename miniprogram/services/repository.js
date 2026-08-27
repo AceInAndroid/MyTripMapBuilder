@@ -6,6 +6,7 @@ var TRIPS_KEY = "travel-book:trips:v2";
 var PROFILE_KEY = "travel-book:profile:v2";
 var DELETED_KEY = "travel-book:deleted:v1";
 var PENDING_KEY = "travel-book:pending-mutations:v1";
+var DESTINATIONS_KEY = "travel-book:destinations:v1";
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 function read(key, fallback) {
@@ -122,5 +123,7 @@ function inviteParent() {
 function createReviewInvite() { return callCloud("createReviewInvite", {}); }
 function revokeReviewAccess() { return callCloud("revokeReviewAccess", {}); }
 function joinFamily(code) { return callCloud("joinFamily", { code: String(code || "").trim().toUpperCase() }); }
+function listDestinations(status) { return callCloud("listDestinations", status ? { status: status } : {}).catch(function () { var items = read(DESTINATIONS_KEY, seed.destinations || []); return status ? items.filter(function (item) { return item.status === status; }) : items; }); }
+function getDestination(destinationId) { return callCloud("getDestination", { destinationId: destinationId }).catch(function () { var destination = (seed.destinations || []).find(function (item) { return item.id === destinationId; }); if (!destination) throw new Error("DESTINATION_NOT_FOUND"); var items = []; (seed.trips || []).forEach(function (trip) { (trip.days || []).forEach(function (day) { (day.locations || []).forEach(function (place, index) { items.push({ id: trip.id + "-" + day.id + "-" + index, destinationId: destination.id, type: place[5] === "美食" ? "food" : place[5] === "景点" ? "attraction" : place[5] === "住宿" ? "hotel" : "transport", title: place[0], summary: place[4], latitude: place[1], longitude: place[2], status: trip.status === "completed" ? "visited" : "planned", verifyRequired: /开放|预约|供氧|封闭|核验|确认/.test(place[4]) }); }); }); }); return { destination: destination, items: items }; }); }
 
-module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, listShares: listShares, revokeShare: revokeShare, inviteParent: inviteParent, createReviewInvite: createReviewInvite, revokeReviewAccess: revokeReviewAccess, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip };
+module.exports = { bootstrap: bootstrap, flushPending: flushPending, listTrips: listTrips, getTrip: getTrip, saveTrip: saveTrip, saveDiary: saveDiary, getProfile: getProfile, saveProfile: saveProfile, createShare: createShare, getShare: getShare, listShares: listShares, revokeShare: revokeShare, inviteParent: inviteParent, createReviewInvite: createReviewInvite, revokeReviewAccess: revokeReviewAccess, joinFamily: joinFamily, deleteTrip: deleteTrip, listDeleted: listDeleted, restoreTrip: restoreTrip, listDestinations: listDestinations, getDestination: getDestination };

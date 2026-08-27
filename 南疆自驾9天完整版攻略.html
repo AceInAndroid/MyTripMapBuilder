@@ -104,6 +104,7 @@ a:hover { text-decoration: underline; }
 }
 .pdf-export:active { transform: scale(.97); }
 .pdf-export:disabled { cursor: wait; opacity: .72; }
+.manager-link { position: fixed; left: 16px; bottom: calc(18px + var(--safe-bottom)); z-index: 500; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--accent); box-shadow: var(--shadow-lg); font-size: 13px; text-decoration: none; }
 .print-root { display: none; }
 .print-root.exporting {
   display: block; position: relative; z-index: 800;
@@ -320,6 +321,7 @@ a:hover { text-decoration: underline; }
 <div class="tabs" id="tabs"></div>
 <div class="content" id="content"></div>
 <button class="pdf-export" type="button" onclick="exportPDF()" aria-label="导出完整行程为PDF" title="一键下载完整行程PDF">⬇️ 导出 PDF</button>
+<a class="manager-link" href="manager.html">旅行计划列表</a>
 <div class="print-root" id="print-root"></div>
 <div class="pdf-status" id="pdf-status" role="status" aria-live="polite"><span>正在生成 PDF…</span></div>
 
