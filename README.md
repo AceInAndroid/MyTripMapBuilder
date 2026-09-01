@@ -6,8 +6,20 @@
 - 路线：喀什 → 塔县 → 莎车 → 和田 → 阿拉尔（补给）→ 库车住宿/龟兹文化 → 阿克苏
 - 同行：4 位大人、2 位 5 岁儿童
 - 地图：高德地图 JavaScript API 2.0
-- 国内访问（CloudBase）：[mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com](https://mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com/)
+- 国内访问（CloudBase）：[mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com](https://mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com/)
 - 境外备用（Vercel）：[my-trip-map-builder.vercel.app](https://my-trip-map-builder.vercel.app/)
+
+## 部署环境
+
+| 环境 | 用途 | 地址或标识 | 发布方式 |
+|---|---|---|---|
+| 本地开发 | 修改和调试静态网页 | `http://127.0.0.1:8000/` | `python3 -m http.server 8000` |
+| CloudBase 静态托管 | 国内访问网页、旅行计划列表和静态攻略 | [正式网页](https://mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com/) | CloudBase CLI 上传静态文件 |
+| CloudBase 小程序后端 | 家庭身份、旅行数据、分享和邀请 | `mytripmap-d3gvmwvxd5dba118e` / `travelBook` | CloudBase CLI 更新云函数 |
+| Vercel Production | GitHub 自动部署的境外备用网页 | [my-trip-map-builder.vercel.app](https://my-trip-map-builder.vercel.app/) | 推送 `main` 后自动部署 |
+| GitHub | 源码和 Vercel 部署源 | [AceInAndroid/MyTripMapBuilder](https://github.com/AceInAndroid/MyTripMapBuilder) | `git push origin main` |
+
+当前正式 CloudBase 环境 ID 同时写在 `cloudbaserc.json` 和 `miniprogram/config.js`。切换环境时必须同时核对这两个文件，不能只修改其中一个。旧环境 `mytripmap-d3gxxk1psd0b28d72` 已不作为当前部署目标。
 
 ## 功能
 
@@ -122,6 +134,7 @@ Web JS API Key 会随网页源码发送到浏览器，因此它不是服务端�
 
 ```text
 my-trip-map-builder.vercel.app
+mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com
 ```
 
 本地开发按高德控制台支持的格式增加：
@@ -224,37 +237,127 @@ Vercel 配置：
 推送到 `main` 后 Vercel 会自动部署：
 
 ```bash
-git add .
+git status --short
+git add README.md index.html manager.html '南疆自驾9天完整版攻略.html'
 git commit -m "update trip map"
 git push origin main
 ```
 
-## CloudBase 国内部署
-
-CloudBase 环境：`mytripmap-d3gxxk1psd0b28d72`（上海地域）。正式国内访问地址：
+生产地址示例，也是当前项目的正式 Vercel 地址：
 
 ```text
-https://mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com/
+https://my-trip-map-builder.vercel.app/
 ```
 
-项目根目录的 `cloudbaserc.json` 只保存环境 ID，不包含 API Key。更新页面后使用 CloudBase CLI 发布：
+发布后检查：
 
 ```bash
-tcb hosting deploy ./index.html /index.html \
-  --env-id mytripmap-d3gxxk1psd0b28d72
+curl -I https://my-trip-map-builder.vercel.app/
+curl -fsSL https://my-trip-map-builder.vercel.app/ \
+  | grep '南疆自驾9天完整版攻略'
+```
+
+如果 GitHub 推送成功但 Vercel 页面没有更新，到 Vercel 项目设置确认 Git Repository、Production Branch=`main` 和 Root Directory=`./`。也可以在已经关联项目的本机目录使用 Vercel CLI 手动发布：
+
+```bash
+npx vercel --prod
+```
+
+不要同时维护两套内容不同的 Vercel 项目；正式域名始终以 `my-trip-map-builder.vercel.app` 为准。
+
+## CloudBase 国内部署
+
+当前 CloudBase 环境：
+
+```text
+mytripmap-d3gvmwvxd5dba118e
+```
+
+正式国内访问地址：
+
+```text
+https://mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com/
+```
+
+### 1. 登录与确认环境
+
+项目根目录的 `cloudbaserc.json` 只保存环境 ID，不包含 API Key。首次使用或登录失效时执行：
+
+```bash
+tcb login
+tcb env list
+tcb hosting detail -e mytripmap-d3gvmwvxd5dba118e
+```
+
+也可以设置 CLI 默认环境，但部署命令仍建议显式携带 `-e`，防止发布到错误环境：
+
+```bash
+tcb env use mytripmap-d3gvmwvxd5dba118e
+```
+
+如使用 CloudBase API Key 登录，只在交互式命令、本机密钥管理器或 CI Secret 中提供，绝不能把 Key 写入 README 或脚本。
+
+### 2. 部署静态网页
+
+更新网页后分别上传正式入口、计划列表和可分享攻略：
+
+```bash
+tcb hosting deploy index.html /index.html \
+  -e mytripmap-d3gvmwvxd5dba118e --yes
+
+tcb hosting deploy manager.html /manager.html \
+  -e mytripmap-d3gvmwvxd5dba118e --yes
+
+tcb hosting deploy '南疆自驾9天完整版攻略.html' \
+  '/南疆自驾9天完整版攻略.html' \
+  -e mytripmap-d3gvmwvxd5dba118e --yes
 ```
 
 发布后验证：
 
 ```bash
-tcb hosting list /index.html \
-  --env-id mytripmap-d3gxxk1psd0b28d72 --json
+tcb hosting list / -e mytripmap-d3gvmwvxd5dba118e
+
+curl -fsSL -H 'Cache-Control: no-cache' \
+  https://mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com/ \
+  | grep '旅行计划列表'
+
+curl -fsSL -H 'Cache-Control: no-cache' \
+  https://mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com/manager.html \
+  | grep 'OUR TRAVEL PLANS'
 ```
+
+CloudBase 静态托管存在 CDN 缓存。CLI 上传成功后手机仍显示旧页面时，先使用上述 `Cache-Control: no-cache` 请求验证源站内容，再等待几分钟或清理浏览器缓存。
+
+### 3. 部署小程序云函数
+
+只有 `cloudfunctions/travelBook/` 的后端代码发生变化时才需要更新云函数：
+
+```bash
+tcb fn code update travelBook \
+  --dir cloudfunctions/travelBook \
+  -e mytripmap-d3gvmwvxd5dba118e
+```
+
+部署后确认函数状态：
+
+```bash
+tcb fn list -e mytripmap-d3gvmwvxd5dba118e
+```
+
+小程序实际调用的函数名是 `travelBook`，配置位于 `miniprogram/config.js`。不要误部署为新的 `travel-book` 函数。
+
+### 4. 小程序代码与 CloudBase 的关系
+
+- 只修改 CloudBase 数据：不需要重新上传小程序版本。
+- 只修改 `index.html` 或 `manager.html`：只部署静态托管，不需要小程序发版。
+- 修改 `cloudfunctions/travelBook/`：更新云函数，不需要小程序发版，前提是接口契约兼容。
+- 修改 `miniprogram/` 页面、样式、配置或客户端逻辑：必须重新上传微信小程序版本并走体验版/审核/发布流程。
 
 CloudBase API Key 只能保存在本机登录状态或 CI 密钥中，不得写入源码、README、`cloudbaserc.json` 或 GitHub。高德 Web JS API Key 的安全域名白名单还需加入：
 
 ```text
-mytripmap-d3gxxk1psd0b28d72-1257836777.tcloudbaseapp.com
+mytripmap-d3gvmwvxd5dba118e-1472039275.tcloudbaseapp.com
 ```
 
 ## 上线前检查
