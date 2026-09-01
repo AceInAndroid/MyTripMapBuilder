@@ -18,6 +18,7 @@ function restoreSeedTrips(trips) { return (trips || []).slice(); }
 function attachTripDefaults(trips) {
   return (trips || []).map(function (trip) {
     if (trip && trip.id === "south-xinjiang-2026-restored" && !trip.notes && seed.trips[0] && seed.trips[0].notes) trip.notes = clone(seed.trips[0].notes);
+    if (trip && trip.id === "south-xinjiang-2026-restored" && !trip.foodNotes && seed.trips[0] && seed.trips[0].foodNotes) trip.foodNotes = clone(seed.trips[0].foodNotes);
     return trip;
   });
 }

@@ -285,6 +285,7 @@ body.notes-mode .tabs { top: 0; }
 .tip-note .bazaar-week span { padding: 7px 9px; border-radius: 9px; background: rgba(255,149,0,.08); color: var(--text-secondary); }
 .tip-note .verify-note { margin-top: 12px; padding: 9px 11px; border-radius: 9px; background: #fff3d4; color: #895600; }
 .notes-grid{display:grid;gap:14px}.note-card{background:linear-gradient(145deg,#fffdf7,#fff);border:1px solid rgba(91,70,54,.14);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-sm)}.note-card h3{margin:0 0 6px;font-size:17px}.note-card .note-region{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tint-red);font-weight:700}.note-summary{color:var(--text-secondary);line-height:1.65;font-size:13px;margin:7px 0 13px}.note-block{margin-top:14px}.note-heading{font-weight:700;font-size:14px;margin-bottom:6px}.note-block p{margin:0;color:var(--text-secondary);line-height:1.7;font-size:13px}.note-block ul{margin:0;padding-left:20px;color:var(--text-secondary);line-height:1.7;font-size:13px}.note-table-wrap{overflow-x:auto;border:1px solid #e8e1d8;border-radius:10px}.note-table{border-collapse:collapse;min-width:520px;width:100%;font-size:12px}.note-table th,.note-table td{padding:8px 10px;border-bottom:1px solid #eee7de;text-align:left;white-space:nowrap}.note-table th{background:#f8f1e6;color:var(--text-primary)}.note-callout{padding:10px 12px;border-radius:10px;background:#eef8f3;color:#477060;font-size:12px;line-height:1.6}.note-callout.warning{background:#fff3d4;color:#895600}.note-verify{margin-top:14px;padding:9px 11px;border-radius:9px;background:#fff3d4;color:#895600;font-size:12px}
+.food-grid .note-card{border-color:rgba(212,102,66,.24);background:linear-gradient(145deg,#fffaf3,#fff)}.food-grid .note-region{color:#d46642}.food-grid .note-heading{color:#8c4934}.food-grid .note-table th{background:#faebdd}.food-intro{padding:12px 14px;border-left:4px solid #e97b52;border-radius:4px 12px 12px 4px;background:#fff4e8}
 @media (max-width:480px) { .tip-note .bazaar-week { grid-template-columns: 1fr; } }
 
 /* ── Legend ── */
@@ -647,6 +648,19 @@ function renderDay(idx) {
   return h;
 }
 
+const FOOD_DATA = [
+ {region:'喀什',title:'喀什特色美食 · 按时段吃',summary:'按烟火气、地道性和手工感整理，从早餐到夜市直接查找。价格、营业时间和摊位位置均以到店当天为准。',blocks:[
+  {type:'heading',text:'早餐 · 古城烟火气起点（09:30—11:30）'},
+  {type:'table',columns:['美食','推荐地点','参考价','推荐吃法'],rows:[['缸子肉','阿布爷爷古城缸子肉店｜阿热亚路与恰萨路交叉口西南约20米','20元/缸；窝窝馕3元','清炖羊肉和恰玛古，掰馕蘸汤，趁热吃。'],['窖坑烤包子','爱乐热木肉馕烤包子店｜诺尔贝希路','2.5元/个','薄皮羊肉洋葱馅，刚出炉时吃。'],['手工馕','爷爷的爷爷的爸爸的馕｜古城西区','普通馕3元；玫瑰馕5元','可单吃或夹烤肉，也适合作随身干粮。']]},
+  {type:'heading',text:'午餐 · 正餐硬核担当（12:30—14:30）'},
+  {type:'table',columns:['美食','推荐地点','参考价','推荐吃法'],rows:[['手抓饭','艾力扎提抓饭馆｜塔吾古孜路17号','羊肉抓饭30元；羊腿抓饭40元','配手工酸奶解腻；想吃羊腿抓饭尽量中午前到。'],['鸽子汤','新蓝天鸽子汤店','35元/份','乳鸽与鹰嘴豆慢炖，可询问是否能够续汤。'],['家常拌面','大水磨抓饭拉面馆｜古城东门附近','15元/份','番茄或牛肉口味，适合作为儿童相对稳妥的主食。']]},
+  {type:'heading',text:'下午茶 · 慢享古城人文（15:00—17:00）'},
+  {type:'table',columns:['体验','推荐地点','参考价','推荐吃法'],rows:[['百年老茶馆','艾提尕尔清真寺旁','约30元/人','咸奶茶、馕和鹰嘴豆；二楼露台听木卡姆、看街景。'],['手工冰淇淋','恰萨路与阿热亚路交叉口小摊／古兰丹姆店','5元/个','牛奶鸡蛋手工捶打，撒开心果碎，买到后尽快吃。']]},
+  {type:'heading',text:'晚餐 · 夜市烟火狂欢（19:30—21:30）'},
+  {type:'table',columns:['美食','参考位置','参考价','推荐吃法'],rows:[['米肠子与面肺子','艾提尕尔夜市','10—20元/份','切片后配辣油蒜汁；儿童少辣。'],['酸奶粽子','夜市绿色衣服阿姨摊位（流动摊位）','5元/份','糯米、酸奶和蜂蜜，适合烤肉后解腻。'],['红柳烤肉','东门“石榴大叔”附近／夜市摊位','5元/串','趁热吃，可配现榨石榴汁。'],['烤蛋','夜市摊位','3元/个','蜂蜜烤蛋偏甜，全家分食尝鲜。']]},
+  {type:'callout',tone:'warning',text:'以上为旅行资料参考，不作为固定行程。门店可能重名、迁址或歇业，流动摊位没有稳定坐标；出发前用高德和电话复核。儿童优先全熟、现做、少辣食物，夜市少量多样。'}]},
+ {region:'库车',title:'库车美食参考',summary:'按住宿位置和排队情况顺路选择，不为某一家店跨城绕行。',blocks:[{type:'list',items:['库车大馕：适合现烤分食，也可作路餐。','喀尔博瓦爷手工冰淇淋：可选原味或巴旦木坚果味。','烤包子、过油肉拌面、阿克苏苹果辣子鸡：按营业与顺路程度选择。']},{type:'callout',text:'高强度驾驶日儿童优先热食、少辣与充足饮水；门店营业和位置出发前核验。'}]}
+];
 const NOTE_DATA = [
  {region:'喀什',title:'喀什各乡镇巴扎指南',summary:'巴扎是乡民交易与体验民俗的集市，本条只作机动参考，不生成路线点位。',blocks:[
   {type:'paragraph',html:'牛羊交易之外，还有烤鱼、肉串、包子、时令水果、干果和土特产。活畜区域照看好儿童。'},
@@ -654,9 +668,10 @@ const NOTE_DATA = [
   {type:'list',items:['通常10:00–20:00，建议11:30到达，逛1–2小时。','周一、周三、周六、周日可能有公交直达；打车或拼车经验价20–40元单程。','周日游客最多。']},{type:'callout',tone:'warning',text:'日期、开市时间、公交班次、价格和节假日安排请出发前核验。'}]},
  {region:'和田',title:'古于阗深度游备选',summary:'愿意多留一晚时参考，不能直接叠加到当前9天路线。',blocks:[{type:'table',columns:['时段','安排','时长'],rows:[['上午','和田博物馆、免费讲解','约2小时'],['午餐','玫瑰花烤肉','机动'],['下午','团城；玉龙喀什河二选一','约2–3小时'],['傍晚','约特干故城日落及演出','约3小时']]},{type:'callout',tone:'warning',text:'博物馆、河道安全、演出与票务均需核验，并同步减少库车或阿克苏内容。'}]},
  {region:'库车',title:'龟兹石窟与克孜尔特窟攻略',summary:'四个区域、普通窟与特窟预约一次看懂。',blocks:[{type:'table',columns:['区域','定位','建议'],rows:[['克孜尔千佛洞','主景区，普通窟与特窟','D7核心'],['库木吐喇','外围石窟','另约时间'],['森木塞姆','外围石窟','另约时间'],['克孜尔尕哈','外围石窟','另约时间']]},{type:'paragraph',html:'普通窟游客经验票价70元，常见8、10、27、32、34、38窟，38窟音乐窟是重点。特窟可优先申请谷东178、179、180、188、189组合；17窟与171窟仅在现场允许时问询。'},{type:'heading',text:'特窟预约执行清单'},{type:'list',items:['从官方公众号、文旅渠道或游客中心确认申请方式、窟号、年龄限制与收费。','准备日期时段、6人证件、联系人、首选与备选窟号，并说明两名5岁儿童。','等待景区或讲解老师明确确认；出发前7天和前1天复核。','当天提前30–60分钟到场，不影响16:00离开硬截止。']},{type:'callout',tone:'warning',text:'票价、开放窟与政策以2026年官方信息为准；不向未经核实的私人账户支付大额费用。'}]},
- {region:'库车',title:'库车行程取舍与美食参考',summary:'自然地貌线、人文线和顺路小吃，按孩子状态灵活选择。',blocks:[{type:'list',items:['D6晚到库车以晚餐休息为主；D7上午热斯坦路/龟兹小巷与古墓博物馆、库车王府二选一。','完整加一天可选：天山神秘大峡谷→克孜尔千佛洞，或龟兹博物馆→老城→王府→乌恰巴扎。','库车大馕、喀尔博瓦爷冰淇淋、烤包子和过油肉拌面按位置顺路选择。']},{type:'callout',text:'各点距离、营业和开放情况按当天导航核验，不默认全部完成。'}]}
+ {region:'库车',title:'库车行程取舍参考',summary:'自然地貌线和人文线按孩子状态灵活选择。',blocks:[{type:'list',items:['D6晚到库车以休息为主；D7上午热斯坦路/龟兹小巷与古墓博物馆、库车王府二选一。','完整加一天可选：天山神秘大峡谷→克孜尔千佛洞，或龟兹博物馆→老城→王府。']},{type:'callout',text:'各点距离和开放情况按当天导航核验，不默认全部完成。'}]}
 ];
 function renderNotes(printMode=false){ return `<div class="section-head">旅行笔记 · 攻略参考</div><p class="note-summary">与具体路线无关的资料集中在这里，表格可横向查看；笔记内容不会改变地图点位、折线或导航。</p><div class="notes-grid">${NOTE_DATA.map(n=>`<article class="note-card"><div class="note-region">${n.region} · 参考笔记</div><h3>${n.title}</h3><div class="note-summary">${n.summary}</div>${n.blocks.map(b=>b.type==='heading'?`<div class="note-block note-heading">${b.text}</div>`:b.type==='paragraph'?`<div class="note-block"><p>${b.html}</p></div>`:b.type==='list'?`<div class="note-block"><ul>${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`:b.type==='table'?`<div class="note-block note-table-wrap"><table class="note-table"><thead><tr>${b.columns.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:`<div class="note-block note-callout ${b.tone||''}">${b.text}</div>`).join('')}</article>`).join('')}</div>`; }
+function renderFood(){ return `<div class="section-head">旅行美食 · 按时段查找</div><p class="note-summary food-intro">美食资料独立于每日路线，适合现场按时间、位置和孩子状态选择；表格可横向查看。</p><div class="notes-grid food-grid">${FOOD_DATA.map(n=>`<article class="note-card"><div class="note-region">${n.region} · 美食笔记</div><h3>${n.title}</h3><div class="note-summary">${n.summary}</div>${n.blocks.map(b=>b.type==='heading'?`<div class="note-block note-heading">${b.text}</div>`:b.type==='list'?`<div class="note-block"><ul>${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`:b.type==='table'?`<div class="note-block note-table-wrap"><table class="note-table"><thead><tr>${b.columns.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:`<div class="note-block note-callout ${b.tone||''}">${b.text}</div>`).join('')}</article>`).join('')}</div>`; }
 
 // ══════════ NAV ══════════
 let cur = 0;
@@ -664,7 +679,8 @@ const tabsEl = document.getElementById('tabs');
 const contentEl = document.getElementById('content');
 
 const NOTES_TAB_ID = -1;
-[{id:0,label:'总览'},{id:NOTES_TAB_ID,label:'笔记'},...DAYS.slice(1)].forEach(d => {
+const FOOD_TAB_ID = -2;
+[{id:0,label:'总览'},{id:NOTES_TAB_ID,label:'笔记'},{id:FOOD_TAB_ID,label:'美食'},...DAYS.slice(1)].forEach(d => {
   const btn = document.createElement('button');
   btn.className = 'tab' + (d.id===0?' active':'');
   btn.dataset.day = d.id;
@@ -675,10 +691,11 @@ const NOTES_TAB_ID = -1;
 function go(idx) {
   cur = idx;
   tabsEl.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.day===idx));
-  contentEl.innerHTML = idx===0 ? overviewContent() : idx===NOTES_TAB_ID ? renderNotes() : renderDay(idx);
-  document.body.classList.toggle('notes-mode', idx===NOTES_TAB_ID);
+  contentEl.innerHTML = idx===0 ? overviewContent() : idx===NOTES_TAB_ID ? renderNotes() : idx===FOOD_TAB_ID ? renderFood() : renderDay(idx);
+  const isReadingTab = idx===NOTES_TAB_ID || idx===FOOD_TAB_ID;
+  document.body.classList.toggle('notes-mode', isReadingTab);
   document.querySelector('.manager-link').hidden = idx !== 0;
-  if(idx===NOTES_TAB_ID) { document.getElementById('map').style.display='none'; } else { document.getElementById('map').style.display=''; showDay(idx); }
+  if(isReadingTab) { document.getElementById('map').style.display='none'; } else { document.getElementById('map').style.display=''; showDay(idx); }
   window.scrollTo({top:0, behavior:'instant'});
   const tab = tabsEl.querySelector(`[data-day="${idx}"]`);
   if(tab) tab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
@@ -696,7 +713,7 @@ const pdfButton = document.querySelector('.pdf-export');
 const pdfStatus = document.getElementById('pdf-status');
 const defaultTitle = document.title;
 function buildPrintDocument() {
-  printRoot.innerHTML = `${overviewContent()}${renderNotes(true)}<p class="print-note">导出说明：地图未嵌入打印稿；路线、封路和实时驾驶时间以出发当天高德导航为准。</p>` +
+  printRoot.innerHTML = `${overviewContent()}${renderNotes(true)}${renderFood()}<p class="print-note">导出说明：地图未嵌入打印稿；路线、封路和实时驾驶时间以出发当天高德导航为准。</p>` +
     DAYS.slice(1).map(d => `<section class="print-day">${renderDay(d.id)}</section>`).join('');
 }
 function nativePrintPDF() {

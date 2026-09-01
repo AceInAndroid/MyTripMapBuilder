@@ -28,6 +28,7 @@ Required structure:
   "footprintCount": 0,
   "aiGenerated": false,
   "needsVerification": true,
+  "foodNotes": [],
   "notes": [],
   "days": [],
   "createdAt": "ISO-8601 timestamp",
@@ -55,6 +56,15 @@ become a daily route stop, map marker, or navigation waypoint:
 
 Notes are informational only. Never copy them into `days[].places` unless the
 user explicitly promotes one item into the itinerary.
+
+## Food notes
+
+Use `foodNotes` for food guides that remain separate from the daily route. They
+use the same structured `blocks` as trip notes, including headings, paragraphs,
+lists, tables, and callouts. A food recommendation is not a map marker or
+navigation waypoint unless the user explicitly adds it to `days[].places`.
+Prices, opening times, addresses, stall descriptions, and availability should
+normally set `verifyRequired: true`.
 
 ## Day and place
 
