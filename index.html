@@ -84,6 +84,7 @@ a:hover { text-decoration: underline; }
   border-bottom: .5px solid var(--separator); scrollbar-width: none;
 }
 .tabs::-webkit-scrollbar { display: none; }
+body.notes-mode .tabs { top: 0; }
 .tab {
   flex-shrink: 0; padding: 7px 16px; border-radius: 980px; border: none;
   background: var(--bg-grouped); color: var(--text-secondary);
@@ -273,6 +274,18 @@ a:hover { text-decoration: underline; }
 .pay-summary h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
 .pay-summary .warn { color: var(--tint-red); }
 .pay-summary .ok-text { color: var(--tint-green); }
+.tip-note { background: linear-gradient(145deg,#fffdf4,#fff); border: 1px solid rgba(255,149,0,.22); border-radius: var(--radius-lg); padding: 0 16px 14px; box-shadow: var(--shadow-sm); font-size: 13px; line-height: 1.72; }
+.tip-note summary { padding: 15px 0 10px; cursor: pointer; color: var(--text-primary); font-size: 15px; font-weight: 700; list-style: none; }
+.tip-note summary::-webkit-details-marker { display: none; }
+.tip-note summary::after { content: '展开'; float: right; color: var(--tint-orange); font-size: 12px; font-weight: 600; }
+.tip-note[open] summary::after { content: '收起'; }
+.tip-note h4 { margin: 13px 0 3px; font-size: 13px; }
+.tip-note p { color: var(--text-secondary); }
+.tip-note .bazaar-week { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin-top: 8px; }
+.tip-note .bazaar-week span { padding: 7px 9px; border-radius: 9px; background: rgba(255,149,0,.08); color: var(--text-secondary); }
+.tip-note .verify-note { margin-top: 12px; padding: 9px 11px; border-radius: 9px; background: #fff3d4; color: #895600; }
+.notes-grid{display:grid;gap:14px}.note-card{background:linear-gradient(145deg,#fffdf7,#fff);border:1px solid rgba(91,70,54,.14);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-sm)}.note-card h3{margin:0 0 6px;font-size:17px}.note-card .note-region{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tint-red);font-weight:700}.note-summary{color:var(--text-secondary);line-height:1.65;font-size:13px;margin:7px 0 13px}.note-block{margin-top:14px}.note-heading{font-weight:700;font-size:14px;margin-bottom:6px}.note-block p{margin:0;color:var(--text-secondary);line-height:1.7;font-size:13px}.note-block ul{margin:0;padding-left:20px;color:var(--text-secondary);line-height:1.7;font-size:13px}.note-table-wrap{overflow-x:auto;border:1px solid #e8e1d8;border-radius:10px}.note-table{border-collapse:collapse;min-width:520px;width:100%;font-size:12px}.note-table th,.note-table td{padding:8px 10px;border-bottom:1px solid #eee7de;text-align:left;white-space:nowrap}.note-table th{background:#f8f1e6;color:var(--text-primary)}.note-callout{padding:10px 12px;border-radius:10px;background:#eef8f3;color:#477060;font-size:12px;line-height:1.6}.note-callout.warning{background:#fff3d4;color:#895600}.note-verify{margin-top:14px;padding:9px 11px;border-radius:9px;background:#fff3d4;color:#895600;font-size:12px}
+@media (max-width:480px) { .tip-note .bazaar-week { grid-template-columns: 1fr; } }
 
 /* ── Legend ── */
 .legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 0; font-size: 12px; color: var(--text-secondary); }
@@ -304,6 +317,8 @@ a:hover { text-decoration: underline; }
   .print-day { break-before: page; }
   .print-day .day-head { padding-top: 0; border-bottom: 2px solid #111; margin-bottom: 12px; }
   .print-root .tl-item, .print-root .card, .print-root .route-bar, .print-root .pay-summary { break-inside: avoid; }
+  .print-root .note-card, .print-root .note-table { break-inside: avoid; page-break-inside: avoid; }
+  .print-root .note-table-wrap { overflow: visible; }
   .print-root .links { display: none !important; }
   .print-root .details, .print-root .details.closed { display: block !important; }
   .print-root .section-head { padding-top: 12px; }
@@ -433,17 +448,11 @@ function overviewContent() {
 <div class="pay-summary"><h4>路线主线</h4>喀什（连住2晚）→ 周日牛羊大巴扎（可选）→ 白沙湖 → 喀拉库勒湖/慕士塔格峰 → 塔县 → 盘龙古道/帕米尔之眼/班迪尔蓝湖（仅作可选支线）→ 莎车 → 和田 → 塔克拉玛干沙漠公路 → 阿拉尔（补给）→ 库车住宿 → 库车王府/老城 → 克孜尔千佛洞 → 阿克苏 → 温宿托木尔大峡谷 → 阿克苏机场。</div>
 <div class="pay-summary"><h4>D3 周日限定与灵活安排</h4>2026年10月4日正好是星期日，可在09:00开市后体验喀什市牛羊大巴扎约1小时，再沿G314前往塔县。石头城与金草滩作为时间允许可选项：根据实际抵达时间、景区末班入园、天气和孩子状态决定是否游览45–60分钟；条件不合适就直接入住，不追日落。</div>
 <div class="pay-summary"><h4>这版行程的两个高压日</h4>D4 塔县直达莎车按高德约6.5小时纯驾驶；若加入盘龙古道、帕米尔之眼和班迪尔蓝湖，可选支线预计额外增加约3–4.5小时，使全天达到约11–13小时，只能在06:30前出发、道路开放、孩子状态良好且10:30前离开班迪尔方向时执行。D6 和田穿越沙漠公路并继续开到库车约9–11小时纯驾驶。两天都须两位以上驾驶员轮换，不强行夜驾。</div>
-<div class="pay-summary"><h4>和田深度游备选</h4>如果更重视古于阗文化，应在和田额外增加1晚：上午和田博物馆约2小时 → 午餐玫瑰花烤肉 → 下午团城约2小时，可在团城与玉龙喀什河捡石体验中二选一 → 傍晚约特干故城约3小时看日落和夜间演出。此方案必须同步减少库车或阿克苏行程，不能直接叠加到当前9天路线；博物馆开放、讲解、河道安全、约特干演出与票务均需出发前核验。</div>
+
 <div class="pay-summary"><h4>儿童高海拔红线</h4>白沙湖约3300米、喀拉库勒湖约3600米、塔县约3100米、盘龙古道高点接近4000米。5岁孩子可能不会准确描述头痛；持续哭闹、精神差、拒食、呕吐、步态异常、嗜睡、静息呼吸困难或口唇发紫，都应视为危险信号：停止上升、立即下撤并就医。不要自行给儿童服用成人高反药。</div>
 <div class="pay-summary"><h4>地图线说明</h4>总览地图上的彩色线按每天点位顺序连接，是行程与驾驶方向示意，不是实时道路轨迹；实际导航以当天高德/路况为准。每天卡片顶部会显示纯驾驶时间与含休息的建议时长。</div>
 <div class="pay-summary"><h4>住宿安排 · 全部亚朵</h4>D1–D2 喀什古城高台民居亚朵 → D3 喀什塔县帕米尔旅游区亚朵 → D4 莎车人民政府迎宾路亚朵 → D5 和田博物馆迎宾路亚朵 → D6 库车步行街五一南路亚朵 → D7–D8 阿克苏老街河南东路亚朵。所有门店房态、精确入口、停车、供氧和儿童政策均须在预订平台及高德再次核实；尤其不能默认塔县亚朵一定有制氧房。</div>
-<div class="pay-summary"><h4>库车当前行程怎么选</h4>D6 穿越沙漠公路后预计较晚到库车，只保留晚餐和休息；若19:30前到店且孩子精神好，可在酒店附近尝库车大馕或喀尔博瓦爷手工冰淇淋，乌恰巴扎夜市仅作低强度参考。D7 上午先短走热斯坦路/龟兹小巷，再在“龟兹魏晋古墓遗址博物馆”和“库车王府”中二选一，最晚11:00离开市区，下午以克孜尔千佛洞为核心后转场阿克苏。博物馆开放预约、龟兹小巷入口、餐饮门店和夜市营业均需出发前核验。</div>
-<div class="pay-summary"><h4>如果给库车完整增加1天</h4><b>自然地貌线：</b>上午天山神秘大峡谷 → 下午克孜尔千佛洞 → 时间、路况和开放均允许再考虑克孜尔红石林 → 回城前顺路拍独库公路终点碑。各点距离较远，必须按当天导航删减，不能默认全部完成。<br><b>龟兹人文线：</b>龟兹博物馆/龟兹魏晋古墓遗址博物馆二选一 → 热斯坦路与龟兹小巷 Citywalk → 库车王府门口或内部二选一 → 晚上乌恰巴扎夜市。更适合孩子、天气差或想慢节奏时选择。</div>
-<div class="pay-summary"><h4>龟兹石窟四个区域先分清</h4><b>克孜尔千佛洞</b>是本行程主景区，有常规开放窟与需单独申请的特窟。<b>库木吐喇、森木塞姆、克孜尔尕哈</b>是三个外围石窟点，位置分散、讲解力量有限，通常需要分别提前预约并等待老师电话确认，不能拿克孜尔主景区门票直接临时串游。本次D7还要赶往阿克苏，不建议叠加外围石窟；若想深度看龟兹石窟，至少给库车增加1–2天。</div>
-<div class="pay-summary"><h4>克孜尔普通窟与特窟怎么选</h4><b>普通参观：</b>游客经验参考票价70元，谷西区常见开放8、10、27、32、34、38窟，每窟讲解约5分钟；38窟“音乐窟”的穹顶伎乐天是重点。票价、实际开放窟和讲解方式会因保护轮换、维修及节假日调整，以2026年10月官方公告和售票页为准。<br><b>特窟参考：</b>谷东178、179、180、188、189窟可作为优先申请组合；游客经验为五窟合计70元、另付100元讲解费，但该价格不能视为2026年固定政策。谷西17窟位于较高处，申请表可能不显示；171窟也可能不在表内，两者只能在现场开放、保护条件和讲解老师允许时礼貌问询，绝不能按“必开”安排行程。</div>
-<div class="pay-summary"><h4>特窟预约执行清单</h4>① 出发前尽早从景区官方公众号、文旅官方渠道或游客中心确认当期申请表、预约电话/邮箱、可选窟号、年龄限制与收费，不使用未经核实的个人代订；② 提交时准备参观日期与时段、6人姓名及证件信息、联系人手机、希望申请的窟号和备选组合，并明确同行有两名5岁儿童；③ 提交不等于成功，必须等讲解老师或景区确认电话/消息，记录集合时间、地点、联系人和付款方式；④ 出发前7天及前1天各复核一次开放、天气和道路，电话未确认就按普通窟方案执行；⑤ 当天提前30–60分钟到游客中心，带原件核验，不因现场加窟影响16:00离开景区的硬截止时间。任何要求向私人账户提前支付大额费用的情况都先向官方核实。</div>
-<div class="pay-summary"><h4>亲子特窟推荐顺序</h4><b>方案A｜最稳：</b>普通窟完整参观，重点听38窟，约1.5–2小时后离开。<br><b>方案B｜特窟确认成功：</b>取消库车老城、古墓博物馆和王府，上午直接到克孜尔；先按老师安排看谷东组合，再视孩子体力决定是否继续。每个特窟讲解约20分钟，五窟本身约100分钟，另加谷东往返、等候和后山步行，不能再按普通窟的2小时预算。17窟位置较高，不建议为了加窟让5岁孩子疲劳攀爬；171窟仅在老师主动确认可开放且时间充足时考虑。洞内遵守禁拍、禁闪光、禁触摸等现场保护规定。</div>
-<div class="pay-summary"><h4>库车美食参考</h4>库车大馕适合现烤分食并带作路餐；喀尔博瓦爷冰淇淋可选原味或巴旦木坚果味；烤包子、艾克热木美食店过油肉拌面、阿克苏苹果辣子鸡均作为到店后按位置和排队情况选择。当前行程驾驶强度高，不为某一家店跨城绕路；儿童优先热食、少辣和充足饮水。</div>
+
 <div class="section-head">行程概览</div>
 <div class="day-list">${DAYS.slice(1).map(d=>`<div class="card" onclick="go(${d.id})"><div class="name"><span class="dot" style="background:${d.color}"></span>${d.label} · ${d.title}</div><div class="desc">${d.date}</div><div class="desc">🚗 ${d.drive||'按当天路况机动'}</div></div>`).join('')}</div>
 <div class="section-head">出发前确认</div>
@@ -638,12 +647,24 @@ function renderDay(idx) {
   return h;
 }
 
+const NOTE_DATA = [
+ {region:'喀什',title:'喀什各乡镇巴扎指南',summary:'巴扎是乡民交易与体验民俗的集市，本条只作机动参考，不生成路线点位。',blocks:[
+  {type:'paragraph',html:'牛羊交易之外，还有烤鱼、肉串、包子、时令水果、干果和土特产。活畜区域照看好儿童。'},
+  {type:'table',columns:['星期','巴扎','距离','参考车程'],rows:[['周一','英吾斯坦乡','约27km','约40分钟'],['周二','牙甫泉镇','约36km','约55分钟'],['周三','阿瓦提乡','约16km','约30分钟'],['周四','巴合齐乡','约21km','约40分钟'],['周五','木什乡','约35km','约50分钟'],['周六','伯什克然木乡','约17km','约40分钟'],['周日','喀什牛羊大巴扎','约11km','约25分钟']]},
+  {type:'list',items:['通常10:00–20:00，建议11:30到达，逛1–2小时。','周一、周三、周六、周日可能有公交直达；打车或拼车经验价20–40元单程。','周日游客最多。']},{type:'callout',tone:'warning',text:'日期、开市时间、公交班次、价格和节假日安排请出发前核验。'}]},
+ {region:'和田',title:'古于阗深度游备选',summary:'愿意多留一晚时参考，不能直接叠加到当前9天路线。',blocks:[{type:'table',columns:['时段','安排','时长'],rows:[['上午','和田博物馆、免费讲解','约2小时'],['午餐','玫瑰花烤肉','机动'],['下午','团城；玉龙喀什河二选一','约2–3小时'],['傍晚','约特干故城日落及演出','约3小时']]},{type:'callout',tone:'warning',text:'博物馆、河道安全、演出与票务均需核验，并同步减少库车或阿克苏内容。'}]},
+ {region:'库车',title:'龟兹石窟与克孜尔特窟攻略',summary:'四个区域、普通窟与特窟预约一次看懂。',blocks:[{type:'table',columns:['区域','定位','建议'],rows:[['克孜尔千佛洞','主景区，普通窟与特窟','D7核心'],['库木吐喇','外围石窟','另约时间'],['森木塞姆','外围石窟','另约时间'],['克孜尔尕哈','外围石窟','另约时间']]},{type:'paragraph',html:'普通窟游客经验票价70元，常见8、10、27、32、34、38窟，38窟音乐窟是重点。特窟可优先申请谷东178、179、180、188、189组合；17窟与171窟仅在现场允许时问询。'},{type:'heading',text:'特窟预约执行清单'},{type:'list',items:['从官方公众号、文旅渠道或游客中心确认申请方式、窟号、年龄限制与收费。','准备日期时段、6人证件、联系人、首选与备选窟号，并说明两名5岁儿童。','等待景区或讲解老师明确确认；出发前7天和前1天复核。','当天提前30–60分钟到场，不影响16:00离开硬截止。']},{type:'callout',tone:'warning',text:'票价、开放窟与政策以2026年官方信息为准；不向未经核实的私人账户支付大额费用。'}]},
+ {region:'库车',title:'库车行程取舍与美食参考',summary:'自然地貌线、人文线和顺路小吃，按孩子状态灵活选择。',blocks:[{type:'list',items:['D6晚到库车以晚餐休息为主；D7上午热斯坦路/龟兹小巷与古墓博物馆、库车王府二选一。','完整加一天可选：天山神秘大峡谷→克孜尔千佛洞，或龟兹博物馆→老城→王府→乌恰巴扎。','库车大馕、喀尔博瓦爷冰淇淋、烤包子和过油肉拌面按位置顺路选择。']},{type:'callout',text:'各点距离、营业和开放情况按当天导航核验，不默认全部完成。'}]}
+];
+function renderNotes(printMode=false){ return `<div class="section-head">旅行笔记 · 攻略参考</div><p class="note-summary">与具体路线无关的资料集中在这里，表格可横向查看；笔记内容不会改变地图点位、折线或导航。</p><div class="notes-grid">${NOTE_DATA.map(n=>`<article class="note-card"><div class="note-region">${n.region} · 参考笔记</div><h3>${n.title}</h3><div class="note-summary">${n.summary}</div>${n.blocks.map(b=>b.type==='heading'?`<div class="note-block note-heading">${b.text}</div>`:b.type==='paragraph'?`<div class="note-block"><p>${b.html}</p></div>`:b.type==='list'?`<div class="note-block"><ul>${b.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`:b.type==='table'?`<div class="note-block note-table-wrap"><table class="note-table"><thead><tr>${b.columns.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:`<div class="note-block note-callout ${b.tone||''}">${b.text}</div>`).join('')}</article>`).join('')}</div>`; }
+
 // ══════════ NAV ══════════
 let cur = 0;
 const tabsEl = document.getElementById('tabs');
 const contentEl = document.getElementById('content');
 
-DAYS.forEach(d => {
+const NOTES_TAB_ID = -1;
+[{id:0,label:'总览'},{id:NOTES_TAB_ID,label:'笔记'},...DAYS.slice(1)].forEach(d => {
   const btn = document.createElement('button');
   btn.className = 'tab' + (d.id===0?' active':'');
   btn.dataset.day = d.id;
@@ -654,9 +675,11 @@ DAYS.forEach(d => {
 function go(idx) {
   cur = idx;
   tabsEl.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.day===idx));
-  contentEl.innerHTML = idx===0 ? overviewContent() : renderDay(idx);
-  showDay(idx);
-  contentEl.scrollTo({top:0});
+  contentEl.innerHTML = idx===0 ? overviewContent() : idx===NOTES_TAB_ID ? renderNotes() : renderDay(idx);
+  document.body.classList.toggle('notes-mode', idx===NOTES_TAB_ID);
+  document.querySelector('.manager-link').hidden = idx !== 0;
+  if(idx===NOTES_TAB_ID) { document.getElementById('map').style.display='none'; } else { document.getElementById('map').style.display=''; showDay(idx); }
+  window.scrollTo({top:0, behavior:'instant'});
   const tab = tabsEl.querySelector(`[data-day="${idx}"]`);
   if(tab) tab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
 }
@@ -673,7 +696,7 @@ const pdfButton = document.querySelector('.pdf-export');
 const pdfStatus = document.getElementById('pdf-status');
 const defaultTitle = document.title;
 function buildPrintDocument() {
-  printRoot.innerHTML = `${overviewContent()}<p class="print-note">导出说明：地图未嵌入打印稿；路线、封路和实时驾驶时间以出发当天高德导航为准。</p>` +
+  printRoot.innerHTML = `${overviewContent()}${renderNotes(true)}<p class="print-note">导出说明：地图未嵌入打印稿；路线、封路和实时驾驶时间以出发当天高德导航为准。</p>` +
     DAYS.slice(1).map(d => `<section class="print-day">${renderDay(d.id)}</section>`).join('');
 }
 function nativePrintPDF() {

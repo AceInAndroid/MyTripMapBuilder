@@ -28,11 +28,33 @@ Required structure:
   "footprintCount": 0,
   "aiGenerated": false,
   "needsVerification": true,
+  "notes": [],
   "days": [],
   "createdAt": "ISO-8601 timestamp",
   "updatedAt": "ISO-8601 timestamp"
 }
 ```
+
+## Trip notes
+
+Use `notes` for rich reference material that belongs to the whole trip but must not
+become a daily route stop, map marker, or navigation waypoint:
+
+```json
+{
+  "id": "kashgar-bazaar-guide",
+  "region": "喀什",
+  "title": "喀什各乡镇巴扎指南",
+  "summary": "巴扎是当地乡民买卖、交换物资的传统集市。",
+  "blocks": [{ "type": "paragraph", "html": "通常约10:00—20:00，建议11:30左右到达。" },
+    { "type": "table", "columns": ["星期", "巴扎"], "rows": [["周日", "喀什牛羊大巴扎"]] }],
+  "verifyRequired": true,
+  "updatedAt": "ISO-8601 timestamp"
+}
+```
+
+Notes are informational only. Never copy them into `days[].places` unless the
+user explicitly promotes one item into the itinerary.
 
 ## Day and place
 

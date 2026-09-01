@@ -15,6 +15,12 @@ function read(key, fallback) {
 function write(key, value) { wx.setStorageSync(key, value); return value; }
 function enqueueMutation(action, payload) { var pending = read(PENDING_KEY, []); pending.push({ id: Date.now() + "-" + Math.random(), action: action, payload: clone(payload) }); write(PENDING_KEY, pending); }
 function restoreSeedTrips(trips) { return (trips || []).slice(); }
+function attachTripDefaults(trips) {
+  return (trips || []).map(function (trip) {
+    if (trip && trip.id === "south-xinjiang-2026-restored" && !trip.notes && seed.trips[0] && seed.trips[0].notes) trip.notes = clone(seed.trips[0].notes);
+    return trip;
+  });
+}
 
 function callCloud(action, data) {
   var app = getApp();
@@ -47,7 +53,7 @@ function callCloud(action, data) {
 function bootstrap() {
   var local = { trips: restoreSeedTrips(read(TRIPS_KEY, [])), profile: read(PROFILE_KEY, seed.profile), source: "local" };
   return flushPending().then(function () { return callCloud("bootstrap", {}); }).then(function (data) {
-    var cloudTrips = restoreSeedTrips(data.trips || []);
+    var cloudTrips = attachTripDefaults(restoreSeedTrips(data.trips || []));
     cloudTrips.forEach(function (trip) { trip.childAge = date.ageAt(data.profile.childBirthday, trip.startDate) || trip.childAge; });
     if (cloudTrips.length) write(TRIPS_KEY, cloudTrips);
     if (data.profile) write(PROFILE_KEY, data.profile);
