@@ -518,8 +518,6 @@ function addMarker(position, color, label, html, small=false, zIndex=100) {
   return marker;
 }
 
-if (HOTEL.lat) addMarker(amapPos(HOTEL.lat,HOTEL.lng), '#ff9500', '🏨', `<b>${HOTEL.name}</b>`, false, 1000);
-
 let markers = [], polylines = [];
 const emojis = { food:'🍽️', spot:'📍', hotel:'🏨', transport:'🚃', drink:'🍺' };
 
