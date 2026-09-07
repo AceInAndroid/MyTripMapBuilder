@@ -10,6 +10,7 @@ var tripDays = original.days.map(function (day) {
     title: day.title,
     distance: day.distance,
     drive: day.drive,
+    tip: day.tip || "",
     warning: day.warning || "",
     places: day.locations.map(function (item, index) {
       return {
@@ -102,6 +103,26 @@ var southXinjiang = {
     verifyRequired: true,
     updatedAt: "2026-09-01T00:00:00.000Z"
   }, {
+    id: "taheman-wetland-loop-guide",
+    region: "塔县",
+    title: "塔合曼湿地小环线（白沙湖→塔县顺时针）",
+    summary: "从白沙湖北岸前往塔县时的顺路可选支线，纯路程约1小时；不改变主线地图点位，是否进入以当天路况、天气和孩子状态为准。",
+    blocks: [
+      { type: "heading", text: "推荐方向与顺序" },
+      { type: "table", columns: ["顺序", "导航关键词", "看点与建议"], rows: [
+        ["1", "塔合曼树洞公路", "沿导航进入树洞公路，上午光影较好；只在安全空地停车。"],
+        ["2", "谢尔乃甫村", "原生态村庄与沿线牛羊马，经过村落不鸣笛、不随意进入院落。"],
+        ["3", "拜什库尔干村", "后半段可见成片沙棘；村道与会车情况以现场为准。"],
+        ["4", "塔合曼湿地公园观景台", "最后登观景台俯瞰湿地；后半段有颠簸和碎石，围栏开口能否进入以现场管理为准。"]
+      ] },
+      { type: "paragraph", html: "秋色渐染的草原、溪水和牛羊马分布在湿地里，适合短停拍照或沿安全小路走一小段，不建议为拍照驶入无路区域。" },
+      { type: "heading", text: "放进行程的方式" },
+      { type: "list", items: ["D3白沙湖北岸→塔县途中顺路加入，建议与周日牛羊大巴扎、石头城/金草滩按时间二选一，不追日落。", "小环线纯路程约1小时，含停车、拍照和步行建议预留1.5–2小时；抵达塔县晚于计划或孩子疲劳就直接走主线。", "如果从塔县返回喀什/白沙湖，改为逆时针更顺；本次行程不安排回程支线。"] },
+      { type: "callout", tone: "warning", text: "树洞公路、村道和观景台入口可能因施工、降雨、落石或管控变化；坐标、路况、是否允许停车和进入湿地均须出发前及当天用高德核验。高原路段不让孩子离车太远，两位驾驶员轮换，不为环线延长夜间驾驶。" }
+    ],
+    verifyRequired: true,
+    updatedAt: "2026-09-07T00:00:00.000Z"
+  }, {
     id: "hotan-deep-day-reference", region: "和田", title: "古于阗深度一日参考", summary: "适合愿意为和田多留一晚时采用，不直接叠加到当前9天路线。",
     blocks: [
       { type: "table", columns: ["时段", "安排", "建议时长"], rows: [["上午", "和田博物馆与免费讲解", "约2小时"], ["午餐", "玫瑰花烤肉", "机动"], ["下午", "团城；与玉龙喀什河捡石体验二选一", "约2–3小时"], ["傍晚", "约特干故城日落及夜间演出", "约3小时"]] },
@@ -128,7 +149,7 @@ var southXinjiang = {
   }],
   days: tripDays,
   createdAt: "2026-08-20T00:00:00.000Z",
-  updatedAt: "2026-09-01T00:00:00.000Z"
+  updatedAt: "2026-09-07T00:00:00.000Z"
 };
 
 var profile = {

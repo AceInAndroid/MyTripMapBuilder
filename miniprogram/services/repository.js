@@ -15,10 +15,24 @@ function read(key, fallback) {
 function write(key, value) { wx.setStorageSync(key, value); return value; }
 function enqueueMutation(action, payload) { var pending = read(PENDING_KEY, []); pending.push({ id: Date.now() + "-" + Math.random(), action: action, payload: clone(payload) }); write(PENDING_KEY, pending); }
 function restoreSeedTrips(trips) { return (trips || []).slice(); }
+function mergeMissingReferenceItems(items, defaults) {
+  var merged = (items || []).slice();
+  var known = {};
+  merged.forEach(function (item) { if (item && item.id) known[item.id] = true; });
+  (defaults || []).forEach(function (item) { if (item && item.id && !known[item.id]) merged.push(clone(item)); });
+  return merged;
+}
 function attachTripDefaults(trips) {
   return (trips || []).map(function (trip) {
-    if (trip && trip.id === "south-xinjiang-2026-restored" && !trip.notes && seed.trips[0] && seed.trips[0].notes) trip.notes = clone(seed.trips[0].notes);
-    if (trip && trip.id === "south-xinjiang-2026-restored" && !trip.foodNotes && seed.trips[0] && seed.trips[0].foodNotes) trip.foodNotes = clone(seed.trips[0].foodNotes);
+    if (trip && trip.id === "south-xinjiang-2026-restored" && seed.trips[0]) {
+      trip.notes = mergeMissingReferenceItems(trip.notes, seed.trips[0].notes);
+      trip.foodNotes = mergeMissingReferenceItems(trip.foodNotes, seed.trips[0].foodNotes);
+      trip.days = (trip.days || []).map(function (day) {
+        var seedDay = seed.trips[0].days && seed.trips[0].days.find(function (candidate) { return candidate.id === day.id; });
+        if (seedDay && !day.tip && seedDay.tip) day.tip = seedDay.tip;
+        return day;
+      });
+    }
     return trip;
   });
 }

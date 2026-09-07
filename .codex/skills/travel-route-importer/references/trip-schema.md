@@ -77,6 +77,7 @@ normally set `verifyRequired: true`.
   "title": "抵达与轻松适应",
   "distance": "约35 km",
   "drive": "纯驾驶约50分钟，不含用餐和停车",
+  "tip": "不生成独立地图点位的当日路线提示，可选。",
   "warning": "儿童当天只安排低强度活动。",
   "places": [{
     "id": "yunnan-2027-02-03-day-1-place-1",
